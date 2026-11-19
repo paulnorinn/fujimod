@@ -623,6 +623,11 @@ pub fn build(
         .iter()
         .any(|n| matches!(&n.model, Model::RegisterBlock { base, .. } if *base == AUDIO_SOURCE.0))
         .then(blocks::Published::default);
+    let serial7_words = spec
+        .nodes
+        .iter()
+        .any(|n| matches!(&n.model, Model::RegisterBlock { base, .. } if *base == 0xfff2_f000))
+        .then(blocks::Published::default);
     // The color unit and the still tone unit a development engine reads,
     // published by their blocks.
     let color = spec.nodes.iter().find_map(|n| match &n.model {
@@ -893,6 +898,11 @@ pub fn build(
                     && let Some(words) = &audio_words
                 {
                     model = model.with_published(words.clone());
+                }
+                if base == 0xfff2_f000
+                    && let Some(words) = &serial7_words
+                {
+                    model = model.with_published(words.clone()).with_serial7_irq(90);
                 }
                 if let Some(j) = job {
                     model = model.with_job(blocks::Job {
@@ -1431,6 +1441,13 @@ pub fn build(
                     sources.push(Arc::new(blocks::SourceWindow::new_writable(
                         AUDIO_SOURCE.0,
                         AUDIO_SOURCE.1,
+                        words.clone(),
+                    )?));
+                }
+                if let Some(words) = &serial7_words {
+                    sources.push(Arc::new(blocks::SourceWindow::new_writable(
+                        0xfff2_f000,
+                        0x1000,
                         words.clone(),
                     )?));
                 }

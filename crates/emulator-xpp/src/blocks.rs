@@ -157,6 +157,15 @@ impl fujimod_emulator_ip_arm::pl330::Source for SourceWindow {
             let word = words.entry(offset & !3).or_insert(0);
             let shift = 8 * (offset & 3);
             *word = (*word & !(0xffu32 << shift)) | ((*byte as u32) << shift);
+            if self.base == 0xfff2_f000
+                && offset < 0xa0
+                && (offset & 0x1c) == 4
+                && (offset & 3) == 3
+                && *word == 0x0007_0000
+            {
+                let status = (offset & !0x1f) + 0x0c;
+                words.entry(status).and_modify(|s| *s |= 1).or_insert(1);
+            }
         }
         Ok(())
     }
@@ -393,6 +402,8 @@ pub struct Block {
     commands: Vec<Command>,
     /// Where this block publishes its words.
     published: Option<Published>,
+    /// Interrupt line for X-Pro2 serial port 7 (0xfff2_f000) DMA completion.
+    serial7_irq: Option<u32>,
     /// The color unit's words, for the film law of a development job, and
     /// the declared reference white balance.
     color: Option<(Published, [u32; 3])>,
@@ -454,6 +465,7 @@ impl Block {
             fixed: Vec::new(),
             commands: Vec::new(),
             published: None,
+            serial7_irq: None,
             color: None,
             tone: None,
             film_exposure: None,
@@ -514,6 +526,11 @@ impl Block {
         self.published = Some(words);
         self
     }
+    /// Raise `irq` when PL330 DMA writes an EOT word to X-Pro2 serial port 7.
+    pub fn with_serial7_irq(mut self, irq: u32) -> Self {
+        self.serial7_irq = Some(irq);
+        self
+    }
     /// Develop with the film law and white balance of the color unit's
     /// published words, relative to the `reference` (R, G, B) gains.
     pub fn with_color(mut self, words: Published, reference: [u32; 3]) -> Result<Self, String> {
@@ -535,7 +552,18 @@ impl Block {
     }
     fn publish(&self) {
         if let Some(words) = &self.published {
-            *words.lock().unwrap() = self.state.words.clone();
+            let mut guard = words.lock().unwrap();
+            let mut next = self.state.words.clone();
+            if self.serial7_irq.is_some() {
+                for ch in 0..5u64 {
+                    let off = ch * 0x20 + 0x0c;
+                    let pub_val = guard.get(&off).copied().unwrap_or(0);
+                    if pub_val != 0 {
+                        next.entry(off).and_modify(|v| *v |= pub_val).or_insert(pub_val);
+                    }
+                }
+            }
+            *guard = next;
         }
     }
     /// One audio converter job: None for a table load, Some(true) once
@@ -1138,6 +1166,31 @@ impl Device for Block {
             }
         }
         match (self.offset(address, size), u32::try_from(value)) {
+            (Some(offset), Ok(val))
+                if self.serial7_irq.is_some() && offset < 0xa0 && (offset & 0x1f) == 0x0c =>
+            {
+                let cur = self.state.words.get(&offset).copied().unwrap_or(0);
+                let next = cur & !val;
+                if next == 0 {
+                    self.state.words.remove(&offset);
+                } else {
+                    self.state.words.insert(offset, next);
+                }
+                if let Some(words) = &self.published {
+                    let mut guard = words.lock().unwrap();
+                    if next == 0 {
+                        guard.remove(&offset);
+                    } else {
+                        guard.insert(offset, next);
+                    }
+                }
+                if let Some(irq) = self.serial7_irq
+                    && (0..5u64).all(|ch| self.state.words.get(&(ch * 0x20 + 0x0c)).copied().unwrap_or(0) == 0)
+                {
+                    cx.set_irq(irq, false);
+                }
+                return;
+            }
             (Some(offset), Ok(0)) => {
                 self.state.words.remove(&offset);
             }
@@ -1145,6 +1198,13 @@ impl Device for Block {
                 self.state.words.insert(offset, value);
             }
             _ => return cx.unmodeled(),
+        }
+        if self.serial7_irq.is_some()
+            && let Some(offset) = self.offset(address, size)
+            && offset < 0xa0
+            && (offset & 0x1f) == 0
+        {
+            self.state.due = cx.now().checked_add(20_000);
         }
         if let Some(c) = self
             .commands
@@ -1170,6 +1230,31 @@ impl Device for Block {
         }
     }
     fn advance(&mut self, cx: &mut Cx<'_>) {
+        if let (Some(irq), Some(words)) = (self.serial7_irq, &self.published) {
+            let mut any = false;
+            {
+                let guard = words.lock().unwrap();
+                for ch in 0..5u64 {
+                    let off = ch * 0x20 + 0x0c;
+                    let pub_val = guard.get(&off).copied().unwrap_or(0);
+                    let cur_val = self.state.words.get(&off).copied().unwrap_or(0);
+                    let merged = cur_val | pub_val;
+                    if merged != 0 {
+                        any = true;
+                        if merged != cur_val {
+                            self.state.words.insert(off, merged);
+                        }
+                    }
+                }
+            }
+            if any {
+                self.state.due = None;
+                self.publish();
+                cx.set_irq(irq, true);
+            } else if self.state.due.is_some_and(|at| at <= cx.now()) {
+                self.state.due = cx.now().checked_add(20_000);
+            }
+        }
         if let Some(job) = self.job {
             if self.state.due.is_some_and(|at| at <= cx.now()) {
                 self.state.due = None;
@@ -1219,7 +1304,20 @@ impl Device for Block {
             cx.fail("Register block frame deadline overflow");
         }
     }
-    fn next_deadline(&self, _now: u64) -> Option<u64> {
+    fn next_deadline(&self, now: u64) -> Option<u64> {
+        if self.serial7_irq.is_some()
+            && let Some(words) = &self.published
+        {
+            let guard = words.lock().unwrap();
+            for ch in 0..5u64 {
+                let off = ch * 0x20 + 0x0c;
+                let pub_val = guard.get(&off).copied().unwrap_or(0);
+                let cur_val = self.state.words.get(&off).copied().unwrap_or(0);
+                if (pub_val & !cur_val) != 0 {
+                    return Some(now);
+                }
+            }
+        }
         self.state.due
     }
     fn save(&self) -> Value {
@@ -2402,5 +2500,57 @@ mod tests {
             convert_audio(&[0x22, 0x33, 0x44, 0x55], 2, 3),
             [0, 0x22, 0x33, 0, 0x44, 0x55]
         );
+    }
+
+    #[test]
+    fn serial7_irq_raises_on_pl330_eot_and_clears_via_w1c() {
+        use fujimod_emulator_devices::test_host::recording::RecordingHost;
+        use fujimod_emulator_devices::{Cx, Device};
+        use fujimod_emulator_ip_arm::pl330::Source;
+
+        const SERIAL7: u64 = 0xfff2_f000;
+        let words = Published::default();
+        let mut block = Block::new(SERIAL7, 0x1000, vec![], None)
+            .unwrap()
+            .with_published(words.clone())
+            .with_serial7_irq(90);
+        let src = SourceWindow::new_writable(SERIAL7, 0x1000, words).unwrap();
+        let mut h = RecordingHost::default();
+
+        // Firmware enables channel 2 (`0xfff2_f040`), scheduling a poll deadline.
+        {
+            let mut cx = Cx::new(&mut h, 0, 0, 0);
+            block.write(&mut cx, SERIAL7 + 0x40, 4, 1);
+        }
+        assert_eq!(block.next_deadline(0), Some(20_000));
+
+        // PL330 writes the EOT word `0x0007_0000` (LE) to `0xfff2_f044`.
+        src.write(SERIAL7 + 0x44, &0x0007_0000u32.to_le_bytes())
+            .unwrap();
+
+        // Advancing at the deadline syncs channel 2 status (`+0x4c`) and raises IRQ 90.
+        h.now = 20_000;
+        {
+            let mut cx = Cx::new(&mut h, 0, 0, 0);
+            block.advance(&mut cx);
+        }
+        assert_eq!(h.irqs, vec![(90, true)]);
+        let status = {
+            let mut cx = Cx::new(&mut h, 0, 0, 0);
+            block.read(&mut cx, SERIAL7 + 0x4c, 4)
+        };
+        assert_eq!(status, 1);
+
+        // Firmware acknowledges channel 2 status via W1C, lowering IRQ 90.
+        {
+            let mut cx = Cx::new(&mut h, 0, 0, 0);
+            block.write(&mut cx, SERIAL7 + 0x4c, 4, 1);
+        }
+        assert_eq!(h.irqs, vec![(90, true), (90, false)]);
+        let cleared = {
+            let mut cx = Cx::new(&mut h, 0, 0, 0);
+            block.read(&mut cx, SERIAL7 + 0x4c, 4)
+        };
+        assert_eq!(cleared, 0);
     }
 }
