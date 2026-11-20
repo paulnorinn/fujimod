@@ -857,8 +857,7 @@
       "face": null,
       "icon": null,
       "connection_ids": [
-        "controls-gpio-10-9",
-        "controls-gpio-10-10"
+        "controls-contacts-10-9-10-10"
       ],
       "assignable": false,
       "pushable": false,
@@ -870,18 +869,27 @@
         "positions": [
           {
             "id": "S",
-            "key": null,
-            "asserted": null
+            "key": {
+              "kind": "debug_key",
+              "name": "MF_AF_A"
+            },
+            "asserted": true
           },
           {
             "id": "C",
-            "key": null,
-            "asserted": null
+            "key": {
+              "kind": "debug_key",
+              "name": "MF_AF_C"
+            },
+            "asserted": true
           },
           {
             "id": "M",
-            "key": null,
-            "asserted": null
+            "key": {
+              "kind": "debug_key",
+              "name": "MF_AF_M"
+            },
+            "asserted": true
           }
         ]
       },

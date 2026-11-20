@@ -263,6 +263,24 @@
           "active_level": false
         }
       ]
+    },
+    {
+      "id": "controls-contacts-10-9-10-10",
+      "kind": "control",
+      "signals": [
+        {
+          "kind": "gpio",
+          "port": 10,
+          "pin": 9,
+          "active_level": true
+        },
+        {
+          "kind": "gpio",
+          "port": 10,
+          "pin": 10,
+          "active_level": true
+        }
+      ]
     }
   ],
   "parts": [

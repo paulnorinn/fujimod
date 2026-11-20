@@ -1662,8 +1662,25 @@
         "kind": "control",
         "control_id": "focus_mode_selector"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 10,
+        "witness": {
+          "physical_key": 41,
+          "input_kind": "kind_5",
+          "source": 11823796,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio_contacts",
+        "connection_id": "controls-contacts-10-9-10-10",
+        "expected_levels": [
+          true,
+          false
+        ],
+        "callback": 11823796
+      }
     },
     {
       "id": "debug-24",
@@ -1673,8 +1690,25 @@
         "kind": "control",
         "control_id": "focus_mode_selector"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 11,
+        "witness": {
+          "physical_key": 42,
+          "input_kind": "kind_5",
+          "source": 11823652,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio_contacts",
+        "connection_id": "controls-contacts-10-9-10-10",
+        "expected_levels": [
+          true,
+          true
+        ],
+        "callback": 11823652
+      }
     },
     {
       "id": "debug-25",
@@ -1684,8 +1718,25 @@
         "kind": "control",
         "control_id": "focus_mode_selector"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 12,
+        "witness": {
+          "physical_key": 43,
+          "input_kind": "kind_5",
+          "source": 11823724,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio_contacts",
+        "connection_id": "controls-contacts-10-9-10-10",
+        "expected_levels": [
+          false,
+          true
+        ],
+        "callback": 11823724
+      }
     },
     {
       "id": "debug-6",
