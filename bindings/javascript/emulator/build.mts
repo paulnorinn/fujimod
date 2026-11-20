@@ -327,7 +327,9 @@ export function buildPlan(selected: BuildOptions, source: NodeJS.ProcessEnv): Bu
     '-sENVIRONMENT=web,worker,node',
     '-sALLOW_MEMORY_GROWTH=1',
     '-sINITIAL_MEMORY=33554432',
-    '-sMAXIMUM_MEMORY=2147483648',
+    // The XPP SoC maps two independent 1 GiB DRAM banks (0x0 and 0x80000000),
+    // so the guest backing alone needs 2 GiB; leave headroom for the module heap.
+    '-sMAXIMUM_MEMORY=4294967296',
     '-sSTACK_SIZE=2097152',
     '-sFILESYSTEM=0',
     '-sNO_EXIT_RUNTIME=1',

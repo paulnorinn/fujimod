@@ -696,7 +696,7 @@ export class WasmWorkerRuntime {
       };
       if (this.manifest!.bootTicks)
         await this.runUntil(s.status().ticks + BigInt(this.manifest!.bootTicks), reportProgress);
-      if (this.manifest!.construction === 'prepared') {
+      if (this.manifest!.construction === 'prepared' && this.manifest!.recCheck !== false) {
         const report = await this.bootToRec(2_000_000_000n, reportProgress);
         if (report.status !== 'rec')
           throw Error(report.failure ?? `Camera boot stopped: ${report.status}`);
