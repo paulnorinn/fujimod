@@ -417,6 +417,8 @@ pub struct Built {
     pub inputs: Vec<(String, Level, usize)>,
     pub contacts: BTreeMap<String, fujimod_emulator_devices::parts::card_contacts::Contacts>,
     pub encoders: BTreeMap<String, fujimod_emulator_devices::parts::encoder_input::EncoderInput>,
+    /// The masked GPIO bank's shared input words, for direct contact driving.
+    pub pins: Option<fujimod_emulator_ip::socionext::gpio::SharedPins>,
 }
 impl Built {
     /// Adopt the planned device nodes and control wires in the shared session.
@@ -428,6 +430,14 @@ impl Built {
                 return Err("repeated X-Processor Pro physical input".into());
             }
             resources.users.entry(name).or_default().insert(node);
+        }
+        // The masked GPIO bank drives its contacts directly; the generic
+        // session input path reaches it through this block.
+        if let Some(pins) = self.pins {
+            resources.direct_gpio.insert(
+                "gpio".into(),
+                Box::new(fujimod_emulator_ip::socionext::gpio::DirectInput::new(pins)),
+            );
         }
         Ok(fujimod_emulator_session::Session {
             definition, board: self.board, controls: None, contact_driver: None, resources,
@@ -1499,6 +1509,7 @@ pub fn build(
         inputs,
         contacts: card_contacts,
         encoders,
+        pins,
     })
 }
 

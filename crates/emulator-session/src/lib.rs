@@ -181,19 +181,25 @@ impl Session {
             .ok_or_else(|| format!("no such session node {name}"))
     }
     pub fn gpio(&mut self, name: &str, port: u8, pin: u8, high: bool) -> Result<(), String> {
-        self.resources.pads(name)?.request(
-            fujimod_emulator_devices::parts::pins::Pin { port, pin },
-            high,
-        )?;
+        let pin = fujimod_emulator_devices::parts::pins::Pin { port, pin };
+        match self.resources.direct_pins(name) {
+            Some(direct) => direct.set_input(pin, high)?,
+            None => self.resources.pads(name)?.request(pin, high)?,
+        }
         self.board.inputs_changed(self.node(name)?)
     }
     pub fn gpio_input_levels(&self, name: &str) -> Result<[u32; 16], String> {
-        Ok(self.resources.pads(name)?.input_levels())
+        match self.resources.direct_pins(name) {
+            Some(direct) => Ok(direct.input_levels()),
+            None => Ok(self.resources.pads(name)?.input_levels()),
+        }
     }
     pub fn gpio_level(&self, name: &str, port: u8, pin: u8) -> Result<bool, String> {
-        self.resources
-            .pads(name)?
-            .input_level(fujimod_emulator_devices::parts::pins::Pin { port, pin })
+        let pin = fujimod_emulator_devices::parts::pins::Pin { port, pin };
+        match self.resources.direct_pins(name) {
+            Some(direct) => direct.input(pin),
+            None => self.resources.pads(name)?.input_level(pin),
+        }
     }
     pub fn gpio_pad_state(
         &self,

@@ -104,6 +104,36 @@
           ]
         },
         {
+          "kind": "control",
+          "id": "movie_record_button",
+          "variant": "record",
+          "caption": "REC"
+        },
+        {
+          "kind": "control",
+          "id": "metering_button",
+          "variant": "key",
+          "face": [
+            "METER"
+          ]
+        },
+        {
+          "kind": "control",
+          "id": "bright_frame_simulation_button",
+          "variant": "key",
+          "face": [
+            "FRAME"
+          ]
+        },
+        {
+          "kind": "control",
+          "id": "viewfinder_selector",
+          "variant": "key",
+          "face": [
+            "VIEW"
+          ]
+        },
+        {
           "kind": "dpad",
           "id": "selector",
           "caption": "SELECTOR",
