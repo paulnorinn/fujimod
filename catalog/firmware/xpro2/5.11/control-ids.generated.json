@@ -1750,8 +1750,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 69,
+        "witness": {
+          "physical_key": 105,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14082,
+            "upper": 14080
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12331",
@@ -1761,8 +1782,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 68,
+        "witness": {
+          "physical_key": 104,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14078,
+            "upper": 14076
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12315",
@@ -1772,8 +1814,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 70,
+        "witness": {
+          "physical_key": 88,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14018,
+            "upper": 14016
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12330",
@@ -1783,8 +1846,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 67,
+        "witness": {
+          "physical_key": 103,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14074,
+            "upper": 14072
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12329",
@@ -1794,8 +1878,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 66,
+        "witness": {
+          "physical_key": 102,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14070,
+            "upper": 14068
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12328",
@@ -1805,8 +1910,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 65,
+        "witness": {
+          "physical_key": 101,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14066,
+            "upper": 14064
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12327",
@@ -1816,8 +1942,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 64,
+        "witness": {
+          "physical_key": 100,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14062,
+            "upper": 14060
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12326",
@@ -1827,8 +1974,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 63,
+        "witness": {
+          "physical_key": 99,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14058,
+            "upper": 14056
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12325",
@@ -1838,8 +2006,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 62,
+        "witness": {
+          "physical_key": 98,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14054,
+            "upper": 14052
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12324",
@@ -1849,8 +2038,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 61,
+        "witness": {
+          "physical_key": 97,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14050,
+            "upper": 14048
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12323",
@@ -1860,8 +2070,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 60,
+        "witness": {
+          "physical_key": 96,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14046,
+            "upper": 14044
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12321",
@@ -1871,8 +2102,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 59,
+        "witness": {
+          "physical_key": 94,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14042,
+            "upper": 14040
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12320",
@@ -1882,8 +2134,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 58,
+        "witness": {
+          "physical_key": 93,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14038,
+            "upper": 14036
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12319",
@@ -1893,8 +2166,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 57,
+        "witness": {
+          "physical_key": 92,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14034,
+            "upper": 14032
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12318",
@@ -1904,8 +2198,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 56,
+        "witness": {
+          "physical_key": 91,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14030,
+            "upper": 14028
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12317",
@@ -1915,8 +2230,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 55,
+        "witness": {
+          "physical_key": 90,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14026,
+            "upper": 14024
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-12316",
@@ -1926,8 +2262,29 @@
         "kind": "control",
         "control_id": "shutter_speed_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 54,
+        "witness": {
+          "physical_key": 89,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14022,
+            "upper": 14020
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20503",
@@ -1937,8 +2294,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 71,
+        "witness": {
+          "physical_key": 106,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14186,
+            "upper": 14184
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20504",
@@ -1948,8 +2326,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 92,
+        "witness": {
+          "physical_key": 107,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14270,
+            "upper": 14268
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20505",
@@ -1959,8 +2358,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 91,
+        "witness": {
+          "physical_key": 108,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14266,
+            "upper": 14264
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20506",
@@ -1970,8 +2390,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 90,
+        "witness": {
+          "physical_key": 109,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14262,
+            "upper": 14260
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20507",
@@ -1981,8 +2422,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 89,
+        "witness": {
+          "physical_key": 110,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14258,
+            "upper": 14256
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20508",
@@ -1992,8 +2454,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 88,
+        "witness": {
+          "physical_key": 111,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14254,
+            "upper": 14252
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20509",
@@ -2003,8 +2486,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 87,
+        "witness": {
+          "physical_key": 112,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14250,
+            "upper": 14248
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20510",
@@ -2014,8 +2518,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 86,
+        "witness": {
+          "physical_key": 113,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14246,
+            "upper": 14244
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20511",
@@ -2025,8 +2550,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 85,
+        "witness": {
+          "physical_key": 114,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14242,
+            "upper": 14240
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20512",
@@ -2036,8 +2582,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 84,
+        "witness": {
+          "physical_key": 115,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14238,
+            "upper": 14236
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20513",
@@ -2047,8 +2614,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 83,
+        "witness": {
+          "physical_key": 116,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14234,
+            "upper": 14232
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20514",
@@ -2058,8 +2646,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 82,
+        "witness": {
+          "physical_key": 117,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14230,
+            "upper": 14228
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20515",
@@ -2069,8 +2678,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 81,
+        "witness": {
+          "physical_key": 118,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14226,
+            "upper": 14224
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20516",
@@ -2080,8 +2710,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 80,
+        "witness": {
+          "physical_key": 119,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14222,
+            "upper": 14220
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20517",
@@ -2091,8 +2742,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 79,
+        "witness": {
+          "physical_key": 120,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14218,
+            "upper": 14216
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20518",
@@ -2102,8 +2774,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 78,
+        "witness": {
+          "physical_key": 121,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14214,
+            "upper": 14212
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20519",
@@ -2113,8 +2806,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 77,
+        "witness": {
+          "physical_key": 122,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14210,
+            "upper": 14208
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20520",
@@ -2124,8 +2838,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 76,
+        "witness": {
+          "physical_key": 123,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14206,
+            "upper": 14204
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20521",
@@ -2135,8 +2870,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 75,
+        "witness": {
+          "physical_key": 124,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14202,
+            "upper": 14200
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20522",
@@ -2146,8 +2902,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 74,
+        "witness": {
+          "physical_key": 125,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14198,
+            "upper": 14196
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20523",
@@ -2157,8 +2934,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 73,
+        "witness": {
+          "physical_key": 126,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14194,
+            "upper": 14192
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-20524",
@@ -2168,8 +2966,29 @@
         "kind": "control",
         "control_id": "sensitivity_dial"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 72,
+        "witness": {
+          "physical_key": 127,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14190,
+            "upper": 14188
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "row-4",

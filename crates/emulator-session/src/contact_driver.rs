@@ -205,8 +205,16 @@ impl Driver {
                         "momentary contact requires checked acknowledgment observations".into(),
                     );
                 }
-                if state.ready.len() + state.expected.len() > 128 {
-                    return Err("contact observation exceeds its bound".into());
+                // A pose checks three words per admitted scanner record, its
+                // expected stable word, and every admitted calibration band on
+                // its shared analog channel. The X-Pro2 sensitivity dial admits
+                // 22 records and 22 bands, so a legitimate pose needs 132.
+                if state.ready.len() + state.expected.len() > 256 {
+                    return Err(format!(
+                        "contact observation exceeds its bound: {} at {}",
+                        actuator.id,
+                        state.position
+                    ));
                 }
                 for check in state.ready.iter().chain(&state.expected) {
                     if check.bytes.is_empty() || check.bytes.len() > 64 {
