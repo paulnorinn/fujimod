@@ -84,6 +84,10 @@ declare class Camera {
      * Reconstruct a running session from `exportSnapshot` or `errorReport` bytes.
      */
     static fromSnapshot(bytes: Uint8Array): Camera;
+    /**
+     * One digital input pad of a node.
+     */
+    gpioLevel(node: string, port: number, pin: number): boolean;
     history(): InputLog;
     /**
      * Queue a physical key edge at guest tick `at` (resolved bodies).
@@ -129,6 +133,10 @@ declare class Camera {
      * Set every analog channel of a node at once.
      */
     setAdcSamples(node: string, samples: Uint16Array): void;
+    /**
+     * Drive one digital input pad of a node.
+     */
+    setGpio(node: string, port: number, pin: number, high: boolean): void;
     setPosition(id: string, position: string): SessionState;
     /**
      * Show RGB888 pixels, tightly packed and top row first, as the scene.

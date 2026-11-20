@@ -272,6 +272,24 @@ impl Camera {
         self.with(|session| session.core.adc_samples(node))
     }
 
+    /// Drive one digital input pad of a node.
+    #[wasm_bindgen(js_name = setGpio)]
+    pub fn set_gpio(
+        &mut self,
+        node: &str,
+        port: u8,
+        pin: u8,
+        high: bool,
+    ) -> Result<(), Failure> {
+        self.with(|session| session.core.gpio(node, port, pin, high))
+    }
+
+    /// One digital input pad of a node.
+    #[wasm_bindgen(js_name = gpioLevel)]
+    pub fn gpio_level(&mut self, node: &str, port: u8, pin: u8) -> Result<bool, Failure> {
+        self.with(|session| session.core.gpio_level(node, port, pin))
+    }
+
     /// Set every analog channel of a node at once.
     #[wasm_bindgen(js_name = setAdcSamples)]
     pub fn set_adc_samples(&mut self, node: &str, samples: Vec<u16>) -> Result<(), Failure> {
