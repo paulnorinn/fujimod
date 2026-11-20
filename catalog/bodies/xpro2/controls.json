@@ -44,6 +44,38 @@
     ]
   },
   "analog_levels": null,
+  "boot": {
+    "sd": {
+      "usb": false,
+      "hold": [
+        {
+          "id": "movie_record_button"
+        },
+        {
+          "id": "rear_command_dial.press"
+        }
+      ]
+    },
+    "firmware_update": {
+      "hold": [
+        {
+          "id": "disp_back_button"
+        }
+      ]
+    },
+    "service": {
+      "usb": true,
+      "hold": [
+        {
+          "id": "selector.up"
+        },
+        {
+          "id": "shutter_button",
+          "stage": "full"
+        }
+      ]
+    }
+  },
   "controls": {
     "movie_record_button": {
       "name": "Movie-record button",
@@ -51,7 +83,9 @@
       "manual_page": 50,
       "face": null,
       "icon": "record",
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-0-14"
+      ],
       "assignable": true,
       "pushable": true,
       "default_function": "Record movies; default Fn1 function-button assignment.",
@@ -91,7 +125,9 @@
       "manual_page": 58,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-adc-7"
+      ],
       "assignable": false,
       "pushable": false,
       "default_function": "Adjust exposure compensation; at C, use the front command dial.",
@@ -197,7 +233,9 @@
       "manual_page": 4,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-adc-6"
+      ],
       "assignable": false,
       "pushable": false,
       "default_function": "Choose shutter speed.",
@@ -393,7 +431,9 @@
       "manual_page": 59,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-adc-5"
+      ],
       "assignable": false,
       "pushable": false,
       "default_function": "Lift and rotate to choose ISO sensitivity; H and L sensitivities are configurable.",
@@ -658,7 +698,10 @@
       "manual_page": 64,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-10-9",
+        "controls-gpio-10-10"
+      ],
       "assignable": false,
       "pushable": false,
       "default_function": "Select S, C, or M focus mode.",
@@ -824,7 +867,9 @@
       "manual_page": 5,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-0-13"
+      ],
       "assignable": true,
       "pushable": true,
       "default_function": "Rotate to adjust program shift, shutter speed, exposure compensation, or playback selection; press to switch shutter-speed and exposure-compensation adjustment when the exposure-compensation dial is at C.",
@@ -889,7 +934,9 @@
       "manual_page": 28,
       "face": "VIEW/MODE",
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-0-15"
+      ],
       "assignable": false,
       "pushable": true,
       "default_function": "Cycle through viewfinder and LCD display modes.",
@@ -926,7 +973,9 @@
       "manual_page": 77,
       "face": "AE-L",
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-1-8"
+      ],
       "assignable": true,
       "pushable": true,
       "default_function": "Lock exposure; its role can be reversed with the AF-L button.",
@@ -969,7 +1018,9 @@
       "manual_page": 6,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-2-2"
+      ],
       "assignable": true,
       "pushable": true,
       "default_function": "Rotate to adjust aperture, quick-menu settings, or focus-frame size; press for the assigned dial function (default: focus check).",
@@ -994,7 +1045,9 @@
       "manual_page": 77,
       "face": "AF-L",
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-1-7"
+      ],
       "assignable": true,
       "pushable": true,
       "default_function": "Lock focus; its role can be reversed with the AE-L button.",
@@ -1012,7 +1065,9 @@
       "manual_page": 47,
       "face": "Q",
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-adc-3"
+      ],
       "assignable": false,
       "pushable": true,
       "default_function": "Open the quick menu; press and hold to edit quick-menu settings; in playback, perform RAW conversion.",
@@ -1030,7 +1085,9 @@
       "manual_page": 4,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-adc-3"
+      ],
       "assignable": true,
       "pushable": true,
       "default_function": "Navigate menus; up is DRIVE, left is film simulation (Fn4), right is white balance (Fn5), and down is AF mode (Fn6).",
@@ -1049,7 +1106,9 @@
       "manual_page": 3,
       "face": "MENU/OK",
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-adc-3"
+      ],
       "assignable": false,
       "pushable": true,
       "default_function": "Open menus and confirm selections; press and hold to toggle control lock.",
@@ -1067,7 +1126,9 @@
       "manual_page": 32,
       "face": "DISP/BACK",
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-adc-3"
+      ],
       "assignable": false,
       "pushable": true,
       "default_function": "Change display indicators or go back; press and hold in shooting mode to assign function-button roles.",
@@ -1085,7 +1146,9 @@
       "manual_page": 43,
       "face": null,
       "icon": "delete",
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-7-3"
+      ],
       "assignable": false,
       "pushable": true,
       "default_function": "Delete pictures in playback.",
@@ -1103,7 +1166,9 @@
       "manual_page": 39,
       "face": null,
       "icon": "playback",
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-7-4"
+      ],
       "assignable": false,
       "pushable": true,
       "default_function": "Start playback.",

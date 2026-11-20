@@ -1,0 +1,23 @@
+{
+  "$schema": "https://fujimod.com/schemas/emulator-run-configuration.schema.json",
+  "schema": 1,
+  "id": "xpro2-511",
+  "purpose": "rom_boot",
+  "body_id": "xpro2",
+  "firmware_id": "xpro2-511",
+  "start": {
+    "kind": "loader"
+  },
+  "execution": null,
+  "inputs": null,
+  "scene": null,
+  "overlays": [],
+  "preset": {
+    "factory_options": {},
+    "hardware_selection": {
+      "soc_profile_id": "xpp",
+      "body_profile_id": "xpro2-discovery"
+    },
+    "hardware_inputs_id": "xpro2-discovery"
+  }
+}

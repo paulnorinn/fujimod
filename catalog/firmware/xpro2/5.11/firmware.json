@@ -1,0 +1,26 @@
+{
+  "$schema": "https://fujimod.com/schemas/firmware.schema.json",
+  "schema": 1,
+  "id": "xpro2-511",
+  "body_id": "xpro2",
+  "version": "5.11",
+  "update": {
+    "size": 53543908,
+    "sha256": "6f9792e53a776ee116732a6df4425b0f5393ad2f53655f573924afe9c61dc54d"
+  },
+  "boot_rom": {
+    "address": 4293918720,
+    "content": {
+      "size": 65536,
+      "sha256": "781bd91b2fd60f659016f9070bc03dec5e0325064d649d00f8016f38ead9c1e6"
+    }
+  },
+  "installation": null,
+  "generated_facts": {
+    "cfgdata_location": {
+      "kind": "pointer",
+      "address": 15367864
+    },
+    "identity_checks": []
+  }
+}
