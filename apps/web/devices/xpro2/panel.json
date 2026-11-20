@@ -46,6 +46,12 @@
           "id": "front_command_dial",
           "variant": "ticks",
           "caption": "FRONT DIAL"
+        },
+        {
+          "kind": "control",
+          "id": "rear_command_dial",
+          "variant": "ticks",
+          "caption": "REAR DIAL"
         }
       ]
     },
