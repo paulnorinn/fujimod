@@ -2433,6 +2433,7 @@ dependencies = [
  "fujimod-emulator-storage",
  "fujimod-emulator-xp5-board",
  "fujimod-emulator-xp5-display",
+ "fujimod-emulator-xpp",
  "fujimod-firmware",
  "fujimod-framebuffer",
  "fujimod-workspace-hack",

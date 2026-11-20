@@ -93,7 +93,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "FUNCTION"
+        }
       },
       "positions": []
     },
@@ -112,8 +115,22 @@
       "behavior": {
         "kind": "shutter",
         "stages": {
-          "half_press": null,
-          "full_press": null
+          "half_press": [
+            {
+              "kind": "debug_key",
+              "name": "S1"
+            }
+          ],
+          "full_press": [
+            {
+              "kind": "debug_key",
+              "name": "S1"
+            },
+            {
+              "kind": "debug_key",
+              "name": "S2"
+            }
+          ]
         }
       },
       "positions": [],
@@ -882,7 +899,10 @@
           "decrease": null,
           "increase": null
         },
-        "press": null,
+        "press": {
+          "kind": "debug_key",
+          "name": "CMD_PUSH"
+        },
         "endless": null
       },
       "positions": [],
@@ -944,7 +964,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "VIEW"
+        }
       },
       "positions": []
     },
@@ -983,7 +1006,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "AE-LOCK"
+        }
       },
       "positions": []
     },
@@ -1002,12 +1028,27 @@
       "behavior": {
         "kind": "pad",
         "directions": {
-          "up": null,
-          "down": null,
-          "left": null,
-          "right": null
+          "up": {
+            "kind": "debug_key",
+            "name": "8DIR_U"
+          },
+          "down": {
+            "kind": "debug_key",
+            "name": "8DIR_D"
+          },
+          "left": {
+            "kind": "debug_key",
+            "name": "8DIR_L"
+          },
+          "right": {
+            "kind": "debug_key",
+            "name": "8DIR_R"
+          }
         },
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "8DIR_PUSH"
+        }
       },
       "positions": [],
       "short_name": "FOCUS"
@@ -1033,7 +1074,10 @@
           "decrease": null,
           "increase": null
         },
-        "press": null,
+        "press": {
+          "kind": "debug_key",
+          "name": "CMD2_PUSH"
+        },
         "endless": null
       },
       "positions": [],
@@ -1055,7 +1099,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "AF-LOCK"
+        }
       },
       "positions": []
     },
@@ -1075,7 +1122,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "Q"
+        }
       },
       "positions": []
     },
@@ -1116,7 +1166,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "EXE_M"
+        }
       },
       "positions": []
     },
@@ -1136,7 +1189,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "DISP_B"
+        }
       },
       "positions": []
     },
@@ -1156,7 +1212,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "DELETE"
+        }
       },
       "positions": []
     },
@@ -1176,7 +1235,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "K_PLAY"
+        }
       },
       "positions": []
     },

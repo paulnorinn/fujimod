@@ -40,6 +40,7 @@ fujimod-emulator-exr2-gpu.workspace = true
 fujimod-emulator-gpu.workspace = true
 fujimod-emulator-exr2-board.workspace = true
 fujimod-emulator-exr2-plan.workspace = true
+fujimod-emulator-xpp.workspace = true
 fujimod-firmware.workspace = true
 serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
