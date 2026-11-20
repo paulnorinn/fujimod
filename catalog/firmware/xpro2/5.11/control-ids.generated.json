@@ -523,8 +523,8 @@
           "physical_key": 24,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14364,
-          "upper": 14366
+          "lower": 14366,
+          "upper": 14364
         }
       },
       "electrical": {
@@ -533,8 +533,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14364,
-            "upper": 14366
+            "lower": 14366,
+            "upper": 14364
           }
         ],
         "callback": null,
@@ -555,8 +555,8 @@
           "physical_key": 25,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14360,
-          "upper": 14362
+          "lower": 14362,
+          "upper": 14360
         }
       },
       "electrical": {
@@ -565,8 +565,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14360,
-            "upper": 14362
+            "lower": 14362,
+            "upper": 14360
           }
         ],
         "callback": null,
@@ -587,8 +587,8 @@
           "physical_key": 26,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14356,
-          "upper": 14358
+          "lower": 14358,
+          "upper": 14356
         }
       },
       "electrical": {
@@ -597,8 +597,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14356,
-            "upper": 14358
+            "lower": 14358,
+            "upper": 14356
           }
         ],
         "callback": null,
@@ -619,8 +619,8 @@
           "physical_key": 27,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14352,
-          "upper": 14354
+          "lower": 14354,
+          "upper": 14352
         }
       },
       "electrical": {
@@ -629,8 +629,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14352,
-            "upper": 14354
+            "lower": 14354,
+            "upper": 14352
           }
         ],
         "callback": null,
@@ -651,8 +651,8 @@
           "physical_key": 40,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14324,
-          "upper": 14326
+          "lower": 14326,
+          "upper": 14324
         }
       },
       "electrical": {
@@ -661,8 +661,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14324,
-            "upper": 14326
+            "lower": 14326,
+            "upper": 14324
           }
         ],
         "callback": null,
@@ -683,8 +683,8 @@
           "physical_key": 23,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14328,
-          "upper": 14330
+          "lower": 14330,
+          "upper": 14328
         }
       },
       "electrical": {
@@ -693,8 +693,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14328,
-            "upper": 14330
+            "lower": 14330,
+            "upper": 14328
           }
         ],
         "callback": null,
@@ -715,8 +715,8 @@
           "physical_key": 21,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14336,
-          "upper": 14338
+          "lower": 14338,
+          "upper": 14336
         }
       },
       "electrical": {
@@ -725,8 +725,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14336,
-            "upper": 14338
+            "lower": 14338,
+            "upper": 14336
           }
         ],
         "callback": null,
@@ -747,8 +747,8 @@
           "physical_key": 22,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14340,
-          "upper": 14342
+          "lower": 14342,
+          "upper": 14340
         }
       },
       "electrical": {
@@ -757,8 +757,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14340,
-            "upper": 14342
+            "lower": 14342,
+            "upper": 14340
           }
         ],
         "callback": null,
@@ -779,8 +779,8 @@
           "physical_key": 9,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14344,
-          "upper": 14346
+          "lower": 14346,
+          "upper": 14344
         }
       },
       "electrical": {
@@ -789,8 +789,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14344,
-            "upper": 14346
+            "lower": 14346,
+            "upper": 14344
           }
         ],
         "callback": null,
@@ -811,8 +811,8 @@
           "physical_key": 20,
           "input_kind": "kind_1",
           "source": 3,
-          "lower": 14348,
-          "upper": 14350
+          "lower": 14350,
+          "upper": 14348
         }
       },
       "electrical": {
@@ -821,8 +821,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14348,
-            "upper": 14350
+            "lower": 14350,
+            "upper": 14348
           }
         ],
         "callback": null,
@@ -951,8 +951,8 @@
           "physical_key": 86,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14104,
-          "upper": 14106
+          "lower": 14106,
+          "upper": 14104
         }
       },
       "electrical": {
@@ -961,8 +961,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14104,
-            "upper": 14106
+            "lower": 14106,
+            "upper": 14104
           }
         ],
         "callback": null,
@@ -983,8 +983,8 @@
           "physical_key": 85,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14108,
-          "upper": 14110
+          "lower": 14110,
+          "upper": 14108
         }
       },
       "electrical": {
@@ -993,8 +993,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14108,
-            "upper": 14110
+            "lower": 14110,
+            "upper": 14108
           }
         ],
         "callback": null,
@@ -1015,8 +1015,8 @@
           "physical_key": 84,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14112,
-          "upper": 14114
+          "lower": 14114,
+          "upper": 14112
         }
       },
       "electrical": {
@@ -1025,8 +1025,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14112,
-            "upper": 14114
+            "lower": 14114,
+            "upper": 14112
           }
         ],
         "callback": null,
@@ -1047,8 +1047,8 @@
           "physical_key": 83,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14116,
-          "upper": 14118
+          "lower": 14118,
+          "upper": 14116
         }
       },
       "electrical": {
@@ -1057,8 +1057,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14116,
-            "upper": 14118
+            "lower": 14118,
+            "upper": 14116
           }
         ],
         "callback": null,
@@ -1079,8 +1079,8 @@
           "physical_key": 82,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14120,
-          "upper": 14122
+          "lower": 14122,
+          "upper": 14120
         }
       },
       "electrical": {
@@ -1089,8 +1089,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14120,
-            "upper": 14122
+            "lower": 14122,
+            "upper": 14120
           }
         ],
         "callback": null,
@@ -1111,8 +1111,8 @@
           "physical_key": 81,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14124,
-          "upper": 14126
+          "lower": 14126,
+          "upper": 14124
         }
       },
       "electrical": {
@@ -1121,8 +1121,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14124,
-            "upper": 14126
+            "lower": 14126,
+            "upper": 14124
           }
         ],
         "callback": null,
@@ -1143,8 +1143,8 @@
           "physical_key": 80,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14128,
-          "upper": 14130
+          "lower": 14130,
+          "upper": 14128
         }
       },
       "electrical": {
@@ -1153,8 +1153,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14128,
-            "upper": 14130
+            "lower": 14130,
+            "upper": 14128
           }
         ],
         "callback": null,
@@ -1175,8 +1175,8 @@
           "physical_key": 79,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14132,
-          "upper": 14134
+          "lower": 14134,
+          "upper": 14132
         }
       },
       "electrical": {
@@ -1185,8 +1185,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14132,
-            "upper": 14134
+            "lower": 14134,
+            "upper": 14132
           }
         ],
         "callback": null,
@@ -1207,8 +1207,8 @@
           "physical_key": 78,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14136,
-          "upper": 14138
+          "lower": 14138,
+          "upper": 14136
         }
       },
       "electrical": {
@@ -1217,8 +1217,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14136,
-            "upper": 14138
+            "lower": 14138,
+            "upper": 14136
           }
         ],
         "callback": null,
@@ -1239,8 +1239,8 @@
           "physical_key": 77,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14140,
-          "upper": 14142
+          "lower": 14142,
+          "upper": 14140
         }
       },
       "electrical": {
@@ -1249,8 +1249,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14140,
-            "upper": 14142
+            "lower": 14142,
+            "upper": 14140
           }
         ],
         "callback": null,
@@ -1271,8 +1271,8 @@
           "physical_key": 76,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14144,
-          "upper": 14146
+          "lower": 14146,
+          "upper": 14144
         }
       },
       "electrical": {
@@ -1281,8 +1281,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14144,
-            "upper": 14146
+            "lower": 14146,
+            "upper": 14144
           }
         ],
         "callback": null,
@@ -1303,8 +1303,8 @@
           "physical_key": 75,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14148,
-          "upper": 14150
+          "lower": 14150,
+          "upper": 14148
         }
       },
       "electrical": {
@@ -1313,8 +1313,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14148,
-            "upper": 14150
+            "lower": 14150,
+            "upper": 14148
           }
         ],
         "callback": null,
@@ -1335,8 +1335,8 @@
           "physical_key": 74,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14152,
-          "upper": 14154
+          "lower": 14154,
+          "upper": 14152
         }
       },
       "electrical": {
@@ -1345,8 +1345,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14152,
-            "upper": 14154
+            "lower": 14154,
+            "upper": 14152
           }
         ],
         "callback": null,
@@ -1367,8 +1367,8 @@
           "physical_key": 73,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14156,
-          "upper": 14158
+          "lower": 14158,
+          "upper": 14156
         }
       },
       "electrical": {
@@ -1377,8 +1377,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14156,
-            "upper": 14158
+            "lower": 14158,
+            "upper": 14156
           }
         ],
         "callback": null,
@@ -1399,8 +1399,8 @@
           "physical_key": 72,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14160,
-          "upper": 14162
+          "lower": 14162,
+          "upper": 14160
         }
       },
       "electrical": {
@@ -1409,8 +1409,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14160,
-            "upper": 14162
+            "lower": 14162,
+            "upper": 14160
           }
         ],
         "callback": null,
@@ -1431,8 +1431,8 @@
           "physical_key": 71,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14164,
-          "upper": 14166
+          "lower": 14166,
+          "upper": 14164
         }
       },
       "electrical": {
@@ -1441,8 +1441,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14164,
-            "upper": 14166
+            "lower": 14166,
+            "upper": 14164
           }
         ],
         "callback": null,
@@ -1463,8 +1463,8 @@
           "physical_key": 70,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14168,
-          "upper": 14170
+          "lower": 14170,
+          "upper": 14168
         }
       },
       "electrical": {
@@ -1473,8 +1473,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14168,
-            "upper": 14170
+            "lower": 14170,
+            "upper": 14168
           }
         ],
         "callback": null,
@@ -1495,8 +1495,8 @@
           "physical_key": 69,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14172,
-          "upper": 14174
+          "lower": 14174,
+          "upper": 14172
         }
       },
       "electrical": {
@@ -1505,8 +1505,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14172,
-            "upper": 14174
+            "lower": 14174,
+            "upper": 14172
           }
         ],
         "callback": null,
@@ -1527,8 +1527,8 @@
           "physical_key": 68,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14176,
-          "upper": 14178
+          "lower": 14178,
+          "upper": 14176
         }
       },
       "electrical": {
@@ -1537,8 +1537,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14176,
-            "upper": 14178
+            "lower": 14178,
+            "upper": 14176
           }
         ],
         "callback": null,
@@ -1559,8 +1559,8 @@
           "physical_key": 87,
           "input_kind": "kind_1",
           "source": 7,
-          "lower": 14180,
-          "upper": 14182
+          "lower": 14182,
+          "upper": 14180
         }
       },
       "electrical": {
@@ -1569,8 +1569,8 @@
         "intervals": [
           {
             "kind": "configuration_u16",
-            "lower": 14180,
-            "upper": 14182
+            "lower": 14182,
+            "upper": 14180
           }
         ],
         "callback": null,

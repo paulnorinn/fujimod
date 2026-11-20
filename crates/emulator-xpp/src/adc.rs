@@ -79,6 +79,16 @@ impl Device for Converter {
     fn name(&self) -> &'static str {
         "xpp-adc"
     }
+    fn analog_inputs(
+        &self,
+    ) -> Option<&(dyn fujimod_emulator_devices::capability::AnalogInputs + 'static)> {
+        Some(self)
+    }
+    fn analog_inputs_mut(
+        &mut self,
+    ) -> Option<&mut (dyn fujimod_emulator_devices::capability::AnalogInputs + 'static)> {
+        Some(self)
+    }
     fn read(&mut self, cx: &mut Cx<'_>, address: u64, size: u8) -> u64 {
         let o = address - self.base;
         if size != 4 || o & 3 != 0 {
@@ -155,6 +165,22 @@ impl Device for Converter {
         Ok(())
     }
     fujimod_emulator_devices::checkpoint_state!(state: State, Self::check);
+}
+impl fujimod_emulator_devices::capability::AnalogInputs for Converter {
+    fn external_inputs(&self) -> fujimod_emulator_devices::parts::analog::Samples {
+        // The converter keeps its own per-channel overrides, so host observers
+        // receive the effective levels as a snapshot.
+        fujimod_emulator_devices::parts::analog::Samples::new(
+            (0..CHANNELS).map(|channel| self.sample(channel)).collect(),
+        )
+        .expect("the converter declares twelve channels")
+    }
+    fn samples(&self) -> Vec<u16> {
+        (0..CHANNELS).map(|channel| self.sample(channel)).collect()
+    }
+    fn set_sample(&mut self, channel: usize, value: u16) -> Result<(), String> {
+        self.set_input(channel, value)
+    }
 }
 impl Converter {
     fn check(&self, state: &State) -> Result<(), String> {
