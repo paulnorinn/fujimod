@@ -251,7 +251,7 @@ impl SwitchPanel {
             .controls
             .iter()
             .find(|c| c.id == id)
-            .ok_or("unknown physical control")?;
+            .ok_or_else(|| format!("unknown physical control {id}"))?;
         if let Some(reason) = &control.unavailable {
             return Err(format!("{id}: {reason}"));
         }
