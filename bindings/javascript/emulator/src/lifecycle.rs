@@ -99,7 +99,7 @@ impl Session {
                     Some("off") => false,
                     _ => return Err("USB boot position must be on or off".into()),
                 };
-                self.core.logic_input("usb_cable", connected)?;
+                self.core.usb_cable(connected)?;
                 continue;
             }
             let position = if let Some(p) = &input.position {
@@ -193,7 +193,11 @@ impl Session {
                 {
                     return Err("USB boot position must be on or off".into());
                 }
-                self.core.resources.logic_level("usb_cable")?;
+                // The cable level survives a cold reset; a run without a
+                // declared cable input has nothing to validate or apply.
+                if self.core.usb_cable_declared() {
+                    self.core.usb_cable(input.position.as_deref() == Some("on"))?;
+                }
                 continue;
             }
             let position = if let Some(p) = &input.position {

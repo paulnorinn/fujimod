@@ -58,6 +58,38 @@ impl Session {
         }
         Ok(())
     }
+    /// Apply the USB cable's physical position.
+    ///
+    /// The EXR II bodies declare a logic-level `usb_cable` wire. The
+    /// X-Processor Pro declares the VBUS contact as an application GPIO pin,
+    /// carried in the run definition as `usb_vbus: [bank, pin]`. A run that
+    /// declares neither has no cable input to drive.
+    pub fn usb_cable(&mut self, connected: bool) -> Result<(), String> {
+        if self.usb_cable_wire() {
+            return self.logic_input("usb_cable", connected);
+        }
+        match self.usb_vbus() {
+            Some((bank, pin)) => self.gpio("gpio", bank, pin, connected),
+            None => Ok(()),
+        }
+    }
+    /// Whether this run declares a USB cable input at all.
+    pub fn usb_cable_declared(&self) -> bool {
+        self.usb_cable_wire() || self.usb_vbus().is_some()
+    }
+    fn usb_cable_wire(&self) -> bool {
+        self.resources.wires.contains_key("usb_cable")
+    }
+    fn usb_vbus(&self) -> Option<(u8, u8)> {
+        let vbus = self.definition.get("usb_vbus")?;
+        let [bank, pin] = vbus.as_array()?.as_slice() else {
+            return None;
+        };
+        Some((
+            u8::try_from(bank.as_u64()?).ok()?,
+            u8::try_from(pin.as_u64()?).ok()?,
+        ))
+    }
     /// Change an explicitly wired HDMI sink input while processors are
     /// stopped, and deliver the corresponding HPD edge through the
     /// transmitter's native device context.
