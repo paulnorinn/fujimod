@@ -36,6 +36,19 @@ declare class Camera {
      * Complete stopped-session state as a canonical typed archive.
      */
     completeState(): Uint8Array;
+    /**
+     * Compile and install the control wiring and input confirmation from the
+     * bundled catalog for \`firmware_id\`.
+     *
+     * Prepared bundles name their catalog controls ahead of time. An
+     * X-Processor Pro bundle carries the checked execution and device graphs
+     * but no catalog, so the specs are compiled here once the firmware has
+     * loaded its configuration. Does nothing when controls are already
+     * connected.
+     * Returns the compiled control state as JSON: every input with its
+     * supported flag and, when unsupported, the compile problem.
+     */
+    connectControls(firmware_id: string, ticks_per_second: number): string;
     deviceStates(kind: string): DeviceStates;
     /**
      * Set the stopped host worker preference (0 or 2) and report it.

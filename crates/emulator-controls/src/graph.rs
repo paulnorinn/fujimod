@@ -41,6 +41,18 @@ fn numbers(value: &Value) -> Vec<u64> {
         .unwrap_or_default()
 }
 
+/// A device's declared sample/level words. The EXR II graphs nest them under
+/// `options` with their own field names; the X-Processor Pro graphs carry them
+/// on the model itself.
+fn declared(node: &Value, option_key: &str, model_key: &str) -> Vec<u64> {
+    let nested = numbers(&node["model"]["options"][option_key]);
+    if nested.is_empty() {
+        numbers(&node["model"][model_key])
+    } else {
+        nested
+    }
+}
+
 pub fn kind(node: &Value) -> &str {
     node["model"]["kind"].as_str().unwrap_or_default()
 }
@@ -119,8 +131,8 @@ impl<'a> Nodes<'a> {
             gpio: name(gpio),
             adc: name(adc),
             serial,
-            gpio_levels: numbers(&gpio["model"]["options"]["input_levels"]),
-            adc_samples: numbers(&adc["model"]["options"]["samples"]),
+            gpio_levels: declared(gpio, "input_levels", "inputs"),
+            adc_samples: declared(adc, "samples", "samples"),
             mappings: execution["mappings"]
                 .as_array()
                 .into_iter()

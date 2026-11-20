@@ -701,6 +701,29 @@ export class WasmWorkerRuntime {
       };
       if (this.manifest!.bootTicks)
         await this.runUntil(s.status().ticks + BigInt(this.manifest!.bootTicks), reportProgress);
+      // A prepared XPP bundle carries no catalog, so its control wiring and
+      // input confirmation are compiled here, once the firmware has loaded the
+      // configuration they read. EXR2 bundles already declare both.
+      if (this.manifest!.construction === 'prepared') {
+        // Controls are an enhancement: a body whose contact model is not wired
+        // for the generic input path must still boot and stream its display.
+        try {
+          const controls = this.require().connectControls(
+            this.config!.firmwareId,
+            this.manifest!.ticksPerSecond,
+          );
+          const compiled = JSON.parse(controls) as {
+            inputs?: { id: string; supported?: boolean; unavailable?: string }[];
+          };
+          for (const input of compiled.inputs ?? [])
+            if (input.supported === false)
+              console.warn('control unavailable: ' + input.id + ' — ' + (input.unavailable ?? ''));
+        } catch (error) {
+          console.warn(
+            'controls not compiled: ' + (error instanceof Error ? error.message : String(error)),
+          );
+        }
+      }
       if (this.manifest!.construction === 'prepared' && this.recCheckEnabled()) {
         const report = await this.bootToRec(2_000_000_000n, reportProgress);
         if (report.status !== 'rec')

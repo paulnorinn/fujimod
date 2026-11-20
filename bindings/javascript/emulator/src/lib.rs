@@ -266,6 +266,41 @@ impl Camera {
     pub fn from_resolved(config: &str, firmware: &[u8]) -> Result<Camera, Failure> {
         Self::new(Session::create(config.as_bytes(), firmware, policy()?))
     }
+    /// Compile and install the control wiring and input confirmation from the
+    /// bundled catalog for \`firmware_id\`.
+    ///
+    /// Prepared bundles name their catalog controls ahead of time. An
+    /// X-Processor Pro bundle carries the checked execution and device graphs
+    /// but no catalog, so the specs are compiled here once the firmware has
+    /// loaded its configuration. Does nothing when controls are already
+    /// connected.
+    /// Returns the compiled control state as JSON: every input with its
+    /// supported flag and, when unsupported, the compile problem.
+    #[wasm_bindgen(js_name = connectControls)]
+    pub fn connect_controls(
+        &mut self,
+        firmware_id: &str,
+        ticks_per_second: f64,
+    ) -> Result<String, Failure> {
+        if !ticks_per_second.is_finite() || ticks_per_second <= 0.0 {
+            return Err(Failure::host("connectControls needs a positive tick rate"));
+        }
+        let selection = fujimod_catalog::reference::ReferenceCatalog::bundled()
+            .and_then(|catalog| catalog.resolve_firmware(firmware_id))
+            .map_err(Failure::host)?;
+        let ticks = ticks_per_second as u64;
+        self.with(|session| {
+            let problems =
+                fujimod_emulator_controls::connect(&mut session.core, &selection, ticks)?;
+            let inputs = session.core.control_state()?.inputs;
+            serde_json::to_string(&serde_json::json!({
+                "problems": problems,
+                "inputs": inputs,
+            }))
+            .map_err(|error| error.to_string())
+        })
+    }
+
     /// Construct an EXR II camera from its device graph document and DAT.
     #[wasm_bindgen(js_name = fromGraph)]
     pub fn from_graph(config: &str, dat: &[u8]) -> Result<Camera, Failure> {

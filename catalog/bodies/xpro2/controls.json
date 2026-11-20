@@ -157,43 +157,67 @@
           "positions": [
             {
               "id": "-3",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "E-D-3.0"
+              },
+              "asserted": true
             },
             {
               "id": "-2",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "E-D-2.0"
+              },
+              "asserted": true
             },
             {
               "id": "-1",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "E-D-1.0"
+              },
+              "asserted": true
             },
             {
               "id": "0",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "E-D-0.0"
+              },
+              "asserted": true
             },
             {
               "id": "+1",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "E-D+1.0"
+              },
+              "asserted": true
             },
             {
               "id": "+2",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "E-D+2.0"
+              },
+              "asserted": true
             },
             {
               "id": "+3",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "E-D+3.0"
+              },
+              "asserted": true
             },
             {
               "id": "C",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "E-D=C"
+              },
+              "asserted": true
             }
           ]
         },

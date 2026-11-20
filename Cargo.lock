@@ -2409,9 +2409,11 @@ name = "fujimod-emulator-javascript"
 version = "0.1.0"
 dependencies = [
  "ciborium",
+ "fujimod-catalog",
  "fujimod-catalog-configuration",
  "fujimod-emulator",
  "fujimod-emulator-boot",
+ "fujimod-emulator-controls",
  "fujimod-emulator-cpu",
  "fujimod-emulator-cpu-unicorn",
  "fujimod-emulator-devices",
