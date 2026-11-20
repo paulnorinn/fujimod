@@ -905,50 +905,22 @@
       "manual_page": 29,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-7-4"
+      ],
       "assignable": false,
       "pushable": true,
       "default_function": "Switch between electronic, optical, and dual optical/electronic rangefinder displays; hold up to choose the OVF zoom ratio.",
       "role": null,
       "mechanical": false,
       "behavior": {
-        "kind": "lever",
-        "positions": [
-          {
-            "id": "EVF",
-            "key": null,
-            "asserted": null
-          },
-          {
-            "id": "OVF",
-            "key": null,
-            "asserted": null
-          },
-          {
-            "id": "ERF",
-            "key": null,
-            "asserted": null
-          }
-        ],
-        "momentary": null
-      },
-      "positions": [
-        {
-          "id": "EVF",
-          "label": "EVF",
-          "description": null
-        },
-        {
-          "id": "OVF",
-          "label": "OVF",
-          "description": null
-        },
-        {
-          "id": "ERF",
-          "label": "ERF",
-          "description": null
+        "kind": "button",
+        "press": {
+          "kind": "debug_key",
+          "name": "EVF_OVF"
         }
-      ],
+      },
+      "positions": [],
       "short_name": "VIEW"
     },
     "diopter_adjustment_control": {
@@ -982,7 +954,9 @@
       "manual_page": 30,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-2-4"
+      ],
       "assignable": true,
       "pushable": true,
       "default_function": "Display bright frame simulation; default Fn2 function-button assignment.",
@@ -990,7 +964,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "FUNCTION2"
+        }
       },
       "positions": [],
       "short_name": "FRAME"
@@ -1106,7 +1083,9 @@
       "manual_page": 50,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-1-8"
+      ],
       "assignable": true,
       "pushable": true,
       "default_function": "Choose metering; default Fn3 function-button assignment.",
@@ -1114,7 +1093,10 @@
       "mechanical": false,
       "behavior": {
         "kind": "button",
-        "press": null
+        "press": {
+          "kind": "debug_key",
+          "name": "AE"
+        }
       },
       "positions": [],
       "short_name": "METER"
@@ -1126,7 +1108,7 @@
       "face": "AE-L",
       "icon": null,
       "connection_ids": [
-        "controls-gpio-1-8"
+        "controls-gpio-1-7"
       ],
       "assignable": true,
       "pushable": true,
@@ -1225,7 +1207,7 @@
       "face": "AF-L",
       "icon": null,
       "connection_ids": [
-        "controls-gpio-1-7"
+        "controls-adc-3"
       ],
       "assignable": true,
       "pushable": true,
@@ -1259,7 +1241,7 @@
         "kind": "button",
         "press": {
           "kind": "debug_key",
-          "name": "Q"
+          "name": "K_Q"
         }
       },
       "positions": []
@@ -1279,7 +1261,25 @@
       "role": null,
       "mechanical": false,
       "behavior": {
-        "kind": "button",
+        "kind": "pad",
+        "directions": {
+          "up": {
+            "kind": "debug_key",
+            "name": "UP"
+          },
+          "down": {
+            "kind": "debug_key",
+            "name": "DOWN"
+          },
+          "left": {
+            "kind": "debug_key",
+            "name": "LEFT"
+          },
+          "right": {
+            "kind": "debug_key",
+            "name": "RIGHT"
+          }
+        },
         "press": null
       },
       "positions": [],
@@ -1338,7 +1338,7 @@
       "face": null,
       "icon": "delete",
       "connection_ids": [
-        "controls-gpio-7-3"
+        "controls-adc-3"
       ],
       "assignable": false,
       "pushable": true,
@@ -1361,7 +1361,7 @@
       "face": null,
       "icon": "playback",
       "connection_ids": [
-        "controls-gpio-7-4"
+        "controls-adc-3"
       ],
       "assignable": false,
       "pushable": true,
