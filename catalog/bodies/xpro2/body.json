@@ -314,6 +314,12 @@
               "size": 4096,
               "idle_bits": [],
               "basis": "X-Pro2 5.11 serial port 7 (0xfff2f000) reached at PC=0x5aa7c (+0x4c)."
+            },
+            {
+              "base": 4294340608,
+              "size": 4096,
+              "idle_bits": [],
+              "basis": "X-Pro2 5.11 display status block (0xfff67000), 4 bytes past the declared display output 0xfff64000-0xfff67000 and reached through the volatile read/write helpers at 0x5aa7c. 0xb6d7d4, 0xb6d780 and 0xb6d450 build 0xfff67004 with movw/movt and read it, testing bit 0; 0xb6d7e8 clears bit 0 there, and 0xb6d808 with 0xb6d82c clears bits 4..8 and bit 9 of 0xfff67008. The words used are +0x004, +0x008, +0x00c, +0x010 and +0x014. Plain registers that read back their last write; the reset value is not measured."
             }
           ]
         }

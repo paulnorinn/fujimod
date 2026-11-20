@@ -12,6 +12,10 @@ license.workspace = true
 name = "fujimod-emulator"
 path = "src/bin/fujimod-emulator.rs"
 
+[[bin]]
+name = "xpp-definition"
+path = "src/bin/xpp-definition.rs"
+
 [dependencies]
 fujimod-emulator-models = { path = "../../crates/emulator-models" }
 fujimod-emulator-boot = { workspace = true, features = ["xp5-startup"] }
