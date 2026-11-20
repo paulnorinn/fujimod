@@ -281,6 +281,54 @@
           "active_level": true
         }
       ]
+    },
+    {
+      "id": "controls-gpio-13-3",
+      "kind": "control",
+      "signals": [
+        {
+          "kind": "gpio",
+          "port": 13,
+          "pin": 3,
+          "active_level": false
+        }
+      ]
+    },
+    {
+      "id": "controls-gpio-13-4",
+      "kind": "control",
+      "signals": [
+        {
+          "kind": "gpio",
+          "port": 13,
+          "pin": 4,
+          "active_level": false
+        }
+      ]
+    },
+    {
+      "id": "controls-gpio-13-5",
+      "kind": "control",
+      "signals": [
+        {
+          "kind": "gpio",
+          "port": 13,
+          "pin": 5,
+          "active_level": false
+        }
+      ]
+    },
+    {
+      "id": "controls-gpio-13-6",
+      "kind": "control",
+      "signals": [
+        {
+          "kind": "gpio",
+          "port": 13,
+          "pin": 6,
+          "active_level": false
+        }
+      ]
     }
   ],
   "parts": [

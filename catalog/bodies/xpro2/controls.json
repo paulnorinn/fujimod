@@ -1162,7 +1162,13 @@
       "manual_page": 4,
       "face": null,
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "controls-gpio-13-3",
+        "controls-gpio-13-4",
+        "controls-gpio-13-5",
+        "controls-gpio-13-6",
+        "controls-adc-3"
+      ],
       "assignable": false,
       "pushable": true,
       "default_function": "Tilt or press to select the focus area.",

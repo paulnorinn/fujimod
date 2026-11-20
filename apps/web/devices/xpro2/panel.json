@@ -135,6 +135,18 @@
         },
         {
           "kind": "dpad",
+          "id": "focus_stick",
+          "caption": "STICK",
+          "bindings": {
+            "up": "focus_stick.up",
+            "down": "focus_stick.down",
+            "left": "focus_stick.left",
+            "right": "focus_stick.right",
+            "center": "focus_stick.press"
+          }
+        },
+        {
+          "kind": "dpad",
           "id": "selector",
           "caption": "SELECTOR",
           "bindings": {

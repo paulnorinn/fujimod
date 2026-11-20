@@ -1607,8 +1607,24 @@
         "kind": "control",
         "control_id": "focus_stick.up"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 13,
+        "witness": {
+          "physical_key": 60,
+          "input_kind": "kind_5",
+          "source": 11824336,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-13-3",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
     },
     {
       "id": "debug-53",
@@ -1618,8 +1634,24 @@
         "kind": "control",
         "control_id": "focus_stick.right"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 15,
+        "witness": {
+          "physical_key": 62,
+          "input_kind": "kind_5",
+          "source": 11824336,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-13-5",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
     },
     {
       "id": "debug-55",
@@ -1629,8 +1661,24 @@
         "kind": "control",
         "control_id": "focus_stick.down"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 14,
+        "witness": {
+          "physical_key": 61,
+          "input_kind": "kind_5",
+          "source": 11824336,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-13-4",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
     },
     {
       "id": "debug-57",
@@ -1640,8 +1688,24 @@
         "kind": "control",
         "control_id": "focus_stick.left"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 16,
+        "witness": {
+          "physical_key": 63,
+          "input_kind": "kind_5",
+          "source": 11824336,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-13-6",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
     },
     {
       "id": "debug-59",
@@ -1651,8 +1715,29 @@
         "kind": "control",
         "control_id": "focus_stick"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 21,
+        "witness": {
+          "physical_key": 59,
+          "input_kind": "kind_5",
+          "source": 11826568,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14334,
+            "upper": 14332
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
     },
     {
       "id": "debug-23",

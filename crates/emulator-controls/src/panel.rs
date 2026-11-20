@@ -721,8 +721,21 @@ pub fn compile(
             .iter()
             .map(|control| control.positions.len())
             .product();
-        if count > 4096 {
-            return Err("Contact component exceeds 4096 declared combinations".into());
+        // The odometer below visits every declared combination but keeps only
+        // those whose masks intersect, so a shared ladder of mutually exclusive
+        // keys costs its poses, not the full product. The bound is a guard on
+        // that enumeration, so it must admit the products a real ladder makes:
+        // fifteen two-pose keys already declare 32768, of which two are real.
+        const MAX_COMBINATIONS: usize = 1 << 20;
+        if count > MAX_COMBINATIONS {
+            let detail = group
+                .iter()
+                .map(|control| format!("{}={}", control.id, control.positions.len()))
+                .collect::<Vec<_>>()
+                .join(" ");
+            return Err(format!(
+                "Contact component exceeds {MAX_COMBINATIONS} declared combinations ({count}): {detail}"
+            ));
         }
         let mut cases = Vec::new();
         let mut initial: Vec<Vec<String>> = Vec::new();

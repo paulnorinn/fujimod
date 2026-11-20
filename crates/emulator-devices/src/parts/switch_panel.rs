@@ -120,8 +120,13 @@ impl SwitchPanel {
                     .ok_or("circuit state count overflow")?;
                 wired.insert(id);
             }
+            // A circuit of mutually exclusive keys on one ladder declares the
+            // product of its poses while admitting only the ones that intersect:
+            // fifteen two-pose keys declare 32768. The bound guards the declared
+            // product, and the case count is checked against it separately.
+            const MAX_COMBINATIONS: usize = 1 << 20;
             if names.is_empty()
-                || count > 4096
+                || count > MAX_COMBINATIONS
                 || circuit.cases.is_empty()
                 || circuit.cases.len() > count
             {
