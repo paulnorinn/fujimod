@@ -703,8 +703,9 @@ export class WasmWorkerRuntime {
       }
       if (this.scene) showScene(s, this.scene);
       if (
-        this.manifest!.construction === 'prepared' ||
-        (this.manifest!.construction === 'session' && this.manifest!.session.preview)
+        this.manifest!.preview !== false &&
+        (this.manifest!.construction === 'prepared' ||
+          (this.manifest!.construction === 'session' && this.manifest!.session.preview))
       )
         s.preview();
       if (held.some((input) => input.position === undefined)) s.releaseBootInputs(held);
@@ -819,7 +820,8 @@ export class WasmWorkerRuntime {
   private inspectSource(tick: bigint) {
     if (this.manifest!.construction === 'resolved' || tick < this.nextInspection) return;
     this.sourceFrames =
-      this.manifest!.construction === 'prepared' || this.manifest!.session.preview
+      this.manifest!.preview !== false &&
+      (this.manifest!.construction === 'prepared' || this.manifest!.session.preview)
         ? this.require().previewState().frames
         : undefined;
     this.sourceTicks = tick;

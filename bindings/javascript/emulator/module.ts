@@ -164,6 +164,7 @@ export function parseEmulatorManifest(value: unknown): EmulatorManifest {
     (manifest.recTicks !== undefined &&
       (!Number.isSafeInteger(manifest.recTicks) || manifest.recTicks <= 0)) ||
     (manifest.recCheck !== undefined && typeof manifest.recCheck !== 'boolean') ||
+    (manifest.preview !== undefined && typeof manifest.preview !== 'boolean') ||
     !Number.isSafeInteger(manifest.output) ||
     manifest.output < 0 ||
     manifest.output > 0xffffffff
@@ -220,6 +221,12 @@ export interface EmulatorManifest {
    * Bodies without located REC observation (XPP) declare false. Defaults true.
    */
   recCheck?: boolean;
+  /**
+   * Prepared boots: start the EXR2 statistics preview source and report its
+   * frames. Bodies without a located FrameSource (XPP) declare false. Defaults
+   * true.
+   */
+  preview?: boolean;
   output: number;
   inputs?: ControlInput[];
   /** Optional external endpoint and boot inputs configured by the caller. */
