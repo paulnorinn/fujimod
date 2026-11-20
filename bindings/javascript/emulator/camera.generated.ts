@@ -11,6 +11,10 @@ declare class Camera {
     free(): void;
     [Symbol.dispose](): void;
     /**
+     * Every analog channel of a node, as the firmware currently samples them.
+     */
+    adcSamples(node: string): Uint16Array;
+    /**
      * Native first-start and REC observation, bounded by an instruction budget.
      */
     bootToRec(limit: bigint, progress?: (ticks: number) => void): RecReport;
@@ -121,6 +125,10 @@ declare class Camera {
      * Use a RAF's mosaic as the sensor scene.
      */
     sceneRaf(raf: Uint8Array): void;
+    /**
+     * Set every analog channel of a node at once.
+     */
+    setAdcSamples(node: string, samples: Uint16Array): void;
     setPosition(id: string, position: string): SessionState;
     /**
      * Show RGB888 pixels, tightly packed and top row first, as the scene.

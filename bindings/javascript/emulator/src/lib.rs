@@ -266,6 +266,18 @@ impl Camera {
     pub fn from_resolved(config: &str, firmware: &[u8]) -> Result<Camera, Failure> {
         Self::new(Session::create(config.as_bytes(), firmware, policy()?))
     }
+    /// Every analog channel of a node, as the firmware currently samples them.
+    #[wasm_bindgen(js_name = adcSamples)]
+    pub fn adc_samples(&mut self, node: &str) -> Result<Vec<u16>, Failure> {
+        self.with(|session| session.core.adc_samples(node))
+    }
+
+    /// Set every analog channel of a node at once.
+    #[wasm_bindgen(js_name = setAdcSamples)]
+    pub fn set_adc_samples(&mut self, node: &str, samples: Vec<u16>) -> Result<(), Failure> {
+        self.with(|session| session.core.set_adc_samples(node, &samples))
+    }
+
     /// Compile and install the control wiring and input confirmation from the
     /// bundled catalog for \`firmware_id\`.
     ///
