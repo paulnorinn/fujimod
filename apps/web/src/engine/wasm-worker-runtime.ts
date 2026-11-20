@@ -191,6 +191,8 @@ export class WasmWorkerRuntime {
   private nextInspection = 0n;
   private sourceFrames?: number;
   private sourceTicks = 0n;
+  /** Prepared device kind, read from the bundle document (e.g. `xpp`). */
+  private preparedKind?: string;
   private canvas?: OffscreenCanvas;
   private lease = 0;
   private release?: () => void;
@@ -598,6 +600,9 @@ export class WasmWorkerRuntime {
         prepared,
         new URL('wasm.json', config.bundle),
       );
+      // The device kind decides which observations exist natively: the XPP
+      // boot-to-REC check and the EXR2 statistics preview are EXR2-only.
+      this.preparedKind = reflectKind(text);
       this.camera = this.timings.measure('create', () =>
         createCamera(
           module,
@@ -696,14 +701,14 @@ export class WasmWorkerRuntime {
       };
       if (this.manifest!.bootTicks)
         await this.runUntil(s.status().ticks + BigInt(this.manifest!.bootTicks), reportProgress);
-      if (this.manifest!.construction === 'prepared' && this.manifest!.recCheck !== false) {
+      if (this.manifest!.construction === 'prepared' && this.recCheckEnabled()) {
         const report = await this.bootToRec(2_000_000_000n, reportProgress);
         if (report.status !== 'rec')
           throw Error(report.failure ?? `Camera boot stopped: ${report.status}`);
       }
       if (this.scene) showScene(s, this.scene);
       if (
-        this.manifest!.preview !== false &&
+        this.previewEnabled() &&
         (this.manifest!.construction === 'prepared' ||
           (this.manifest!.construction === 'session' && this.manifest!.session.preview))
       )
@@ -820,7 +825,7 @@ export class WasmWorkerRuntime {
   private inspectSource(tick: bigint) {
     if (this.manifest!.construction === 'resolved' || tick < this.nextInspection) return;
     this.sourceFrames =
-      this.manifest!.preview !== false &&
+      this.previewEnabled() &&
       (this.manifest!.construction === 'prepared' || this.manifest!.session.preview)
         ? this.require().previewState().frames
         : undefined;
@@ -857,6 +862,14 @@ export class WasmWorkerRuntime {
       // A following replay step must not mutate a shared borrowed frame.
       await this.leased;
     } else await this.dispatch(step);
+  }
+  /** Prepared XPP bundles have no native boot-to-REC check. */
+  private recCheckEnabled(): boolean {
+    return this.manifest!.recCheck !== false && this.preparedKind !== 'xpp';
+  }
+  /** Prepared XPP bundles have no EXR2 statistics frame source. */
+  private previewEnabled(): boolean {
+    return this.manifest!.preview !== false && this.preparedKind !== 'xpp';
   }
   private publish(force = false) {
     const s = this.require(),
@@ -958,5 +971,21 @@ export class WasmWorkerRuntime {
       this.send({ type: 'saved', error: String(error) });
       throw error;
     }
+  }
+}
+
+/** The prepared document's device kind, or undefined when it is not JSON. */
+function reflectKind(document: string): string | undefined {
+  try {
+    const parsed: unknown = JSON.parse(document);
+    if (parsed === null || typeof parsed !== 'object') return undefined;
+    const prepared: unknown = Reflect.get(parsed, 'prepared');
+    if (prepared === null || typeof prepared !== 'object') return undefined;
+    const devices: unknown = Reflect.get(prepared, 'devices');
+    if (devices === null || typeof devices !== 'object') return undefined;
+    const kind: unknown = Reflect.get(devices, 'kind');
+    return typeof kind === 'string' ? kind : undefined;
+  } catch {
+    return undefined;
   }
 }
