@@ -93,15 +93,48 @@ fn routes(node: &Value, kinds: &[&str]) -> Vec<SerialRoute> {
 }
 
 /// Readable serial status routes of every serial controller with endpoints of `kinds`.
+///
+/// The EXR II controllers declare named endpoints of each accepted kind. The
+/// X-Processor Pro serial ports declare one attached peer instead, whose
+/// declared register map is the port's single route.
 pub fn serial_routes<'a>(nodes: &[&'a Value], kinds: &[&str]) -> Vec<(&'a Value, SerialRoute)> {
     nodes
         .iter()
-        .filter(|node| kind(node) == "spi-controller")
-        .flat_map(|node| {
-            routes(node, kinds)
+        .filter_map(|node| {
+            if kind(node) == "spi-controller" {
+                return Some(
+                    routes(node, kinds)
+                        .into_iter()
+                        .map(move |route| (*node, route))
+                        .collect::<Vec<_>>(),
+                );
+            }
+            if kind(node) != "serial-port" || !kinds.contains(&"registers") {
+                return None;
+            }
+            let peer = &node["model"]["peer"];
+            if peer["kind"].as_str() != Some("registers") {
+                return None;
+            }
+            let declared: Vec<(u8, u64)> = peer["registers"]
+                .as_array()
                 .into_iter()
-                .map(move |route| (*node, route))
+                .flatten()
+                .filter_map(|pair| Some((pair[0].as_u64()? as u8, pair[1].as_u64()?)))
+                .collect();
+            Some(vec![(
+                *node,
+                SerialRoute {
+                    node: name(node),
+                    index: 0,
+                    base: node["model"]["base"].as_u64().unwrap_or(u64::MAX),
+                    readable: true,
+                    status_registers: declared.iter().map(|(register, _)| *register).collect(),
+                    registers: declared,
+                },
+            )])
         })
+        .flatten()
         .collect()
 }
 

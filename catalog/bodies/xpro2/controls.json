@@ -1031,7 +1031,9 @@
       "manual_page": 25,
       "face": "ON/OFF",
       "icon": null,
-      "connection_ids": [],
+      "connection_ids": [
+        "power"
+      ],
       "assignable": false,
       "pushable": false,
       "default_function": "Turn the camera on or off.",

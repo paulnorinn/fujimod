@@ -1831,8 +1831,24 @@
         "kind": "control",
         "control_id": "power_switch"
       },
-      "scanner": null,
-      "electrical": null
+      "scanner": {
+        "index": 32,
+        "witness": {
+          "physical_key": 8,
+          "input_kind": "kind_5",
+          "source": 11823864,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "serial_status",
+        "connection_id": "power",
+        "endpoint": 10,
+        "register": 96,
+        "mask": 1,
+        "active_value": 0
+      }
     },
     {
       "id": "debug-36",

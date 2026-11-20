@@ -221,7 +221,11 @@ impl Session {
         }
         // External RAF input is a physical scene, independent of a cold reset.
         // Preserve its immutable frame instead of retaining and reparsing the file.
-        let mosaic = self.core.resources.images()?.mosaic_frames()?;
+        // A board with no image inputs has no physical scene to preserve.
+        let mosaic = match self.core.resources.images() {
+            Ok(images) => images.mosaic_frames()?,
+            Err(_) => Vec::new(),
+        };
         // This image was captured before the first instruction or caller holds.
         // Reuse the same execution owner and RAM reservation across cold resets.
         self.core.restore(&reset)?;

@@ -365,6 +365,18 @@
           "active_level": true
         }
       ]
+    },
+    {
+      "id": "power",
+      "kind": "control",
+      "signals": [
+        {
+          "kind": "serial_status",
+          "block_id": "serial2",
+          "register": 96,
+          "mask": 1
+        }
+      ]
     }
   ],
   "parts": [
