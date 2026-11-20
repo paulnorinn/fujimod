@@ -11,6 +11,10 @@ declare class Camera {
     free(): void;
     [Symbol.dispose](): void;
     /**
+     * Every analog channel of a node, as the firmware currently samples them.
+     */
+    adcSamples(node: string): Uint16Array;
+    /**
      * Native first-start and REC observation, bounded by an instruction budget.
      */
     bootToRec(limit: bigint, progress?: (ticks: number) => void): RecReport;
@@ -36,6 +40,19 @@ declare class Camera {
      * Complete stopped-session state as a canonical typed archive.
      */
     completeState(): Uint8Array;
+    /**
+     * Compile and install the control wiring and input confirmation from the
+     * bundled catalog for \`firmware_id\`.
+     *
+     * Prepared bundles name their catalog controls ahead of time. An
+     * X-Processor Pro bundle carries the checked execution and device graphs
+     * but no catalog, so the specs are compiled here once the firmware has
+     * loaded its configuration. Does nothing when controls are already
+     * connected.
+     * Returns the compiled control state as JSON: every input with its
+     * supported flag and, when unsupported, the compile problem.
+     */
+    connectControls(firmware_id: string, ticks_per_second: number): string;
     deviceStates(kind: string): DeviceStates;
     /**
      * Set the stopped host worker preference (0 or 2) and report it.
@@ -67,6 +84,10 @@ declare class Camera {
      * Reconstruct a running session from `exportSnapshot` or `errorReport` bytes.
      */
     static fromSnapshot(bytes: Uint8Array): Camera;
+    /**
+     * One digital input pad of a node.
+     */
+    gpioLevel(node: string, port: number, pin: number): boolean;
     history(): InputLog;
     /**
      * Queue a physical key edge at guest tick `at` (resolved bodies).
@@ -108,6 +129,14 @@ declare class Camera {
      * Use a RAF's mosaic as the sensor scene.
      */
     sceneRaf(raf: Uint8Array): void;
+    /**
+     * Set every analog channel of a node at once.
+     */
+    setAdcSamples(node: string, samples: Uint16Array): void;
+    /**
+     * Drive one digital input pad of a node.
+     */
+    setGpio(node: string, port: number, pin: number, high: boolean): void;
     setPosition(id: string, position: string): SessionState;
     /**
      * Show RGB888 pixels, tightly packed and top row first, as the scene.

@@ -99,7 +99,7 @@ impl Session {
                     Some("off") => false,
                     _ => return Err("USB boot position must be on or off".into()),
                 };
-                self.core.logic_input("usb_cable", connected)?;
+                self.core.usb_cable(connected)?;
                 continue;
             }
             let position = if let Some(p) = &input.position {
@@ -193,7 +193,11 @@ impl Session {
                 {
                     return Err("USB boot position must be on or off".into());
                 }
-                self.core.resources.logic_level("usb_cable")?;
+                // The cable level survives a cold reset; a run without a
+                // declared cable input has nothing to validate or apply.
+                if self.core.usb_cable_declared() {
+                    self.core.usb_cable(input.position.as_deref() == Some("on"))?;
+                }
                 continue;
             }
             let position = if let Some(p) = &input.position {
@@ -217,7 +221,11 @@ impl Session {
         }
         // External RAF input is a physical scene, independent of a cold reset.
         // Preserve its immutable frame instead of retaining and reparsing the file.
-        let mosaic = self.core.resources.images()?.mosaic_frames()?;
+        // A board with no image inputs has no physical scene to preserve.
+        let mosaic = match self.core.resources.images() {
+            Ok(images) => images.mosaic_frames()?,
+            Err(_) => Vec::new(),
+        };
         // This image was captured before the first instruction or caller holds.
         // Reuse the same execution owner and RAM reservation across cold resets.
         self.core.restore(&reset)?;
@@ -236,9 +244,10 @@ impl Session {
         for (id, p) in poses {
             self.core.set_position(&id, &p)?;
         }
-        if let Some(input) = inputs.iter().find(|input| input.id == "usb") {
-            self.core
-                .logic_input("usb_cable", input.position.as_deref() == Some("on"))?;
+        if let Some(input) = inputs.iter().find(|input| input.id == "usb")
+            && self.core.usb_cable_declared()
+        {
+            self.core.usb_cable(input.position.as_deref() == Some("on"))?;
         }
         if !saved.powered_on {
             for old in self.frames.values_mut() {

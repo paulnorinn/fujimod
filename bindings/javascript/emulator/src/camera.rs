@@ -53,7 +53,7 @@ struct Graph {
     firmware_id: String,
     boot_source: BootSource,
     execution: factory::Graph,
-    devices: Plan,
+    devices: serde_json::Value,
     #[serde(default)]
     scene: fujimod_emulator_preparation::Spec,
     #[serde(default)]
@@ -87,6 +87,12 @@ enum Asset {
         pattern: Vec<u8>,
         size: usize,
     },
+    XppFlash {
+        dat_offset: u64,
+        flash_size: usize,
+        #[serde(default)]
+        overlays: Vec<(u64, Vec<u8>)>,
+    },
 }
 impl Asset {
     fn build(self, dat: &[u8]) -> Result<Vec<u8>, String> {
@@ -109,6 +115,27 @@ impl Asset {
                 if size <= 128 << 20 && !pattern.is_empty() && size % pattern.len() == 0 =>
             {
                 Ok(pattern.repeat(size / pattern.len()))
+            }
+            Self::XppFlash {
+                dat_offset,
+                flash_size,
+                overlays,
+            } if flash_size <= 128 << 20 => {
+                let start = usize::try_from(dat_offset).map_err(|e| e.to_string())?;
+                let body = dat
+                    .get(start..)
+                    .ok_or("XPP flash DAT offset past end of update image")?;
+                let mut flash = fujimod_firmware::invert(body);
+                if flash.len() < flash_size {
+                    flash.resize(flash_size, 0xff);
+                }
+                for (offset, bytes) in overlays {
+                    let at = usize::try_from(offset).map_err(|e| e.to_string())?;
+                    let end = at.checked_add(bytes.len()).ok_or("XPP overlay overflow")?;
+                    let dst = flash.get_mut(at..end).ok_or("XPP overlay out of bounds")?;
+                    dst.copy_from_slice(&bytes);
+                }
+                Ok(flash)
             }
             _ => Err("invalid or oversized scene asset".into()),
         }
@@ -315,6 +342,109 @@ impl Session {
         if config.schema != 1 {
             return Err("prepared camera document schema mismatch".into());
         }
+        if config.prepared["devices"]
+            .get("kind")
+            .and_then(|v| v.as_str())
+            == Some("xpp")
+        {
+            let firmware_id = config.prepared["firmware_id"]
+                .as_str()
+                .ok_or("prepared run has no firmware identity")?
+                .to_owned();
+            let firmware_sha256 =
+                config.prepared["resolved"]["reference"]["firmware"]["update"]["sha256"]
+                    .as_str()
+                    .ok_or("prepared run has no firmware update identity")?
+                    .to_owned();
+            let quantum = config.prepared["quantum"]
+                .as_u64()
+                .and_then(|q| usize::try_from(q).ok())
+                .filter(|q| *q > 0)
+                .ok_or("prepared run has no positive quantum")?;
+            let execution: factory::Graph =
+                serde_json::from_value(config.prepared["execution"].clone())
+                    .map_err(|e| e.to_string())?;
+            let spec: fujimod_emulator_xpp::board::Spec =
+                serde_json::from_value(config.prepared["devices"].clone())
+                    .map_err(|e| e.to_string())?;
+            let scanout = spec
+                .nodes
+                .iter()
+                .find(|n| matches!(n.model, fujimod_emulator_xpp::board::Model::DisplayOutput { .. }))
+                .map(|n| n.name.clone());
+            let mut assets = BTreeMap::new();
+            assets.insert("ffboot.bin".into(), boot_rom.clone());
+            assets.insert("xt20-211-statistics-window".into(), vec![0; 0x100000]);
+            let flash = Asset::XppFlash {
+                dat_offset: 604,
+                flash_size: 0x4000000,
+                overlays: {
+                    let mut ov = Vec::new();
+                    if let Some(cfg) = settings {
+                        ov.push((0x3840000, cfg));
+                    }
+                    if let Some(reg) = nand {
+                        if reg.len() >= 136 + 10049 + 17940 {
+                            ov.push((0x3820000, reg[0..136].to_vec()));
+                            ov.push((0x3320000, reg[136..136 + 10049].to_vec()));
+                            ov.push((0x3330000, reg[136 + 10049..136 + 10049 + 17940].to_vec()));
+                        }
+                    }
+                    ov
+                },
+            }
+            .build(&update)?;
+            let flash_asset = spec
+                .nodes
+                .iter()
+                .find_map(|n| match &n.model {
+                    fujimod_emulator_xpp::board::Model::Flash { asset, .. } => Some(asset.clone()),
+                    _ => None,
+                })
+                .unwrap_or_else(|| "flash".into());
+            assets.insert(flash_asset, flash);
+            assets.insert(format!("{firmware_id}-update"), update);
+            let mut core = fujimod_emulator_xpp::board::build(
+                execution,
+                spec,
+                &assets,
+                Mode::Strict,
+                RunEngine::Unicorn,
+            )?
+            .into_session(config.prepared)?;
+            core.board.set_execution_policy(policy)?;
+            core.board.write_physical(0, &boot_rom)?;
+            let browser = config.browser;
+            let storage = fujimod_emulator_session::durable::Spec {
+                cards: browser
+                    .card
+                    .as_ref()
+                    .map(|c| vec![c.node.clone()])
+                    .unwrap_or_default(),
+                nands: vec![],
+            };
+            let identity = camera_identity(&firmware_id, &firmware_sha256, &storage)?;
+            let mut session = Self::start_camera(
+                core,
+                Attachments {
+                    quantum,
+                    gpio: vec![],
+                    watch_pcs: browser.watch_pcs,
+                    card: browser.card,
+                    scene: browser.scene_input,
+                    preview: browser.preview,
+                    controls: browser.controls,
+                    contact_driver: browser.contact_driver,
+                    storage,
+                    identity,
+                    scanout,
+                    initial_positions: browser.initial_positions,
+                    boot_inputs: browser.boot_inputs,
+                },
+            )?;
+            session.construction = Some(construction);
+            return Ok(session);
+        }
         let quantum = config.prepared["quantum"]
             .as_u64()
             .and_then(|q| usize::try_from(q).ok())
@@ -402,9 +532,11 @@ impl Session {
         }
         if let Some(clock) = c.clock_seconds2000 {
             let mut devices = definition["devices"].clone();
-            fujimod_emulator_boot::apply_clock(&mut devices, clock)?;
-            g.devices = Plan::parse(&serde_json::to_vec(&devices).map_err(|e| e.to_string())?)?;
-            definition["devices"] = devices;
+            if devices.get("kind").and_then(|v| v.as_str()) != Some("xpp") {
+                fujimod_emulator_boot::apply_clock(&mut devices, clock)?;
+                g.devices = devices.clone();
+                definition["devices"] = devices;
+            }
         }
         if let Some(preview) = &g.preview {
             if preview.tick_hz == 0 || preview.period_ticks == 0 {
@@ -414,75 +546,117 @@ impl Session {
         }
         let images = decode(&g.firmware, dat)?;
         g.execution.validate()?;
-        g.devices.validate_reset_outputs(
-            &g.execution
-                .processors
-                .iter()
-                .map(|p| p.released)
-                .collect::<Vec<_>>(),
-        )?;
-        g.devices.validate_memory_outputs(
-            &g.execution
-                .decoders
-                .iter()
-                .map(|d| MemoryChoices {
-                    initial: d.initial,
-                    choices: d.choices.len(),
-                })
-                .collect::<Vec<_>>(),
-        )?;
-        let (scanout, nands) = device_roles(&g.devices)?;
-        let assets = g
+        let assets: BTreeMap<String, Vec<u8>> = g
             .assets
             .into_iter()
             .map(|(name, a)| Ok((name, a.build(dat)?)))
             .collect::<Result<_, String>>()?;
-        fujimod_emulator_exr2_board::register_board_builder();
-        fujimod_emulator_models::register();
-        let resources = g.scene.build(&assets)?;
-        let storage = fujimod_emulator_session::durable::Spec {
-            cards: g
-                .card
-                .as_ref()
-                .map(|c| vec![c.node.clone()])
-                .unwrap_or_default(),
-            nands,
-        };
-        let identity = camera_identity(&g.firmware_id, &g.firmware.sha256, &storage)?;
-        let built = g.devices.build(resources, 0, &mut RefuseAdapters)?;
-        let bus = Bus::from_graph(Mode::Strict, built.graph)?;
-        let mut board = g.execution.build(
-            factory::Options::new(RunEngine::Unicorn),
-            bus,
-            None,
-        )?;
-        board.set_execution_policy(policy)?;
-        for irq in built.core_interrupts {
-            board.configure_core_interrupts(irq.core, irq.device, Box::new(irq.inputs))?;
-        }
-        for image in images {
-            board.write_physical(image.base, &image.bytes)?;
-        }
-        for c in g.coprocessors {
-            let cpu = board.cpu(c.core)?;
-            let value = match c.value {
-                Some(value) => value,
-                None => cpu.coprocessor(c.register, None)?,
+        let (core, scanout, storage) =
+            if g.devices.get("kind").and_then(|v| v.as_str()) == Some("xpp") {
+                let spec: fujimod_emulator_xpp::board::Spec =
+                    serde_json::from_value(g.devices).map_err(|e| e.to_string())?;
+                let scanout = spec
+                    .nodes
+                    .iter()
+                    .find(|n| matches!(n.model, fujimod_emulator_xpp::board::Model::DisplayOutput { .. }))
+                    .map(|n| n.name.clone());
+                let mut core = fujimod_emulator_xpp::board::build(
+                    g.execution,
+                    spec,
+                    &assets,
+                    Mode::Strict,
+                    RunEngine::Unicorn,
+                )?
+                .into_session(definition)?;
+                core.board.set_execution_policy(policy)?;
+                if images.is_empty() {
+                    if let Some(boot_rom) = assets.get("ffboot.bin") {
+                        core.board.write_physical(0, boot_rom)?;
+                    }
+                } else {
+                    for image in images {
+                        core.board.write_physical(image.base, &image.bytes)?;
+                    }
+                }
+                let storage = fujimod_emulator_session::durable::Spec {
+                    cards: g
+                        .card
+                        .as_ref()
+                        .map(|c| vec![c.node.clone()])
+                        .unwrap_or_default(),
+                    nands: vec![],
+                };
+                (core, scanout, storage)
+            } else {
+                let plan = Plan::parse(
+                    &serde_json::to_vec(&g.devices).map_err(|e| e.to_string())?,
+                )?;
+                plan.validate_reset_outputs(
+                    &g.execution
+                        .processors
+                        .iter()
+                        .map(|p| p.released)
+                        .collect::<Vec<_>>(),
+                )?;
+                plan.validate_memory_outputs(
+                    &g.execution
+                        .decoders
+                        .iter()
+                        .map(|d| MemoryChoices {
+                            initial: d.initial,
+                            choices: d.choices.len(),
+                        })
+                        .collect::<Vec<_>>(),
+                )?;
+                let (scanout, nands) = device_roles(&plan)?;
+                fujimod_emulator_exr2_board::register_board_builder();
+                fujimod_emulator_models::register();
+                let resources = g.scene.build(&assets)?;
+                let storage = fujimod_emulator_session::durable::Spec {
+                    cards: g
+                        .card
+                        .as_ref()
+                        .map(|c| vec![c.node.clone()])
+                        .unwrap_or_default(),
+                    nands,
+                };
+                let built = plan.build(resources, 0, &mut RefuseAdapters)?;
+                let bus = Bus::from_graph(Mode::Strict, built.graph)?;
+                let mut board = g.execution.build(
+                    factory::Options::new(RunEngine::Unicorn),
+                    bus,
+                    None,
+                )?;
+                board.set_execution_policy(policy)?;
+                for irq in built.core_interrupts {
+                    board.configure_core_interrupts(irq.core, irq.device, Box::new(irq.inputs))?;
+                }
+                for image in images {
+                    board.write_physical(image.base, &image.bytes)?;
+                }
+                for c in g.coprocessors {
+                    let cpu = board.cpu(c.core)?;
+                    let value = match c.value {
+                        Some(value) => value,
+                        None => cpu.coprocessor(c.register, None)?,
+                    };
+                    cpu.coprocessor(c.register, Some(value | c.set_bits))?;
+                }
+                let core = fujimod_emulator_session::Session {
+                    definition,
+                    controls: None,
+                    contact_driver: None,
+                    board,
+                    nodes: built.node_ids,
+                    resources: built.resources,
+                    contacts: built.contacts,
+                    power_cycle: None,
+                    window_action: None,
+                    recording_frames: Default::default(),
+                };
+                (core, scanout, storage)
             };
-            cpu.coprocessor(c.register, Some(value | c.set_bits))?;
-        }
-        let core = fujimod_emulator_session::Session {
-            definition,
-            controls: None,
-            contact_driver: None,
-            board,
-            nodes: built.node_ids,
-            resources: built.resources,
-            contacts: built.contacts,
-            power_cycle: None,
-            window_action: None,
-            recording_frames: Default::default(),
-        };
+        let identity = camera_identity(&g.firmware_id, &g.firmware.sha256, &storage)?;
         let mut session = Self::start_camera(
             core,
             Attachments {

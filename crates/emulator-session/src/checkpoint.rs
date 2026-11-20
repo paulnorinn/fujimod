@@ -66,8 +66,14 @@ impl Session {
             self.validate_snapshot(saved)?;
             self.board.restore_keyframe(&saved.board)?;
             self.resources.restore_checkpoint(&saved.resources)?;
-            self.controls = saved.controls.clone();
-            self.contact_driver = saved.contact_driver.clone();
+            // A snapshot without a panel must not strip one the session has
+            // since connected: the panel is host state, not guest state.
+            if saved.controls.is_some() {
+                self.controls = saved.controls.clone();
+            }
+            if saved.contact_driver.is_some() {
+                self.contact_driver = saved.contact_driver.clone();
+            }
             self.recording_frames.borrow_mut().clear();
             if let Some(cycle) = &mut self.power_cycle {
                 cycle.clear_retained();

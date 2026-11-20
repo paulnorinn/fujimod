@@ -34,6 +34,19 @@ pub trait DriveInput: Send + Sync {
     fn set_input(&self, pin: Pin, high: bool);
 }
 
+/// A GPIO block whose external input levels are set directly, with no pad
+/// register model and no queued request stage.
+///
+/// The EXR II boards present their contacts through the pad registers; the
+/// X-Processor Pro sets the sampled input words directly, so the generic
+/// session input path needs a block it can drive and read.
+pub trait DirectPins: Send + Sync {
+    fn set_input(&self, pin: Pin, high: bool) -> Result<(), String>;
+    fn input(&self, pin: Pin) -> Result<bool, String>;
+    /// Every bank's sampled input word.
+    fn input_levels(&self) -> [u32; 16];
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Selection {

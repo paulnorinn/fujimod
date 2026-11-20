@@ -59,6 +59,38 @@ impl Session {
         }
         Ok(())
     }
+    /// Apply the USB cable's physical position.
+    ///
+    /// The EXR II bodies declare a logic-level `usb_cable` wire. The
+    /// X-Processor Pro declares the VBUS contact as an application GPIO pin,
+    /// carried in the run definition as `usb_vbus: [bank, pin]`. A run that
+    /// declares neither has no cable input to drive.
+    pub fn usb_cable(&mut self, connected: bool) -> Result<(), String> {
+        if self.usb_cable_wire() {
+            return self.logic_input("usb_cable", connected);
+        }
+        match self.usb_vbus() {
+            Some((bank, pin)) => self.gpio("gpio", bank, pin, connected),
+            None => Ok(()),
+        }
+    }
+    /// Whether this run declares a USB cable input at all.
+    pub fn usb_cable_declared(&self) -> bool {
+        self.usb_cable_wire() || self.usb_vbus().is_some()
+    }
+    fn usb_cable_wire(&self) -> bool {
+        self.resources.wires.contains_key("usb_cable")
+    }
+    fn usb_vbus(&self) -> Option<(u8, u8)> {
+        let vbus = self.definition.get("usb_vbus")?;
+        let [bank, pin] = vbus.as_array()?.as_slice() else {
+            return None;
+        };
+        Some((
+            u8::try_from(bank.as_u64()?).ok()?,
+            u8::try_from(pin.as_u64()?).ok()?,
+        ))
+    }
     /// Change an explicitly wired HDMI sink input while processors are
     /// stopped, and deliver the corresponding HPD edge through the
     /// transmitter's native device context.
@@ -150,19 +182,25 @@ impl Session {
             .ok_or_else(|| format!("no such session node {name}"))
     }
     pub fn gpio(&mut self, name: &str, port: u8, pin: u8, high: bool) -> Result<(), String> {
-        self.resources.pads(name)?.request(
-            fujimod_emulator_devices::parts::pins::Pin { port, pin },
-            high,
-        )?;
+        let pin = fujimod_emulator_devices::parts::pins::Pin { port, pin };
+        match self.resources.direct_pins(name) {
+            Some(direct) => direct.set_input(pin, high)?,
+            None => self.resources.pads(name)?.request(pin, high)?,
+        }
         self.board.inputs_changed(self.node(name)?)
     }
     pub fn gpio_input_levels(&self, name: &str) -> Result<[u32; 16], String> {
-        Ok(self.resources.pads(name)?.input_levels())
+        match self.resources.direct_pins(name) {
+            Some(direct) => Ok(direct.input_levels()),
+            None => Ok(self.resources.pads(name)?.input_levels()),
+        }
     }
     pub fn gpio_level(&self, name: &str, port: u8, pin: u8) -> Result<bool, String> {
-        self.resources
-            .pads(name)?
-            .input_level(fujimod_emulator_devices::parts::pins::Pin { port, pin })
+        let pin = fujimod_emulator_devices::parts::pins::Pin { port, pin };
+        match self.resources.direct_pins(name) {
+            Some(direct) => direct.input(pin),
+            None => self.resources.pads(name)?.input_level(pin),
+        }
     }
     pub fn gpio_pad_state(
         &self,

@@ -55,8 +55,10 @@
 //! A declared handshake clock makes +0 a bit-16 status: a falling request
 //! sets status after that delay; a set request clears it. Other words retain
 //! writes. This is the same output controller with a timed completion law.
+use fujimod_emulator_devices::capability::ScanoutSource;
 use fujimod_emulator_devices::graphics::scanout::Frame;
 use fujimod_emulator_devices::{Cx, Device};
+use fujimod_framebuffer::frame::{Frame as HostFrame, State};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -253,12 +255,21 @@ impl Output {
     fn word(&self, offset: u64) -> u32 {
         self.words.get(&offset).copied().unwrap_or(0)
     }
-    fn compose(&self,cx:&mut Cx<'_>)->Result<Option<(u32,u32,Vec<u8>,u64)>,()> {
-        fujimod_framebuffer_xpp::Decoder{words:&self.words}.compose(|a,n|cx.ram_bytes(a,n))
+    fn compose_with(
+        &self,
+        read: &mut dyn FnMut(u64, usize) -> Result<Vec<u8>, String>,
+    ) -> Result<Option<(u32, u32, Vec<u8>, u64)>, ()> {
+        fujimod_framebuffer_xpp::Decoder { words: &self.words }.compose(read)
+    }
+    fn compose(&self, cx: &mut Cx<'_>) -> Result<Option<(u32, u32, Vec<u8>, u64)>, ()> {
+        self.compose_with(&mut |a, n| cx.ram_bytes(a, n))
     }
     /// The registers and source bytes `compose` reads; equal inputs compose
     /// the same frame. `None` when a layer cannot be read.
-    fn inputs(&self, cx: &mut Cx<'_>) -> Option<Vec<u8>> {
+    fn inputs_with(
+        &self,
+        read: &mut dyn FnMut(u64, usize) -> Result<Vec<u8>, String>,
+    ) -> Option<Vec<u8>> {
         let mut key: Vec<u8> = self
             .words
             .iter()
@@ -267,14 +278,17 @@ impl Output {
         if self.word(CONTROL) & VIDEO_ENABLE != 0 {
             let (w, h) = fujimod_framebuffer_xpp::Decoder::extent(self.word(VIDEO_SIZE))?;
             let buffer = u64::from(self.word(VIDEO_BUFFER));
-            key.extend(cx.ram_bytes(buffer, w as usize * h as usize * 2).ok()?);
+            key.extend(read(buffer, w as usize * h as usize * 2).ok()?);
         }
         for layer in (0..4u64).filter(|n| self.word(LAYER_ENABLE) & 1 << n != 0) {
             let (w, h) = fujimod_framebuffer_xpp::Decoder::extent(self.word(LAYER_SIZE + 4 * layer))?;
             let buffer = u64::from(self.word(LAYER_BUFFER + 4 * layer));
-            key.extend(cx.ram_bytes(buffer, w as usize * h as usize * 4).ok()?);
+            key.extend(read(buffer, w as usize * h as usize * 4).ok()?);
         }
         Some(key)
+    }
+    fn inputs(&self, cx: &mut Cx<'_>) -> Option<Vec<u8>> {
+        self.inputs_with(&mut |a, n| cx.ram_bytes(a, n))
     }
     fn scan(&mut self, cx: &mut Cx<'_>, scanout: Scanout) {
         let inputs = self.inputs(cx);
@@ -357,6 +371,12 @@ impl Output {
 impl Device for Output {
     fn name(&self) -> &'static str {
         "xpp-display-output"
+    }
+    fn scanout_source(&self) -> Option<&(dyn ScanoutSource + 'static)> {
+        Some(self)
+    }
+    fn scanout_source_mut(&mut self) -> Option<&mut (dyn ScanoutSource + 'static)> {
+        Some(self)
     }
     fn read(&mut self, cx: &mut Cx<'_>, address: u64, size: u8) -> u64 {
         let Some(offset) = self.offset(cx, address, size) else {
@@ -498,6 +518,92 @@ impl Device for Output {
     fn fingerprint(&self) -> Result<Value, String> {
         Ok(self.checkpoint()?.state())
     }
+}
+
+/// The X-Processor Pro output as an observational scanout. Frames keep the OSD
+/// byte order (blue, green, red, alpha, premultiplied); `rgb` is the straight
+/// red, green, blue view the presentation path expects.
+impl ScanoutSource for Output {
+    fn metadata(&self) -> Value {
+        let words = self
+            .words
+            .iter()
+            .map(|(offset, value)| (format!("{offset:#x}"), format!("{value:#x}")))
+            .collect::<BTreeMap<_, _>>();
+        json!({
+            "kind": self.name(),
+            "base": self.base,
+            "scanout": self.scanout.map(|scanout| json!({
+                "output": scanout.output,
+                "period": scanout.period,
+            })),
+            "words": words,
+            "sequence": self.capture.sequence,
+            "hash": self.capture.hash,
+        })
+    }
+    fn frame(
+        &self,
+        instance: usize,
+        pixels: bool,
+        read: &mut dyn FnMut(u64, usize) -> Result<Vec<u8>, String>,
+        diagnostic_hashes: bool,
+    ) -> Result<Option<HostFrame>, String> {
+        let Some(scanout) = self.scanout else {
+            return Ok(None);
+        };
+        if instance != scanout.output {
+            return Ok(None);
+        }
+        let Some((width, height, bgra, source)) = self
+            .compose_with(read)
+            .map_err(|()| "unsupported X-Processor Pro display layer setup".to_string())?
+        else {
+            return Ok(None);
+        };
+        let rgb = pixels.then(|| straight_rgb(&bgra));
+        Ok(Some(HostFrame {
+            raw: bgra,
+            rgb,
+            png: None,
+            state: State::dict(vec![
+                ("kind", State::str("xpp-display-output")),
+                ("output", State::Int(scanout.output as i64)),
+                ("source", State::hex(source)),
+                ("diagnostic_hashes", State::Bool(diagnostic_hashes)),
+            ]),
+            width: width as usize,
+            height: height as usize,
+        }))
+    }
+    fn main_frame(
+        &self,
+        instance: usize,
+        pixels: bool,
+        read: &mut dyn FnMut(u64, usize) -> Result<Vec<u8>, String>,
+        diagnostic_hashes: bool,
+    ) -> Result<Option<HostFrame>, String> {
+        // The OSD layers are the only difference from the video plane; the
+        // browser presentation path reads the composed frame.
+        self.frame(instance, pixels, read, diagnostic_hashes)
+    }
+}
+
+/// Convert premultiplied blue, green, red, alpha bytes to straight red, green, blue.
+fn straight_rgb(bgra: &[u8]) -> Vec<u8> {
+    let mut rgb = Vec::with_capacity(bgra.len() / 4 * 3);
+    for px in bgra.as_chunks::<4>().0 {
+        let alpha = u32::from(px[3]);
+        if alpha == 0 {
+            rgb.extend_from_slice(&[0, 0, 0]);
+            continue;
+        }
+        for channel in [px[2], px[1], px[0]] {
+            let straight = (u32::from(channel) * 255 + alpha / 2) / alpha;
+            rgb.push(straight.min(255) as u8);
+        }
+    }
+    rgb
 }
 
 /// Mutable display output state: words, capture clock and handshake.
@@ -994,5 +1100,86 @@ mod tests {
         assert_eq!(read(&mut d, &mut h, 0xfff64010), 0x33);
         write(&mut d, &mut h, 0xfff64000, 0x10020);
         assert_eq!(read(&mut d, &mut h, 0xfff64000), 0);
+    }
+
+    #[test]
+    fn straight_rgb_unpremultiplies_the_osd_byte_order() {
+        // Blue, green, red, alpha: opaque red stays red, half white becomes white.
+        assert_eq!(straight_rgb(&[0, 0, 255, 255]), [255, 0, 0]);
+        assert_eq!(straight_rgb(&[128, 128, 128, 128]), [255, 255, 255]);
+        // A fully transparent pixel cannot be unpremultiplied.
+        assert_eq!(straight_rgb(&[9, 9, 9, 0]), [0, 0, 0]);
+        assert_eq!(straight_rgb(&[]), Vec::<u8>::new());
+    }
+
+    #[test]
+    fn scanout_source_observes_the_composed_bgra_frame_as_straight_rgb() {
+        const BASE: u64 = 0xfff64000;
+        let mut out = Output::new(
+            BASE,
+            0x3000,
+            &[],
+            &[],
+            Some(Scanout {
+                output: 0,
+                period: 10,
+            }),
+        )
+        .unwrap();
+        let mut host = Screen {
+            ram: vec![0; 0x100],
+            ..Screen::default()
+        };
+        // One 2 x 1 layer: opaque red then an untouched (transparent) pixel.
+        host.ram[0x40..0x48].copy_from_slice(&[0, 0, 255, 255, 0, 0, 0, 0]);
+        let write = |out: &mut Output, host: &mut Screen, offset: u64, value: u32| {
+            out.write(
+                &mut Cx::new(host, 0, 0, 0),
+                BASE + offset,
+                4,
+                u64::from(value),
+            );
+        };
+        write(&mut out, &mut host, CONTROL, OSD_ENABLE);
+        write(&mut out, &mut host, OUTPUT_SIZE, 0x1_0000);
+        write(&mut out, &mut host, LAYER_ENABLE, 1);
+        write(&mut out, &mut host, LAYER_SIZE, 0x1_0000);
+        write(&mut out, &mut host, LAYER_BUFFER, 0x40);
+        let ram = host.ram.clone();
+        let mut read = |address: u64, count: usize| {
+            let start = address as usize;
+            ram.get(start..start + count)
+                .map(<[u8]>::to_vec)
+                .ok_or_else(|| "outside RAM".to_string())
+        };
+        // Only the declared output instance observes a frame.
+        assert!(
+            ScanoutSource::frame(&out, 1, true, &mut read, false)
+                .unwrap()
+                .is_none()
+        );
+        let frame = ScanoutSource::frame(&out, 0, true, &mut read, false)
+            .unwrap()
+            .expect("a composed frame");
+        assert_eq!((frame.width, frame.height), (2, 1));
+        assert_eq!(frame.raw, [0, 0, 255, 255, 0, 0, 0, 0]);
+        assert_eq!(frame.rgb.as_deref(), Some(&[255, 0, 0, 0, 0, 0][..]));
+        // Without requested pixels the raw byte order is still reported.
+        let raw = ScanoutSource::frame(&out, 0, false, &mut read, false)
+            .unwrap()
+            .expect("a composed frame");
+        assert!(raw.rgb.is_none());
+        assert_eq!(raw.width, 2);
+        // A declared output with no scanout clock observes nothing.
+        let idle = Output::new(BASE, 0x1000, &[], &[], None).unwrap();
+        assert!(
+            ScanoutSource::frame(&idle, 0, true, &mut read, false)
+                .unwrap()
+                .is_none()
+        );
+        let metadata = ScanoutSource::metadata(&out);
+        assert_eq!(metadata["kind"], "xpp-display-output");
+        assert_eq!(metadata["scanout"]["output"], 0);
+        assert_eq!(metadata["scanout"]["period"], 10);
     }
 }

@@ -1,0 +1,3218 @@
+{
+  "$schema": "https://fujimod.com/schemas/control-ids.schema.json",
+  "schema": 1,
+  "id": "xpro2-511-control-ids",
+  "firmware_id": "xpro2-511",
+  "scanner": {
+    "base": 14850712,
+    "count": 103,
+    "stride": 28,
+    "lookup": 11824528,
+    "sha256": "cf503df7b3687e0972eb215a9d02285dfee3f2273194dc4a380a63bdbf4b4887"
+  },
+  "input_readers": {
+    "calibration": null,
+    "scanner": {
+      "stable_offset": 21,
+      "stable_width": 1,
+      "pressed_value": 1,
+      "released_value": 0,
+      "routine": {
+        "address": 11831244,
+        "size": 64,
+        "sha256": "b9d00ee974836130e376ae80c5dc5f581ecc05b7382f027bf5a6fa1d22172d4b"
+      }
+    }
+  },
+  "native_key_names": null,
+  "event_translation": null,
+  "debug_keys": [
+    {
+      "name": "EXE_M",
+      "event": 1
+    },
+    {
+      "name": "UP",
+      "event": 2
+    },
+    {
+      "name": "DOWN",
+      "event": 3
+    },
+    {
+      "name": "LEFT",
+      "event": 4
+    },
+    {
+      "name": "RIGHT",
+      "event": 5
+    },
+    {
+      "name": "POWER",
+      "event": 6
+    },
+    {
+      "name": "S1",
+      "event": 7
+    },
+    {
+      "name": "S2",
+      "event": 8
+    },
+    {
+      "name": "DISP_B",
+      "event": 9
+    },
+    {
+      "name": "K_PLAY",
+      "event": 10
+    },
+    {
+      "name": "MF_AF_M",
+      "event": 23
+    },
+    {
+      "name": "MF_AF_A",
+      "event": 24
+    },
+    {
+      "name": "MF_AF_C",
+      "event": 25
+    },
+    {
+      "name": "AE-LOCK",
+      "event": 29
+    },
+    {
+      "name": "FUNCTION",
+      "event": 32
+    },
+    {
+      "name": "EVF_OVF",
+      "event": 33
+    },
+    {
+      "name": "CMD_PUSH",
+      "event": 35
+    },
+    {
+      "name": "CMD_LEFT",
+      "event": 36
+    },
+    {
+      "name": "CMD_RIGHT",
+      "event": 37
+    },
+    {
+      "name": "AE",
+      "event": 39
+    },
+    {
+      "name": "K_Q",
+      "event": 42
+    },
+    {
+      "name": "8DIR_U",
+      "event": 51
+    },
+    {
+      "name": "8DIR_R",
+      "event": 53
+    },
+    {
+      "name": "8DIR_D",
+      "event": 55
+    },
+    {
+      "name": "8DIR_L",
+      "event": 57
+    },
+    {
+      "name": "8DIR_PUSH",
+      "event": 59
+    },
+    {
+      "name": "CMD2_L",
+      "event": 60
+    },
+    {
+      "name": "CMD2_R",
+      "event": 61
+    },
+    {
+      "name": "AF-LOCK",
+      "event": 8209
+    },
+    {
+      "name": "CMD2_PUSH",
+      "event": 8217
+    },
+    {
+      "name": "VIEW",
+      "event": 8232
+    },
+    {
+      "name": "FUNCTION2",
+      "event": 8233
+    },
+    {
+      "name": "DELETE",
+      "event": 8240
+    },
+    {
+      "name": "ND",
+      "event": 8257
+    },
+    {
+      "name": "S-A",
+      "event": 12315
+    },
+    {
+      "name": "S-1/8000",
+      "event": 12316
+    },
+    {
+      "name": "S-1/4000",
+      "event": 12317
+    },
+    {
+      "name": "S-1/2000",
+      "event": 12318
+    },
+    {
+      "name": "S-1/1000",
+      "event": 12319
+    },
+    {
+      "name": "S-1/500",
+      "event": 12320
+    },
+    {
+      "name": "S-1/250",
+      "event": 12321
+    },
+    {
+      "name": "S-1/125",
+      "event": 12323
+    },
+    {
+      "name": "S-1/60",
+      "event": 12324
+    },
+    {
+      "name": "S-1/30",
+      "event": 12325
+    },
+    {
+      "name": "S-1/15",
+      "event": 12326
+    },
+    {
+      "name": "S-1/8",
+      "event": 12327
+    },
+    {
+      "name": "S-1/4",
+      "event": 12328
+    },
+    {
+      "name": "S-1/2",
+      "event": 12329
+    },
+    {
+      "name": "S-1/1",
+      "event": 12330
+    },
+    {
+      "name": "S-T",
+      "event": 12331
+    },
+    {
+      "name": "S-B",
+      "event": 12332
+    },
+    {
+      "name": "E-D+3.0",
+      "event": 12333
+    },
+    {
+      "name": "E-D+2.7",
+      "event": 12334
+    },
+    {
+      "name": "E-D+2.3",
+      "event": 12335
+    },
+    {
+      "name": "E-D+2.0",
+      "event": 12336
+    },
+    {
+      "name": "E-D+1.7",
+      "event": 12337
+    },
+    {
+      "name": "E-D+1.3",
+      "event": 12338
+    },
+    {
+      "name": "E-D+1.0",
+      "event": 12339
+    },
+    {
+      "name": "E-D+0.7",
+      "event": 12340
+    },
+    {
+      "name": "E-D+0.3",
+      "event": 12341
+    },
+    {
+      "name": "E-D-0.0",
+      "event": 12342
+    },
+    {
+      "name": "E-D-0.3",
+      "event": 12343
+    },
+    {
+      "name": "E-D-0.7",
+      "event": 12344
+    },
+    {
+      "name": "E-D-1.0",
+      "event": 12345
+    },
+    {
+      "name": "E-D-1.3",
+      "event": 12346
+    },
+    {
+      "name": "E-D-1.7",
+      "event": 12347
+    },
+    {
+      "name": "E-D-2.0",
+      "event": 12348
+    },
+    {
+      "name": "E-D-2.3",
+      "event": 12349
+    },
+    {
+      "name": "E-D-2.7",
+      "event": 12350
+    },
+    {
+      "name": "E-D-3.0",
+      "event": 12351
+    },
+    {
+      "name": "E-D=C",
+      "event": 12352
+    },
+    {
+      "name": "ISO_A",
+      "event": 20503
+    },
+    {
+      "name": "ISO_L",
+      "event": 20504
+    },
+    {
+      "name": "I200",
+      "event": 20505
+    },
+    {
+      "name": "I200_1_3",
+      "event": 20506
+    },
+    {
+      "name": "I200_2_3",
+      "event": 20507
+    },
+    {
+      "name": "I400",
+      "event": 20508
+    },
+    {
+      "name": "I400_1_3",
+      "event": 20509
+    },
+    {
+      "name": "I400_2_3",
+      "event": 20510
+    },
+    {
+      "name": "I800",
+      "event": 20511
+    },
+    {
+      "name": "I800_1_3",
+      "event": 20512
+    },
+    {
+      "name": "I800_2_3",
+      "event": 20513
+    },
+    {
+      "name": "I1600",
+      "event": 20514
+    },
+    {
+      "name": "I1600_1_3",
+      "event": 20515
+    },
+    {
+      "name": "I1600_2_3",
+      "event": 20516
+    },
+    {
+      "name": "I3200",
+      "event": 20517
+    },
+    {
+      "name": "I3200_1_3",
+      "event": 20518
+    },
+    {
+      "name": "I3200_2_3",
+      "event": 20519
+    },
+    {
+      "name": "I6400",
+      "event": 20520
+    },
+    {
+      "name": "I6400_1_3",
+      "event": 20521
+    },
+    {
+      "name": "I6400_2_3",
+      "event": 20522
+    },
+    {
+      "name": "I12800",
+      "event": 20523
+    },
+    {
+      "name": "ISO_H1",
+      "event": 20524
+    }
+  ],
+  "inputs": [
+    {
+      "id": "row-6",
+      "event": 8232,
+      "debug_key": "VIEW",
+      "target": {
+        "kind": "control",
+        "control_id": "view_mode_button"
+      },
+      "scanner": {
+        "index": 6,
+        "witness": {
+          "physical_key": 30,
+          "input_kind": "kind_2",
+          "source": 15,
+          "lower": 1,
+          "upper": 0
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-0-15",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-7",
+      "event": 39,
+      "debug_key": "AE",
+      "target": {
+        "kind": "control",
+        "control_id": "metering_button"
+      },
+      "scanner": {
+        "index": 7,
+        "witness": {
+          "physical_key": 37,
+          "input_kind": "kind_2",
+          "source": 65544,
+          "lower": 1,
+          "upper": 0
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-1-8",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-8",
+      "event": 29,
+      "debug_key": "AE-LOCK",
+      "target": {
+        "kind": "control",
+        "control_id": "ae_lock_button"
+      },
+      "scanner": {
+        "index": 8,
+        "witness": {
+          "physical_key": 39,
+          "input_kind": "kind_2",
+          "source": 65543,
+          "lower": 1,
+          "upper": 0
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-1-7",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-9",
+      "event": 35,
+      "debug_key": "CMD_PUSH",
+      "target": {
+        "kind": "control",
+        "control_id": "front_command_dial"
+      },
+      "scanner": {
+        "index": 9,
+        "witness": {
+          "physical_key": 31,
+          "input_kind": "kind_2",
+          "source": 13,
+          "lower": 1,
+          "upper": 0
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-0-13",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-22",
+      "event": 2,
+      "debug_key": "UP",
+      "target": {
+        "kind": "control",
+        "control_id": "selector.up"
+      },
+      "scanner": {
+        "index": 22,
+        "witness": {
+          "physical_key": 24,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14366,
+          "upper": 14364
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14366,
+            "upper": 14364
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-23",
+      "event": 3,
+      "debug_key": "DOWN",
+      "target": {
+        "kind": "control",
+        "control_id": "selector.down"
+      },
+      "scanner": {
+        "index": 23,
+        "witness": {
+          "physical_key": 25,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14362,
+          "upper": 14360
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14362,
+            "upper": 14360
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-24",
+      "event": 4,
+      "debug_key": "LEFT",
+      "target": {
+        "kind": "control",
+        "control_id": "selector.left"
+      },
+      "scanner": {
+        "index": 24,
+        "witness": {
+          "physical_key": 26,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14358,
+          "upper": 14356
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14358,
+            "upper": 14356
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-25",
+      "event": 5,
+      "debug_key": "RIGHT",
+      "target": {
+        "kind": "control",
+        "control_id": "selector.right"
+      },
+      "scanner": {
+        "index": 25,
+        "witness": {
+          "physical_key": 27,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14354,
+          "upper": 14352
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14354,
+            "upper": 14352
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-26",
+      "event": 8209,
+      "debug_key": "AF-LOCK",
+      "target": {
+        "kind": "control",
+        "control_id": "af_lock_button"
+      },
+      "scanner": {
+        "index": 26,
+        "witness": {
+          "physical_key": 40,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14326,
+          "upper": 14324
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14326,
+            "upper": 14324
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-27",
+      "event": 42,
+      "debug_key": "K_Q",
+      "target": {
+        "kind": "control",
+        "control_id": "quick_menu_button"
+      },
+      "scanner": {
+        "index": 27,
+        "witness": {
+          "physical_key": 23,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14330,
+          "upper": 14328
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14330,
+            "upper": 14328
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-28",
+      "event": 9,
+      "debug_key": "DISP_B",
+      "target": {
+        "kind": "control",
+        "control_id": "disp_back_button"
+      },
+      "scanner": {
+        "index": 28,
+        "witness": {
+          "physical_key": 21,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14338,
+          "upper": 14336
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14338,
+            "upper": 14336
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-29",
+      "event": 8240,
+      "debug_key": "DELETE",
+      "target": {
+        "kind": "control",
+        "control_id": "delete_button"
+      },
+      "scanner": {
+        "index": 29,
+        "witness": {
+          "physical_key": 22,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14342,
+          "upper": 14340
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14342,
+            "upper": 14340
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-30",
+      "event": 10,
+      "debug_key": "K_PLAY",
+      "target": {
+        "kind": "control",
+        "control_id": "playback_button"
+      },
+      "scanner": {
+        "index": 30,
+        "witness": {
+          "physical_key": 9,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14346,
+          "upper": 14344
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14346,
+            "upper": 14344
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-31",
+      "event": 1,
+      "debug_key": "EXE_M",
+      "target": {
+        "kind": "control",
+        "control_id": "menu_ok_button"
+      },
+      "scanner": {
+        "index": 31,
+        "witness": {
+          "physical_key": 20,
+          "input_kind": "kind_1",
+          "source": 3,
+          "lower": 14350,
+          "upper": 14348
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14350,
+            "upper": 14348
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-33",
+      "event": 32,
+      "debug_key": "FUNCTION",
+      "target": {
+        "kind": "control",
+        "control_id": "movie_record_button"
+      },
+      "scanner": {
+        "index": 33,
+        "witness": {
+          "physical_key": 28,
+          "input_kind": "kind_2",
+          "source": 14,
+          "lower": 1,
+          "upper": 0
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-0-14",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-93",
+      "event": 8233,
+      "debug_key": "FUNCTION2",
+      "target": {
+        "kind": "control",
+        "control_id": "bright_frame_simulation_button"
+      },
+      "scanner": {
+        "index": 93,
+        "witness": {
+          "physical_key": 29,
+          "input_kind": "kind_2",
+          "source": 131076,
+          "lower": 1,
+          "upper": 0
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-2-4",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-94",
+      "event": 8217,
+      "debug_key": "CMD2_PUSH",
+      "target": {
+        "kind": "control",
+        "control_id": "rear_command_dial"
+      },
+      "scanner": {
+        "index": 94,
+        "witness": {
+          "physical_key": 34,
+          "input_kind": "kind_2",
+          "source": 131074,
+          "lower": 1,
+          "upper": 0
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-2-2",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-95",
+      "event": 33,
+      "debug_key": "EVF_OVF",
+      "target": {
+        "kind": "control",
+        "control_id": "viewfinder_selector"
+      },
+      "scanner": {
+        "index": 95,
+        "witness": {
+          "physical_key": 44,
+          "input_kind": "kind_2",
+          "source": 458756,
+          "lower": 1,
+          "upper": 0
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-7-4",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-34",
+      "event": 12351,
+      "debug_key": "E-D-3.0",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 34,
+        "witness": {
+          "physical_key": 86,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14106,
+          "upper": 14104
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14106,
+            "upper": 14104
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-35",
+      "event": 12350,
+      "debug_key": "E-D-2.7",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 35,
+        "witness": {
+          "physical_key": 85,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14110,
+          "upper": 14108
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14110,
+            "upper": 14108
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-36",
+      "event": 12349,
+      "debug_key": "E-D-2.3",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 36,
+        "witness": {
+          "physical_key": 84,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14114,
+          "upper": 14112
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14114,
+            "upper": 14112
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-37",
+      "event": 12348,
+      "debug_key": "E-D-2.0",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 37,
+        "witness": {
+          "physical_key": 83,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14118,
+          "upper": 14116
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14118,
+            "upper": 14116
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-38",
+      "event": 12347,
+      "debug_key": "E-D-1.7",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 38,
+        "witness": {
+          "physical_key": 82,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14122,
+          "upper": 14120
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14122,
+            "upper": 14120
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-39",
+      "event": 12346,
+      "debug_key": "E-D-1.3",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 39,
+        "witness": {
+          "physical_key": 81,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14126,
+          "upper": 14124
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14126,
+            "upper": 14124
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-40",
+      "event": 12345,
+      "debug_key": "E-D-1.0",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 40,
+        "witness": {
+          "physical_key": 80,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14130,
+          "upper": 14128
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14130,
+            "upper": 14128
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-41",
+      "event": 12344,
+      "debug_key": "E-D-0.7",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 41,
+        "witness": {
+          "physical_key": 79,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14134,
+          "upper": 14132
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14134,
+            "upper": 14132
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-42",
+      "event": 12343,
+      "debug_key": "E-D-0.3",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 42,
+        "witness": {
+          "physical_key": 78,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14138,
+          "upper": 14136
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14138,
+            "upper": 14136
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-43",
+      "event": 12342,
+      "debug_key": "E-D-0.0",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 43,
+        "witness": {
+          "physical_key": 77,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14142,
+          "upper": 14140
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14142,
+            "upper": 14140
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-44",
+      "event": 12341,
+      "debug_key": "E-D+0.3",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 44,
+        "witness": {
+          "physical_key": 76,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14146,
+          "upper": 14144
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14146,
+            "upper": 14144
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-45",
+      "event": 12340,
+      "debug_key": "E-D+0.7",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 45,
+        "witness": {
+          "physical_key": 75,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14150,
+          "upper": 14148
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14150,
+            "upper": 14148
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-46",
+      "event": 12339,
+      "debug_key": "E-D+1.0",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 46,
+        "witness": {
+          "physical_key": 74,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14154,
+          "upper": 14152
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14154,
+            "upper": 14152
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-47",
+      "event": 12338,
+      "debug_key": "E-D+1.3",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 47,
+        "witness": {
+          "physical_key": 73,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14158,
+          "upper": 14156
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14158,
+            "upper": 14156
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-48",
+      "event": 12337,
+      "debug_key": "E-D+1.7",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 48,
+        "witness": {
+          "physical_key": 72,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14162,
+          "upper": 14160
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14162,
+            "upper": 14160
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-49",
+      "event": 12336,
+      "debug_key": "E-D+2.0",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 49,
+        "witness": {
+          "physical_key": 71,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14166,
+          "upper": 14164
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14166,
+            "upper": 14164
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-50",
+      "event": 12335,
+      "debug_key": "E-D+2.3",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 50,
+        "witness": {
+          "physical_key": 70,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14170,
+          "upper": 14168
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14170,
+            "upper": 14168
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-51",
+      "event": 12334,
+      "debug_key": "E-D+2.7",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 51,
+        "witness": {
+          "physical_key": 69,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14174,
+          "upper": 14172
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14174,
+            "upper": 14172
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-52",
+      "event": 12333,
+      "debug_key": "E-D+3.0",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 52,
+        "witness": {
+          "physical_key": 68,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14178,
+          "upper": 14176
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14178,
+            "upper": 14176
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-53",
+      "event": 12352,
+      "debug_key": "E-D=C",
+      "target": {
+        "kind": "control",
+        "control_id": "exposure_compensation_dial"
+      },
+      "scanner": {
+        "index": 53,
+        "witness": {
+          "physical_key": 87,
+          "input_kind": "kind_1",
+          "source": 7,
+          "lower": 14182,
+          "upper": 14180
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-7",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14182,
+            "upper": 14180
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-7",
+      "event": 7,
+      "debug_key": "S1",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_button"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-8",
+      "event": 8,
+      "debug_key": "S2",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_button"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-51",
+      "event": 51,
+      "debug_key": "8DIR_U",
+      "target": {
+        "kind": "control",
+        "control_id": "focus_stick.up"
+      },
+      "scanner": {
+        "index": 13,
+        "witness": {
+          "physical_key": 60,
+          "input_kind": "kind_5",
+          "source": 11824336,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-13-3",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "debug-53",
+      "event": 53,
+      "debug_key": "8DIR_R",
+      "target": {
+        "kind": "control",
+        "control_id": "focus_stick.right"
+      },
+      "scanner": {
+        "index": 15,
+        "witness": {
+          "physical_key": 62,
+          "input_kind": "kind_5",
+          "source": 11824336,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-13-5",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "debug-55",
+      "event": 55,
+      "debug_key": "8DIR_D",
+      "target": {
+        "kind": "control",
+        "control_id": "focus_stick.down"
+      },
+      "scanner": {
+        "index": 14,
+        "witness": {
+          "physical_key": 61,
+          "input_kind": "kind_5",
+          "source": 11824336,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-13-4",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "debug-57",
+      "event": 57,
+      "debug_key": "8DIR_L",
+      "target": {
+        "kind": "control",
+        "control_id": "focus_stick.left"
+      },
+      "scanner": {
+        "index": 16,
+        "witness": {
+          "physical_key": 63,
+          "input_kind": "kind_5",
+          "source": 11824336,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-13-6",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "debug-59",
+      "event": 59,
+      "debug_key": "8DIR_PUSH",
+      "target": {
+        "kind": "control",
+        "control_id": "focus_stick"
+      },
+      "scanner": {
+        "index": 21,
+        "witness": {
+          "physical_key": 59,
+          "input_kind": "kind_5",
+          "source": 11826568,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-3",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14334,
+            "upper": 14332
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-23",
+      "event": 23,
+      "debug_key": "MF_AF_M",
+      "target": {
+        "kind": "control",
+        "control_id": "focus_mode_selector"
+      },
+      "scanner": {
+        "index": 10,
+        "witness": {
+          "physical_key": 41,
+          "input_kind": "kind_5",
+          "source": 11823796,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio_contacts",
+        "connection_id": "controls-contacts-10-9-10-10",
+        "expected_levels": [
+          true,
+          false
+        ],
+        "callback": 11823796
+      }
+    },
+    {
+      "id": "debug-24",
+      "event": 24,
+      "debug_key": "MF_AF_A",
+      "target": {
+        "kind": "control",
+        "control_id": "focus_mode_selector"
+      },
+      "scanner": {
+        "index": 11,
+        "witness": {
+          "physical_key": 42,
+          "input_kind": "kind_5",
+          "source": 11823652,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio_contacts",
+        "connection_id": "controls-contacts-10-9-10-10",
+        "expected_levels": [
+          true,
+          true
+        ],
+        "callback": 11823652
+      }
+    },
+    {
+      "id": "debug-25",
+      "event": 25,
+      "debug_key": "MF_AF_C",
+      "target": {
+        "kind": "control",
+        "control_id": "focus_mode_selector"
+      },
+      "scanner": {
+        "index": 12,
+        "witness": {
+          "physical_key": 43,
+          "input_kind": "kind_5",
+          "source": 11823724,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "gpio_contacts",
+        "connection_id": "controls-contacts-10-9-10-10",
+        "expected_levels": [
+          false,
+          true
+        ],
+        "callback": 11823724
+      }
+    },
+    {
+      "id": "debug-6",
+      "event": 6,
+      "debug_key": "POWER",
+      "target": {
+        "kind": "control",
+        "control_id": "power_switch"
+      },
+      "scanner": {
+        "index": 32,
+        "witness": {
+          "physical_key": 8,
+          "input_kind": "kind_5",
+          "source": 11823864,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "serial_status",
+        "connection_id": "power",
+        "endpoint": 10,
+        "register": 96,
+        "mask": 1,
+        "active_value": 0
+      }
+    },
+    {
+      "id": "debug-36",
+      "event": 36,
+      "debug_key": "CMD_LEFT",
+      "target": {
+        "kind": "control",
+        "control_id": "front_command_dial"
+      },
+      "scanner": null,
+      "electrical": {
+        "kind": "gpio_fixed_cycle",
+        "connection_id": "controls-encoder-1-2-1-3",
+        "cycle_sign": 1
+      }
+    },
+    {
+      "id": "debug-37",
+      "event": 37,
+      "debug_key": "CMD_RIGHT",
+      "target": {
+        "kind": "control",
+        "control_id": "front_command_dial"
+      },
+      "scanner": null,
+      "electrical": {
+        "kind": "gpio_fixed_cycle",
+        "connection_id": "controls-encoder-1-2-1-3",
+        "cycle_sign": -1
+      }
+    },
+    {
+      "id": "debug-60",
+      "event": 60,
+      "debug_key": "CMD2_L",
+      "target": {
+        "kind": "control",
+        "control_id": "rear_command_dial"
+      },
+      "scanner": null,
+      "electrical": {
+        "kind": "gpio_fixed_cycle",
+        "connection_id": "controls-encoder-1-4-1-5",
+        "cycle_sign": 1
+      }
+    },
+    {
+      "id": "debug-61",
+      "event": 61,
+      "debug_key": "CMD2_R",
+      "target": {
+        "kind": "control",
+        "control_id": "rear_command_dial"
+      },
+      "scanner": null,
+      "electrical": {
+        "kind": "gpio_fixed_cycle",
+        "connection_id": "controls-encoder-1-4-1-5",
+        "cycle_sign": -1
+      }
+    },
+    {
+      "id": "debug-12332",
+      "event": 12332,
+      "debug_key": "S-B",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 69,
+        "witness": {
+          "physical_key": 105,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14082,
+            "upper": 14080
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12331",
+      "event": 12331,
+      "debug_key": "S-T",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 68,
+        "witness": {
+          "physical_key": 104,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14078,
+            "upper": 14076
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12315",
+      "event": 12315,
+      "debug_key": "S-A",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 70,
+        "witness": {
+          "physical_key": 88,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14018,
+            "upper": 14016
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12330",
+      "event": 12330,
+      "debug_key": "S-1/1",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 67,
+        "witness": {
+          "physical_key": 103,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14074,
+            "upper": 14072
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12329",
+      "event": 12329,
+      "debug_key": "S-1/2",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 66,
+        "witness": {
+          "physical_key": 102,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14070,
+            "upper": 14068
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12328",
+      "event": 12328,
+      "debug_key": "S-1/4",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 65,
+        "witness": {
+          "physical_key": 101,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14066,
+            "upper": 14064
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12327",
+      "event": 12327,
+      "debug_key": "S-1/8",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 64,
+        "witness": {
+          "physical_key": 100,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14062,
+            "upper": 14060
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12326",
+      "event": 12326,
+      "debug_key": "S-1/15",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 63,
+        "witness": {
+          "physical_key": 99,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14058,
+            "upper": 14056
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12325",
+      "event": 12325,
+      "debug_key": "S-1/30",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 62,
+        "witness": {
+          "physical_key": 98,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14054,
+            "upper": 14052
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12324",
+      "event": 12324,
+      "debug_key": "S-1/60",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 61,
+        "witness": {
+          "physical_key": 97,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14050,
+            "upper": 14048
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12323",
+      "event": 12323,
+      "debug_key": "S-1/125",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 60,
+        "witness": {
+          "physical_key": 96,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14046,
+            "upper": 14044
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12321",
+      "event": 12321,
+      "debug_key": "S-1/250",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 59,
+        "witness": {
+          "physical_key": 94,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14042,
+            "upper": 14040
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12320",
+      "event": 12320,
+      "debug_key": "S-1/500",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 58,
+        "witness": {
+          "physical_key": 93,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14038,
+            "upper": 14036
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12319",
+      "event": 12319,
+      "debug_key": "S-1/1000",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 57,
+        "witness": {
+          "physical_key": 92,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14034,
+            "upper": 14032
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12318",
+      "event": 12318,
+      "debug_key": "S-1/2000",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 56,
+        "witness": {
+          "physical_key": 91,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14030,
+            "upper": 14028
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12317",
+      "event": 12317,
+      "debug_key": "S-1/4000",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 55,
+        "witness": {
+          "physical_key": 90,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14026,
+            "upper": 14024
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-12316",
+      "event": 12316,
+      "debug_key": "S-1/8000",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": {
+        "index": 54,
+        "witness": {
+          "physical_key": 89,
+          "input_kind": "kind_5",
+          "source": 11823940,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-6",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14022,
+            "upper": 14020
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20503",
+      "event": 20503,
+      "debug_key": "ISO_A",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 71,
+        "witness": {
+          "physical_key": 106,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14186,
+            "upper": 14184
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20504",
+      "event": 20504,
+      "debug_key": "ISO_L",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 92,
+        "witness": {
+          "physical_key": 107,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14270,
+            "upper": 14268
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20505",
+      "event": 20505,
+      "debug_key": "I200",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 91,
+        "witness": {
+          "physical_key": 108,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14266,
+            "upper": 14264
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20506",
+      "event": 20506,
+      "debug_key": "I200_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 90,
+        "witness": {
+          "physical_key": 109,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14262,
+            "upper": 14260
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20507",
+      "event": 20507,
+      "debug_key": "I200_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 89,
+        "witness": {
+          "physical_key": 110,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14258,
+            "upper": 14256
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20508",
+      "event": 20508,
+      "debug_key": "I400",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 88,
+        "witness": {
+          "physical_key": 111,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14254,
+            "upper": 14252
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20509",
+      "event": 20509,
+      "debug_key": "I400_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 87,
+        "witness": {
+          "physical_key": 112,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14250,
+            "upper": 14248
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20510",
+      "event": 20510,
+      "debug_key": "I400_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 86,
+        "witness": {
+          "physical_key": 113,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14246,
+            "upper": 14244
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20511",
+      "event": 20511,
+      "debug_key": "I800",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 85,
+        "witness": {
+          "physical_key": 114,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14242,
+            "upper": 14240
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20512",
+      "event": 20512,
+      "debug_key": "I800_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 84,
+        "witness": {
+          "physical_key": 115,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14238,
+            "upper": 14236
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20513",
+      "event": 20513,
+      "debug_key": "I800_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 83,
+        "witness": {
+          "physical_key": 116,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14234,
+            "upper": 14232
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20514",
+      "event": 20514,
+      "debug_key": "I1600",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 82,
+        "witness": {
+          "physical_key": 117,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14230,
+            "upper": 14228
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20515",
+      "event": 20515,
+      "debug_key": "I1600_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 81,
+        "witness": {
+          "physical_key": 118,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14226,
+            "upper": 14224
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20516",
+      "event": 20516,
+      "debug_key": "I1600_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 80,
+        "witness": {
+          "physical_key": 119,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14222,
+            "upper": 14220
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20517",
+      "event": 20517,
+      "debug_key": "I3200",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 79,
+        "witness": {
+          "physical_key": 120,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14218,
+            "upper": 14216
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20518",
+      "event": 20518,
+      "debug_key": "I3200_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 78,
+        "witness": {
+          "physical_key": 121,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14214,
+            "upper": 14212
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20519",
+      "event": 20519,
+      "debug_key": "I3200_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 77,
+        "witness": {
+          "physical_key": 122,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14210,
+            "upper": 14208
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20520",
+      "event": 20520,
+      "debug_key": "I6400",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 76,
+        "witness": {
+          "physical_key": 123,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14206,
+            "upper": 14204
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20521",
+      "event": 20521,
+      "debug_key": "I6400_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 75,
+        "witness": {
+          "physical_key": 124,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14202,
+            "upper": 14200
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20522",
+      "event": 20522,
+      "debug_key": "I6400_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 74,
+        "witness": {
+          "physical_key": 125,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14198,
+            "upper": 14196
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20523",
+      "event": 20523,
+      "debug_key": "I12800",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 73,
+        "witness": {
+          "physical_key": 126,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14194,
+            "upper": 14192
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "debug-20524",
+      "event": 20524,
+      "debug_key": "ISO_H1",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": {
+        "index": 72,
+        "witness": {
+          "physical_key": 127,
+          "input_kind": "kind_5",
+          "source": 11824020,
+          "lower": 0,
+          "upper": 1
+        }
+      },
+      "electrical": {
+        "kind": "adc",
+        "connection_id": "controls-adc-5",
+        "intervals": [
+          {
+            "kind": "configuration_u16",
+            "lower": 14190,
+            "upper": 14188
+          }
+        ],
+        "callback": null,
+        "expected_result": null
+      }
+    },
+    {
+      "id": "row-4",
+      "event": 7,
+      "debug_key": "S1",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_button"
+      },
+      "scanner": {
+        "index": 4,
+        "witness": {
+          "physical_key": 2,
+          "input_kind": "kind_4",
+          "source": 0,
+          "lower": 1,
+          "upper": 20
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-0-0",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-5",
+      "event": 8,
+      "debug_key": "S2",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_button"
+      },
+      "scanner": {
+        "index": 5,
+        "witness": {
+          "physical_key": 3,
+          "input_kind": "kind_4",
+          "source": 1,
+          "lower": 1,
+          "upper": 21
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-0-1",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    }
+  ],
+  "undelivered_rows": [],
+  "interfaces": {}
+}

@@ -103,6 +103,9 @@ pub struct Resources {
     pub users: BTreeMap<String, BTreeSet<usize>>,
     pub image_users: BTreeMap<String, BTreeSet<usize>>,
     pub gpio: BTreeMap<String, gpio::Pads>,
+    /// Boards that set their GPIO input words directly instead of presenting
+    /// pad registers, keyed by node name.
+    pub direct_gpio: BTreeMap<String, Box<dyn fujimod_emulator_devices::parts::pins::DirectPins>>,
     pub analog: BTreeMap<String, fujimod_emulator_devices::parts::analog::Samples>,
     pub pulses: BTreeMap<String, pulse::PulsePins>,
     pub encoders: BTreeMap<String, fujimod_emulator_devices::parts::encoder_input::EncoderInput>,
@@ -224,6 +227,13 @@ impl Resources {
             .get(name)
             .cloned()
             .ok_or_else(|| format!("{name} is not a constructed GPIO block"))
+    }
+    /// The directly driven input block of a board that has no pad model.
+    pub fn direct_pins(
+        &self,
+        name: &str,
+    ) -> Option<&dyn fujimod_emulator_devices::parts::pins::DirectPins> {
+        self.direct_gpio.get(name).map(Box::as_ref)
     }
     pub fn pulses(&self, name: &str) -> Result<pulse::PulsePins, String> {
         self.pulses

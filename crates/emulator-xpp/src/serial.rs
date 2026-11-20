@@ -341,9 +341,43 @@ impl DiscoveryPort {
         Ok(port)
     }
 }
+impl fujimod_emulator_devices::capability::SerialStatus for DiscoveryPort {
+    /// The single declared peer holds the port's status byte registers.
+    fn status_value(&self, route: usize, register: u8) -> Result<u8, String> {
+        if route != 0 {
+            return Err("X-Processor Pro serial port has one peer route".into());
+        }
+        self.peer
+            .as_ref()
+            .and_then(|peer| peer.get(usize::from(register)))
+            .copied()
+            .ok_or_else(|| format!("X-Processor Pro serial peer has no register {register}"))
+    }
+    fn status_input(&mut self, route: usize, register: u8, value: u8) -> Result<(), String> {
+        if route != 0 {
+            return Err("X-Processor Pro serial port has one peer route".into());
+        }
+        let peer = self
+            .peer
+            .as_mut()
+            .ok_or("X-Processor Pro serial port has no attached peer")?;
+        *peer
+            .get_mut(usize::from(register))
+            .ok_or_else(|| format!("X-Processor Pro serial peer has no register {register}"))? = value;
+        Ok(())
+    }
+}
 impl Device for DiscoveryPort {
     fn name(&self) -> &'static str {
         "xpp-serial"
+    }
+    fn serial_status(&self) -> Option<&(dyn fujimod_emulator_devices::capability::SerialStatus + 'static)> {
+        Some(self)
+    }
+    fn serial_status_mut(
+        &mut self,
+    ) -> Option<&mut (dyn fujimod_emulator_devices::capability::SerialStatus + 'static)> {
+        Some(self)
     }
     fn read(&mut self, cx: &mut Cx<'_>, address: u64, size: u8) -> u64 {
         let o = address - self.base;
