@@ -265,88 +265,139 @@
           "positions": [
             {
               "id": "B",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-B"
+              },
+              "asserted": true
             },
             {
               "id": "T",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-T"
+              },
+              "asserted": true
             },
             {
               "id": "A",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-A"
+              },
+              "asserted": true
             },
             {
               "id": "1",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/1"
+              },
+              "asserted": true
             },
             {
               "id": "2",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/2"
+              },
+              "asserted": true
             },
             {
               "id": "4",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/4"
+              },
+              "asserted": true
             },
             {
               "id": "8",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/8"
+              },
+              "asserted": true
             },
             {
               "id": "15",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/15"
+              },
+              "asserted": true
             },
             {
               "id": "30",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/30"
+              },
+              "asserted": true
             },
             {
               "id": "60",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/60"
+              },
+              "asserted": true
             },
             {
               "id": "125",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/125"
+              },
+              "asserted": true
             },
             {
               "id": "250",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/250"
+              },
+              "asserted": true
             },
             {
               "id": "500",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/500"
+              },
+              "asserted": true
             },
             {
               "id": "1000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/1000"
+              },
+              "asserted": true
             },
             {
               "id": "2000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/2000"
+              },
+              "asserted": true
             },
             {
               "id": "4000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/4000"
+              },
+              "asserted": true
             },
             {
               "id": "8000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "S-1/8000"
+              },
+              "asserted": true
             }
           ]
         },
@@ -463,113 +514,179 @@
           "positions": [
             {
               "id": "A",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "ISO_A"
+              },
+              "asserted": true
             },
             {
               "id": "200",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I200"
+              },
+              "asserted": true
             },
             {
               "id": "250",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I200_1_3"
+              },
+              "asserted": true
             },
             {
               "id": "320",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I200_2_3"
+              },
+              "asserted": true
             },
             {
               "id": "400",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I400"
+              },
+              "asserted": true
             },
             {
               "id": "500",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I400_1_3"
+              },
+              "asserted": true
             },
             {
               "id": "640",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I400_2_3"
+              },
+              "asserted": true
             },
             {
               "id": "800",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I800"
+              },
+              "asserted": true
             },
             {
               "id": "1000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I800_1_3"
+              },
+              "asserted": true
             },
             {
               "id": "1250",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I800_2_3"
+              },
+              "asserted": true
             },
             {
               "id": "1600",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I1600"
+              },
+              "asserted": true
             },
             {
               "id": "2000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I1600_1_3"
+              },
+              "asserted": true
             },
             {
               "id": "2500",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I1600_2_3"
+              },
+              "asserted": true
             },
             {
               "id": "3200",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I3200"
+              },
+              "asserted": true
             },
             {
               "id": "4000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I3200_1_3"
+              },
+              "asserted": true
             },
             {
               "id": "5000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I3200_2_3"
+              },
+              "asserted": true
             },
             {
               "id": "6400",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I6400"
+              },
+              "asserted": true
             },
             {
               "id": "8000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I6400_1_3"
+              },
+              "asserted": true
             },
             {
               "id": "10000",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I6400_2_3"
+              },
+              "asserted": true
             },
             {
               "id": "12800",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "I12800"
+              },
+              "asserted": true
             },
             {
               "id": "H",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "ISO_H1"
+              },
+              "asserted": true
             },
             {
               "id": "L",
-              "key": null,
-              "asserted": null
+              "key": {
+                "kind": "debug_key",
+                "name": "ISO_L"
+              },
+              "asserted": true
             }
           ]
         },
@@ -896,8 +1013,14 @@
         "kind": "dial",
         "motion": {
           "kind": "steps",
-          "decrease": null,
-          "increase": null
+          "decrease": {
+            "kind": "debug_key",
+            "name": "CMD_LEFT"
+          },
+          "increase": {
+            "kind": "debug_key",
+            "name": "CMD_RIGHT"
+          }
         },
         "press": {
           "kind": "debug_key",
@@ -925,13 +1048,19 @@
         "positions": [
           {
             "id": "ON",
-            "key": null,
-            "asserted": null
+            "key": {
+              "kind": "debug_key",
+              "name": "POWER"
+            },
+            "asserted": true
           },
           {
             "id": "OFF",
-            "key": null,
-            "asserted": null
+            "key": {
+              "kind": "debug_key",
+              "name": "POWER"
+            },
+            "asserted": false
           }
         ]
       },
@@ -1071,8 +1200,14 @@
         "kind": "dial",
         "motion": {
           "kind": "steps",
-          "decrease": null,
-          "increase": null
+          "decrease": {
+            "kind": "debug_key",
+            "name": "CMD2_L"
+          },
+          "increase": {
+            "kind": "debug_key",
+            "name": "CMD2_R"
+          }
         },
         "press": {
           "kind": "debug_key",

@@ -44,6 +44,10 @@
       "event": 5
     },
     {
+      "name": "POWER",
+      "event": 6
+    },
+    {
       "name": "S1",
       "event": 7
     },
@@ -84,6 +88,14 @@
       "event": 35
     },
     {
+      "name": "CMD_LEFT",
+      "event": 36
+    },
+    {
+      "name": "CMD_RIGHT",
+      "event": 37
+    },
+    {
       "name": "AE-LOCK",
       "event": 39
     },
@@ -112,6 +124,14 @@
       "event": 59
     },
     {
+      "name": "CMD2_L",
+      "event": 60
+    },
+    {
+      "name": "CMD2_R",
+      "event": 61
+    },
+    {
       "name": "EXE_M",
       "event": 8209
     },
@@ -126,6 +146,74 @@
     {
       "name": "DELETE",
       "event": 8257
+    },
+    {
+      "name": "S-A",
+      "event": 12315
+    },
+    {
+      "name": "S-1/8000",
+      "event": 12316
+    },
+    {
+      "name": "S-1/4000",
+      "event": 12317
+    },
+    {
+      "name": "S-1/2000",
+      "event": 12318
+    },
+    {
+      "name": "S-1/1000",
+      "event": 12319
+    },
+    {
+      "name": "S-1/500",
+      "event": 12320
+    },
+    {
+      "name": "S-1/250",
+      "event": 12321
+    },
+    {
+      "name": "S-1/125",
+      "event": 12323
+    },
+    {
+      "name": "S-1/60",
+      "event": 12324
+    },
+    {
+      "name": "S-1/30",
+      "event": 12325
+    },
+    {
+      "name": "S-1/15",
+      "event": 12326
+    },
+    {
+      "name": "S-1/8",
+      "event": 12327
+    },
+    {
+      "name": "S-1/4",
+      "event": 12328
+    },
+    {
+      "name": "S-1/2",
+      "event": 12329
+    },
+    {
+      "name": "S-1/1",
+      "event": 12330
+    },
+    {
+      "name": "S-T",
+      "event": 12331
+    },
+    {
+      "name": "S-B",
+      "event": 12332
     },
     {
       "name": "E-D+3.0",
@@ -206,6 +294,94 @@
     {
       "name": "E-D=C",
       "event": 12352
+    },
+    {
+      "name": "ISO_A",
+      "event": 20503
+    },
+    {
+      "name": "ISO_L",
+      "event": 20504
+    },
+    {
+      "name": "I200",
+      "event": 20505
+    },
+    {
+      "name": "I200_1_3",
+      "event": 20506
+    },
+    {
+      "name": "I200_2_3",
+      "event": 20507
+    },
+    {
+      "name": "I400",
+      "event": 20508
+    },
+    {
+      "name": "I400_1_3",
+      "event": 20509
+    },
+    {
+      "name": "I400_2_3",
+      "event": 20510
+    },
+    {
+      "name": "I800",
+      "event": 20511
+    },
+    {
+      "name": "I800_1_3",
+      "event": 20512
+    },
+    {
+      "name": "I800_2_3",
+      "event": 20513
+    },
+    {
+      "name": "I1600",
+      "event": 20514
+    },
+    {
+      "name": "I1600_1_3",
+      "event": 20515
+    },
+    {
+      "name": "I1600_2_3",
+      "event": 20516
+    },
+    {
+      "name": "I3200",
+      "event": 20517
+    },
+    {
+      "name": "I3200_1_3",
+      "event": 20518
+    },
+    {
+      "name": "I3200_2_3",
+      "event": 20519
+    },
+    {
+      "name": "I6400",
+      "event": 20520
+    },
+    {
+      "name": "I6400_1_3",
+      "event": 20521
+    },
+    {
+      "name": "I6400_2_3",
+      "event": 20522
+    },
+    {
+      "name": "I12800",
+      "event": 20523
+    },
+    {
+      "name": "ISO_H1",
+      "event": 20524
     }
   ],
   "inputs": [
@@ -1422,6 +1598,490 @@
       "target": {
         "kind": "control",
         "control_id": "focus_mode_selector"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-6",
+      "event": 6,
+      "debug_key": "POWER",
+      "target": {
+        "kind": "control",
+        "control_id": "power_switch"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-36",
+      "event": 36,
+      "debug_key": "CMD_LEFT",
+      "target": {
+        "kind": "control",
+        "control_id": "front_command_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-37",
+      "event": 37,
+      "debug_key": "CMD_RIGHT",
+      "target": {
+        "kind": "control",
+        "control_id": "front_command_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-60",
+      "event": 60,
+      "debug_key": "CMD2_L",
+      "target": {
+        "kind": "control",
+        "control_id": "rear_command_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-61",
+      "event": 61,
+      "debug_key": "CMD2_R",
+      "target": {
+        "kind": "control",
+        "control_id": "rear_command_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12332",
+      "event": 12332,
+      "debug_key": "S-B",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12331",
+      "event": 12331,
+      "debug_key": "S-T",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12315",
+      "event": 12315,
+      "debug_key": "S-A",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12330",
+      "event": 12330,
+      "debug_key": "S-1/1",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12329",
+      "event": 12329,
+      "debug_key": "S-1/2",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12328",
+      "event": 12328,
+      "debug_key": "S-1/4",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12327",
+      "event": 12327,
+      "debug_key": "S-1/8",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12326",
+      "event": 12326,
+      "debug_key": "S-1/15",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12325",
+      "event": 12325,
+      "debug_key": "S-1/30",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12324",
+      "event": 12324,
+      "debug_key": "S-1/60",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12323",
+      "event": 12323,
+      "debug_key": "S-1/125",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12321",
+      "event": 12321,
+      "debug_key": "S-1/250",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12320",
+      "event": 12320,
+      "debug_key": "S-1/500",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12319",
+      "event": 12319,
+      "debug_key": "S-1/1000",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12318",
+      "event": 12318,
+      "debug_key": "S-1/2000",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12317",
+      "event": 12317,
+      "debug_key": "S-1/4000",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-12316",
+      "event": 12316,
+      "debug_key": "S-1/8000",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_speed_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20503",
+      "event": 20503,
+      "debug_key": "ISO_A",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20504",
+      "event": 20504,
+      "debug_key": "ISO_L",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20505",
+      "event": 20505,
+      "debug_key": "I200",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20506",
+      "event": 20506,
+      "debug_key": "I200_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20507",
+      "event": 20507,
+      "debug_key": "I200_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20508",
+      "event": 20508,
+      "debug_key": "I400",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20509",
+      "event": 20509,
+      "debug_key": "I400_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20510",
+      "event": 20510,
+      "debug_key": "I400_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20511",
+      "event": 20511,
+      "debug_key": "I800",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20512",
+      "event": 20512,
+      "debug_key": "I800_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20513",
+      "event": 20513,
+      "debug_key": "I800_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20514",
+      "event": 20514,
+      "debug_key": "I1600",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20515",
+      "event": 20515,
+      "debug_key": "I1600_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20516",
+      "event": 20516,
+      "debug_key": "I1600_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20517",
+      "event": 20517,
+      "debug_key": "I3200",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20518",
+      "event": 20518,
+      "debug_key": "I3200_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20519",
+      "event": 20519,
+      "debug_key": "I3200_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20520",
+      "event": 20520,
+      "debug_key": "I6400",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20521",
+      "event": 20521,
+      "debug_key": "I6400_1_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20522",
+      "event": 20522,
+      "debug_key": "I6400_2_3",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20523",
+      "event": 20523,
+      "debug_key": "I12800",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
+      },
+      "scanner": null,
+      "electrical": null
+    },
+    {
+      "id": "debug-20524",
+      "event": 20524,
+      "debug_key": "ISO_H1",
+      "target": {
+        "kind": "control",
+        "control_id": "sensitivity_dial"
       },
       "scanner": null,
       "electrical": null
