@@ -842,11 +842,8 @@
       "pushable": true,
       "default_function": "Release the dial lock while rotating a locked dial.",
       "role": null,
-      "mechanical": false,
-      "behavior": {
-        "kind": "button",
-        "press": null
-      },
+      "mechanical": true,
+      "behavior": null,
       "positions": [],
       "short_name": "LOCK"
     },
@@ -923,11 +920,8 @@
       "pushable": true,
       "default_function": "Press while rotating the lens to remove it.",
       "role": null,
-      "mechanical": false,
-      "behavior": {
-        "kind": "button",
-        "press": null
-      },
+      "mechanical": true,
+      "behavior": null,
       "positions": [],
       "short_name": "LENS"
     },
@@ -966,17 +960,8 @@
       "pushable": false,
       "default_function": "Adjust viewfinder focus.",
       "role": null,
-      "mechanical": false,
-      "behavior": {
-        "kind": "dial",
-        "motion": {
-          "kind": "steps",
-          "decrease": null,
-          "increase": null
-        },
-        "press": null,
-        "endless": null
-      },
+      "mechanical": true,
+      "behavior": null,
       "positions": [],
       "short_name": "DIOPTER"
     },
@@ -1426,12 +1411,8 @@
       "pushable": false,
       "default_function": "Slide the battery-chamber latch as shown and open the battery-chamber cover.",
       "role": null,
-      "mechanical": false,
-      "behavior": {
-        "kind": "lever",
-        "positions": [],
-        "momentary": null
-      },
+      "mechanical": true,
+      "behavior": null,
       "positions": [],
       "short_name": "COVER"
     },
@@ -1446,12 +1427,8 @@
       "pushable": true,
       "default_function": "To remove the battery, press the battery latch to the side, and slide the battery out of the camera as shown.",
       "role": null,
-      "mechanical": false,
-      "behavior": {
-        "kind": "lever",
-        "positions": [],
-        "momentary": null
-      },
+      "mechanical": true,
+      "behavior": null,
       "positions": [],
       "short_name": "BATTERY"
     }
