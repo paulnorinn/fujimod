@@ -409,7 +409,16 @@ fn widgets(row: &LocatedControl) -> Result<(Vec<Widget>, BTreeSet<String>), Unre
     let (widgets, keys): (Vec<Widget>, BTreeSet<String>) = if row.kind == "shutter" {
         let names: BTreeSet<&str> = row.actions.iter().map(|(name, _)| name.as_str()).collect();
         if names != BTreeSet::from(["half_press", "full_press"]) {
-            return Err("Shutter stages are unresolved".into());
+            let detail = row
+                .actions
+                .iter()
+                .map(|(name, keys)| format!("{name}=[{}]", keys.join("+")))
+                .collect::<Vec<_>>()
+                .join(" ");
+            return Err(Unresolved(format!(
+                "Shutter stages are unresolved: {} action(s) {detail}",
+                row.actions.len()
+            )));
         }
         let half = row.action("half_press").unwrap_or_default().to_vec();
         let full = row.action("full_press").unwrap_or_default().to_vec();
@@ -626,6 +635,23 @@ pub fn compile(
     let mut unavailable = Vec::new();
     let mut problems = Vec::new();
     for row in controls {
+        // A control the locator already refused has no actions to prepare;
+        // report the locator's reason rather than a symptom of the empty row.
+        if let Some(reason) = &row.unavailable {
+            if !row.mechanical {
+                problems.push(Problem {
+                    control: row.id.clone(),
+                    reason: reason.clone(),
+                });
+            }
+            unavailable.push(UnavailableControl {
+                id: row.id.clone(),
+                label: row.name.clone(),
+                kind: row.kind.clone(),
+                reason: reason.clone(),
+            });
+            continue;
+        }
         match prepare(row, calibration, nodes, analog_levels, stable_offset) {
             Ok(controls) => prepared.extend(controls),
             Err(Unresolved(reason)) => {

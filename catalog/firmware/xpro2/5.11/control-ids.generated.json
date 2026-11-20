@@ -2170,6 +2170,60 @@
       },
       "scanner": null,
       "electrical": null
+    },
+    {
+      "id": "row-4",
+      "event": 7,
+      "debug_key": "S1",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_button"
+      },
+      "scanner": {
+        "index": 4,
+        "witness": {
+          "physical_key": 2,
+          "input_kind": "kind_4",
+          "source": 0,
+          "lower": 1,
+          "upper": 20
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-0-0",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
+    },
+    {
+      "id": "row-5",
+      "event": 8,
+      "debug_key": "S2",
+      "target": {
+        "kind": "control",
+        "control_id": "shutter_button"
+      },
+      "scanner": {
+        "index": 5,
+        "witness": {
+          "physical_key": 3,
+          "input_kind": "kind_4",
+          "source": 1,
+          "lower": 1,
+          "upper": 21
+        }
+      },
+      "electrical": {
+        "kind": "gpio",
+        "connection_id": "controls-gpio-0-1",
+        "expected_level": false,
+        "scanner": {
+          "kind": "direct"
+        }
+      }
     }
   ],
   "undelivered_rows": [],
