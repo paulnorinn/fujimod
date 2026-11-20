@@ -399,7 +399,10 @@ pub struct Plan {
 
 type Widget = (String, String, String, Vec<(String, Vec<String>)>);
 
-fn widgets(row: &LocatedControl) -> Result<(Vec<Widget>, BTreeSet<String>), Unresolved> {
+fn widgets(
+    row: &LocatedControl,
+    rotary: bool,
+) -> Result<(Vec<Widget>, BTreeSet<String>), Unresolved> {
     let inactive: BTreeSet<&str> = row
         .positions
         .iter()
@@ -463,7 +466,9 @@ fn widgets(row: &LocatedControl) -> Result<(Vec<Widget>, BTreeSet<String>), Unre
             keys,
         )
     } else if !row.actions.is_empty() {
-        let single = row.actions.len() == 1;
+        // A rotary control keeps its remaining action, such as the dial's own
+        // press, as a distinct part of the control rather than the control.
+        let single = row.actions.len() == 1 && !rotary;
         let widgets = row
             .actions
             .iter()
@@ -513,8 +518,9 @@ fn prepare(
     nodes: &Nodes,
     analog_levels: u32,
     stable_offset: Option<u32>,
+    rotary: bool,
 ) -> Result<Vec<Prepared>, Unresolved> {
-    let (widgets, keys) = widgets(row)?;
+    let (widgets, keys) = widgets(row, rotary)?;
     let mut wires: BTreeMap<String, (Vec<Term>, bool)> = BTreeMap::new();
     let mut records: BTreeMap<String, Vec<ScannerRecord>> = BTreeMap::new();
     for key in &keys {
@@ -627,6 +633,7 @@ pub fn compile(
     nodes: &Nodes,
     analog_levels: u32,
     stable_offset: Option<u32>,
+    rotaries: &std::collections::BTreeSet<String>,
 ) -> Result<Plan, String> {
     if !(2..=65536).contains(&analog_levels) {
         return Err("Analog input domain must declare 2..65536 discrete levels".into());
@@ -652,7 +659,8 @@ pub fn compile(
             });
             continue;
         }
-        match prepare(row, calibration, nodes, analog_levels, stable_offset) {
+        let rotary = rotaries.contains(&row.id);
+        match prepare(row, calibration, nodes, analog_levels, stable_offset, rotary) {
             Ok(controls) => prepared.extend(controls),
             Err(Unresolved(reason)) => {
                 if !row.mechanical {

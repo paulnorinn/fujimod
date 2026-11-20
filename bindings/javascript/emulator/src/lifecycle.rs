@@ -244,9 +244,10 @@ impl Session {
         for (id, p) in poses {
             self.core.set_position(&id, &p)?;
         }
-        if let Some(input) = inputs.iter().find(|input| input.id == "usb") {
-            self.core
-                .logic_input("usb_cable", input.position.as_deref() == Some("on"))?;
+        if let Some(input) = inputs.iter().find(|input| input.id == "usb")
+            && self.core.usb_cable_declared()
+        {
+            self.core.usb_cable(input.position.as_deref() == Some("on"))?;
         }
         if !saved.powered_on {
             for old in self.frames.values_mut() {

@@ -250,12 +250,19 @@ pub fn compile(
                 .retain(|(action, _)| action != "decrease" && action != "increase");
         }
     }
+    let rotaries: std::collections::BTreeSet<String> = controls
+        .iter()
+        .zip(&encoders)
+        .filter(|(_, encoder)| matches!(encoder, Ok(Some(_))))
+        .map(|(row, _)| row.id.clone())
+        .collect();
     let mut plan = panel::compile(
         &controls,
         calibration,
         &nodes,
         located.analog_levels,
         located.scanner_stable_offset,
+        &rotaries,
     )?;
     let sources: BTreeMap<u64, &fujimod_catalog_wiring::Wire> = located
         .controls
