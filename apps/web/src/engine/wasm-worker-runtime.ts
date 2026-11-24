@@ -631,6 +631,10 @@ export class WasmWorkerRuntime {
           manifest.construction,
         ),
       );
+    // Whether the LCD ever receives frames decides how the workspace reports
+    // an idle screen: a body without a live-view source shows no picture at
+    // all, which must not read as a hang.
+    this.send({ type: 'preview', available: this.previewEnabled() });
     const session = this.camera;
     if (manifest.construction !== 'resolved') {
       if (saved) this.observe(session.restoreDurable(new Uint8Array(saved.durable)));

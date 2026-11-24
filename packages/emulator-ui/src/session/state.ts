@@ -8,6 +8,8 @@ export function sessionState() {
     message: '',
     error: false,
     live: '',
+    /** Whether the camera has a live-view image source; false leaves the LCD blank. */
+    liveViewSource: true,
     loading: false,
     loadingAssets: [] as AssetProgress[],
     webcamActive: false,

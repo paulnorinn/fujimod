@@ -265,6 +265,37 @@ test('declared preview policy is applied once and source metrics use observation
   assert.equal(f.calls.filter((c) => c.action === 'preview_state').length, 1);
   assert.equal(f.calls.filter((c) => c.action === 'error_report').length, 0);
   assert(f.events.some((e) => e.type === 'metrics' && e.metrics.runtime?.sourceFrames === 0));
+  // The workspace is told whether the LCD ever receives frames.
+  assert(f.events.some((e) => e.type === 'preview' && e.available === true));
+});
+
+test('a prepared X-Processor Pro bundle reports that it has no live-view source', async () => {
+  const f = setup();
+  f.manifest.construction = 'prepared';
+  f.manifest.prepared = { document: 'document.json', bootRom: 'boot.bin' };
+  f.prepared(() => {});
+  vi.stubGlobal(
+    'fetch',
+    async (url: URL) =>
+      new Response(
+        url.pathname.endsWith('document.json')
+          ? '{"prepared":{"devices":{"kind":"xpp"}}}'
+          : 'binary',
+      ),
+  );
+  try {
+    const boot = await f.send({
+      action: 'boot',
+      config: f.config,
+      dat: new ArrayBuffer(1),
+      files: [],
+      seedIdentity: [],
+    });
+    assert.equal(boot.type, 'reply', JSON.stringify(boot));
+    assert(f.events.some((e) => e.type === 'preview' && e.available === false));
+  } finally {
+    vi.unstubAllGlobals();
+  }
 });
 
 test('a portable camera save restores media before boot', async () => {

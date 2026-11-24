@@ -316,6 +316,11 @@ export function startSession(
       panel.setPowered(on);
       viewer.powered(on);
     });
+    active.liveViewSource((available) => {
+      setState((s) => {
+        s.liveViewSource = available;
+      });
+    });
     panel.synchronize(positions);
     setCardEngine(active);
     finishLoading();

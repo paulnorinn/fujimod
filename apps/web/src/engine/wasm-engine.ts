@@ -79,6 +79,8 @@ export class WasmEngine implements Engine {
   private cardListeners = new Listeners<CardState>();
   private connectionListeners = new Listeners<Connection[]>();
   private saveListeners = new Listeners<SaveEvent>();
+  private liveViewListeners = new Listeners<boolean>();
+  private latestLiveView?: boolean;
   private progress?: LoadingProgress;
   private fault?: EngineFault;
   private disposed = false;
@@ -162,6 +164,10 @@ export class WasmEngine implements Engine {
         this.latestConnections = [];
         this.cardListeners.emit(event.state.card);
         this.connectionListeners.emit([]);
+        return;
+      case 'preview':
+        this.latestLiveView = event.available;
+        this.liveViewListeners.emit(event.available);
         return;
       case 'metrics':
         this.metricListeners.emit({
@@ -382,6 +388,10 @@ export class WasmEngine implements Engine {
     if (this.selectedScene !== scene) return;
     await this.rpc({ action: 'scene', scene: image });
     if (this.selectedScene === scene && scene && 'raf' in scene) this.selectedScene = null;
+  }
+  liveViewSource(listener: (available: boolean) => void) {
+    if (this.latestLiveView !== undefined) listener(this.latestLiveView);
+    return this.liveViewListeners.add(listener);
   }
   powerChanges(listener: (on: boolean) => void) {
     if (this.latestPower !== undefined) listener(this.latestPower);
