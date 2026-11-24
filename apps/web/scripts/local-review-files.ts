@@ -36,8 +36,10 @@ export function assertNoPublicReviews(webRoot: string): void {
 export function reviewFiles(directory: string, repository: string): Connect.NextHandleFunction {
   if (!isAbsolute(directory))
     throw Error('FUJIMOD_REVIEW_DIR must be an absolute path outside the repository.');
-  const root = realpathSync(directory);
-  if (inside(realpathSync(repository), root))
+  // `native` expands Windows short names (ADMINI~1) the same way the async
+  // `realpath` used per request does; otherwise every path fails the root check.
+  const root = realpathSync.native(directory);
+  if (inside(realpathSync.native(repository), root))
     throw Error('FUJIMOD_REVIEW_DIR must be outside the repository.');
   return staticFiles(root, '/review/');
 }
@@ -48,7 +50,7 @@ export function staticFiles(
   prefix: string,
   allowed: (path: string) => boolean = () => true,
 ): Connect.NextHandleFunction {
-  const root = realpathSync(directory);
+  const root = realpathSync.native(directory);
   return (req, res, next) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
     if (!url.pathname.startsWith(prefix)) return next();

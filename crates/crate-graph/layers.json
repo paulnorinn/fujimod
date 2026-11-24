@@ -50,6 +50,8 @@
       "fujimod-emulator-xp5-storage"
     ],
     "plan": [
+      "fujimod-emulator-board-graph",
+      "fujimod-emulator-controls",
       "fujimod-emulator-exr2-plan"
     ],
     "board": [
@@ -84,7 +86,6 @@
     ],
     "final": [
       "fujimod-emulator-cli",
-      "fujimod-emulator-xp5-bringup",
       "fujimod-emulator-ip-dmp-webgpu",
       "fujimod-emulator-javascript",
       "fujimod-emulator-models",
@@ -112,13 +113,17 @@
       "fujimod-catalog-schemas",
       "fujimod-catalog-service",
       "fujimod-catalog-settings",
+    "fujimod-catalog-wiring",
       "fujimod-corpus",
       "fujimod-crate-graph",
       "fujimod-emulator-exr2-isp-testing",
       "fujimod-firmware",
       "fujimod-recording",
       "fujimod-release-manifest",
-      "fujimod-settings",
+      "fujimod-mcp",
+    "fujimod-mcp-camera",
+    "fujimod-mcp-core",
+    "fujimod-settings",
       "fujimod-usb",
       "fujimod-usb-app80",
       "fujimod-usb-app80-types",
@@ -148,6 +153,12 @@
   "remaining": {
     "untested_libraries": [],
     "model_dependencies": {
+      "fujimod-emulator-boot": [
+        "fujimod-emulator-parts-controls",
+        "fujimod-emulator-xp5-display",
+        "fujimod-emulator-xp5-io",
+        "fujimod-emulator-xp5-storage"
+      ],
       "fujimod-emulator-xp5-board": [
         "fujimod-emulator-graphics",
         "fujimod-emulator-ip",

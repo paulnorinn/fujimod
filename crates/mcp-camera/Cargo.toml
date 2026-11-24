@@ -9,6 +9,8 @@ publish.workspace = true
 license.workspace = true
 
 [lib]
+# No unit tests of its own, so no test harness is built for it.
+test = false
 doctest = false
 
 [dependencies]

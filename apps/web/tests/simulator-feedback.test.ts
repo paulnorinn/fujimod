@@ -3,11 +3,12 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { simulatorIssue } from '@fujimod/emulator-ui/ui/simulator-feedback';
 
+// Compare the form as text: a Windows checkout has CRLF endings in it.
 const template = (event: string) =>
   readFileSync(
     new URL(`../../../.github/ISSUE_TEMPLATE/simulator-${event}.yml`, import.meta.url),
     'utf8',
-  );
+  ).replaceAll('\r\n', '\n');
 test('crashes require a ZIP upload; general feedback requires a ZIP upload', () => {
   for (const event of ['feedback', 'crash'] as const) {
     const form = template(event);
@@ -82,7 +83,7 @@ test('every field is required and physical device crashes have a separate form',
     const form = readFileSync(
       new URL(`../../../.github/ISSUE_TEMPLATE/${name}.yml`, import.meta.url),
       'utf8',
-    );
+    ).replaceAll('\r\n', '\n');
     for (const field of form.split('  - type:').slice(1))
       assert.match(field, /validations:\n      required: true/, `${name}: ${field}`);
     assert.match(form, /label: Firmware ID\n/);

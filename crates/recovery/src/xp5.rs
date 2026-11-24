@@ -664,7 +664,7 @@ fn bind_internal_flash(
         require(
             seconds <= MAX_FALLBACK_WAIT_SECONDS
                 && setup.reset_copy_size > 0
-                && setup.reset_copy_size % 8 == 0
+                && setup.reset_copy_size.is_multiple_of(8)
                 && restore_offset % 8 == 0
                 && (restore_offset as u64)
                     .checked_add(setup.reset_copy_size as u64)
@@ -706,7 +706,7 @@ fn bind_read_only(
     )?;
     let destination = read_only.destination;
     require(
-        destination % 0x1000 == 0
+        destination.is_multiple_of(0x1000)
             && (READ_ONLY_FLOOR..READ_ONLY_CEILING).contains(&destination)
             && bytes as u64 <= READ_ONLY_CEILING - destination,
         "The read-only destination is outside the DRAM the loader may fill",
@@ -714,8 +714,8 @@ fn bind_read_only(
     require(
         setup.reset_copy_size >= 8
             && setup.reset_copy_size <= 0x10_0000
-            && setup.reset_copy_size % 4 == 0
-            && setup.selector % 4 == 0
+            && setup.reset_copy_size.is_multiple_of(4)
+            && setup.selector.is_multiple_of(4)
             && setup.selector + 8 <= setup.reset_copy_size,
         "The read-only guard does not fit the stock reset image",
     )?;
@@ -1441,7 +1441,7 @@ mod tests {
         let field = |raw: &[u8], n: usize| {
             u64::from_le_bytes(raw[at + 8 * n..at + 8 * n + 8].try_into().unwrap())
         };
-        let gate = (s.gate_offset - 0x800) as usize;
+        let gate = s.gate_offset - 0x800;
         let address = s.base + 0xc000;
         for wait in [None, Some(7), Some(0), Some(MAX_FALLBACK_WAIT_SECONDS)] {
             let files = package_internal_flash(&data, &setup, ram.clone(), 0, wait).unwrap();
@@ -1637,8 +1637,8 @@ mod tests {
     fn the_read_only_startup_binds_a_destination_and_leaves_the_stock_continuation_alone() {
         let (data, s, ram) = fixture();
         let at = 0xc000 + read_only_template::SETUP_SD_READ_ONLY;
-        let gate = (s.gate_offset - 0x800) as usize;
-        let call = (s.bootstrap_offset - 0x800 + 36) as usize;
+        let gate = s.gate_offset - 0x800;
+        let call = s.bootstrap_offset - 0x800 + 36;
         let address = s.base + 0xc000;
         // The recipe's card-resident setup (interrupt frames) is not needed and not used.
         for setup in [s.clone(), with_frames(s.clone())] {

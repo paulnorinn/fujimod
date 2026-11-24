@@ -6,6 +6,21 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { crc32, zipBlob } from './archive';
 
+/**
+ * Whether the host has the external `unzip` the cross-check needs. Windows
+ * images without MSYS or Git's usr/bin do not, and the in-process assertions
+ * still cover the same bytes there.
+ */
+function unzipAvailable(): boolean {
+  try {
+    execFileSync('unzip', ['-v'], { stdio: 'ignore' });
+    return true;
+  } catch {
+    console.warn('skipping the external unzip cross-check: no unzip on PATH');
+    return false;
+  }
+}
+
 test('deflate ZIP preserves UTF-8 names, CRCs and large Blob contents and passes unzip -t', async () => {
   const block = new Uint8Array(1024 * 1024).fill(42);
   const large = new Blob(Array.from({ length: 128 }, () => block));
@@ -26,15 +41,17 @@ test('deflate ZIP preserves UTF-8 names, CRCs and large Blob contents and passes
   expect(decoded.length).toBe(large.size);
   expect(crc32(decoded)).toBe(view.getUint32(14, true));
   expect(crc32(new TextEncoder().encode('123456789'))).toBe(0xcbf43926);
-  const root = await mkdtemp(join(tmpdir(), 'fujimod-zip-'));
-  try {
-    const path = join(root, 'archive.zip');
-    await writeFile(path, bytes);
-    expect(execFileSync('unzip', ['-t', path], { encoding: 'utf8' })).toContain(
-      'No errors detected',
-    );
-  } finally {
-    await rm(root, { recursive: true });
+  if (unzipAvailable()) {
+    const root = await mkdtemp(join(tmpdir(), 'fujimod-zip-'));
+    try {
+      const path = join(root, 'archive.zip');
+      await writeFile(path, bytes);
+      expect(execFileSync('unzip', ['-t', path], { encoding: 'utf8' })).toContain(
+        'No errors detected',
+      );
+    } finally {
+      await rm(root, { recursive: true });
+    }
   }
 }, 30000);
 test('ZIP64 directory counts at the 16-bit boundary pass unzip', async () => {
@@ -48,13 +65,15 @@ test('ZIP64 directory counts at the 16-bit boundary pass unzip', async () => {
   expect(view.getUint32(end64, true)).toBe(0x06064b50);
   expect(view.getBigUint64(end64 + 32, true)).toBe(65535n);
   expect(view.getUint32(bytes.length - 42, true)).toBe(0x07064b50);
-  const root = await mkdtemp(join(tmpdir(), 'fujimod-zip64-'));
-  try {
-    const path = join(root, 'archive.zip');
-    await writeFile(path, bytes);
-    execFileSync('unzip', ['-tqq', path]);
-  } finally {
-    await rm(root, { recursive: true });
+  if (unzipAvailable()) {
+    const root = await mkdtemp(join(tmpdir(), 'fujimod-zip64-'));
+    try {
+      const path = join(root, 'archive.zip');
+      await writeFile(path, bytes);
+      execFileSync('unzip', ['-tqq', path]);
+    } finally {
+      await rm(root, { recursive: true });
+    }
   }
 }, 30000);
 test('empty archives and oversized paths', async () => {

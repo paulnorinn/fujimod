@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import test from 'node:test';
 import { unzipSync } from 'fflate';
 import { build } from './build-web-wheel.ts';
@@ -41,7 +41,7 @@ await test('wheel records authenticate every included Python source and metadata
     assert.match(Buffer.from(files[metadata]).toString(), /Requires-Python: >=3\.14\n/);
     assert.equal(
       JSON.parse(readFileSync(join(output, 'manifest.json'), 'utf8')).wheel,
-      path.split('/').at(-1),
+      basename(path),
     );
   } finally {
     rmSync(output, { recursive: true, force: true });

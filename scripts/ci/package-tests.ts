@@ -9,7 +9,14 @@ const { scripts } = JSON.parse(readFileSync(resolve(directory, 'package.json'), 
 let failed = false;
 for (const name of Object.keys(scripts)) {
   if (!name.startsWith('test:') || name.endsWith(':watch')) continue;
-  const result = spawnSync('npm', ['run', name], { cwd: directory, stdio: 'inherit' });
+  // `npm` is a `.cmd` shim on Windows, so it needs the command interpreter.
+  const result =
+    process.platform === 'win32'
+      ? spawnSync(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', 'npm', 'run', name], {
+          cwd: directory,
+          stdio: 'inherit',
+        })
+      : spawnSync('npm', ['run', name], { cwd: directory, stdio: 'inherit' });
   if (result.error) throw result.error;
   if (result.status !== 0) failed = true;
 }

@@ -75,7 +75,7 @@ impl Tree {
         if used - previous + bytes.len() > MAX_BYTES {
             return Err(libc::ENOMEM);
         }
-        self.nodes.get_mut(&id).ok_or(libc::ESTALE)?.0.size = bytes.len() as u64;
+        self.nodes.get_mut(&id).ok_or(crate::ESTALE)?.0.size = bytes.len() as u64;
         self.bytes.insert(id, bytes);
         Ok(())
     }
@@ -85,7 +85,7 @@ impl Tree {
         id: u64,
         continuation: bool,
     ) -> Result<(u64, Vec<Node>)> {
-        let entry = self.nodes.get(&id).ok_or(libc::ESTALE)?.1.clone();
+        let entry = self.nodes.get(&id).ok_or(crate::ESTALE)?.1.clone();
         let output = match entry {
             Entry::Root => None,
             Entry::Output(o) | Entry::Layers(o) => Some(o),

@@ -1,16 +1,26 @@
 import { Miniflare, type Request as WorkerRequest, type Response as WorkerResponse } from 'miniflare';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 // Test files run in parallel; each bundles the Worker into its own directory.
 const outdir = mkdtempSync(join(tmpdir(), 'fujimod-sharing-worker-'));
-execFileSync(
-  fileURLToPath(new URL('./node_modules/.bin/wrangler', import.meta.url)),
-  ['deploy', '--dry-run', '--outdir', outdir],
-  { cwd: fileURLToPath(new URL('.', import.meta.url)), stdio: 'pipe' },
-);
+const directory = fileURLToPath(new URL('.', import.meta.url));
+const wranglerBin = fileURLToPath(new URL('./node_modules/.bin/wrangler', import.meta.url));
+// Windows installs the package binary as a .cmd shim, which only the command
+// interpreter can run.
+const wrangler =
+  process.platform === 'win32' && existsSync(`${wranglerBin}.cmd`)
+    ? `${wranglerBin}.cmd`
+    : wranglerBin;
+const args = ['deploy', '--dry-run', '--outdir', outdir];
+if (wrangler.endsWith('.cmd'))
+  execFileSync(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', wrangler, ...args], {
+    cwd: directory,
+    stdio: 'pipe',
+  });
+else execFileSync(wrangler, args, { cwd: directory, stdio: 'pipe' });
 const worker = readFileSync(join(outdir, 'worker.js'), 'utf8');
 rmSync(outdir, { recursive: true });
 const origin = 'https://justjake.github.io';

@@ -507,9 +507,9 @@ pub(crate) fn open_from(
             cpu.sysregs.icc_igrpen0_el1 = 0;
             cpu.sysregs.icc_igrpen1_el1 = 0;
         }
-        xp5_boot::startup_from_profile(&resolved, &profile, ticks_per_second)?
+        xp5_boot::startup_from_profile(resolved, &profile, ticks_per_second)?
     } else {
-        xp5_boot::startup_from_profile(&resolved, firmware_profile, ticks_per_second)?
+        xp5_boot::startup_from_profile(resolved, firmware_profile, ticks_per_second)?
     };
     if let Some(rom) = rom {
         let mpidr = Register::Arm64System(arm64::system_register("MPIDR_EL1")?);
@@ -691,7 +691,7 @@ pub(crate) fn open_from(
             for mapping in execution.mappings.iter().filter(|mapping| mapping.core == core) {
                 occupied.push((mapping.address, mapping.size as u64));
             }
-            let planned = plan_aperture(window.base, window.size as u64, &occupied).map_err(
+            let planned = plan_aperture(window.base, window.size, &occupied).map_err(
                 |error| format!("device window {} at {:#x}: {error}", window.kind, window.base),
             )?;
             if let Some((start, size)) = planned {
@@ -799,7 +799,7 @@ pub(crate) fn open_from(
         .and_then(|options| options.get("resistor_keys"))
         .map(|value| serde_json::to_value(value).map_err(|error| error.to_string()))
         .transpose()?;
-    let ladder_keys = fujimod_emulator_xp5_board::ladder_controls::ladder_keys(&resolved)?;
+    let ladder_keys = fujimod_emulator_xp5_board::ladder_controls::ladder_keys(resolved)?;
     let controls = match (resistor_keys, ladder_keys) {
         (Some(_), Some(_)) => {
             return Err(
@@ -822,7 +822,7 @@ pub(crate) fn open_from(
         _ => return Err("X100VI run configuration has no XP5 scene".into()),
     };
     let mut windows = state.device.clone();
-    xp5_boot::apply_run_scene(&resolved, &mut windows, run_scene, ticks_per_second)?;
+    xp5_boot::apply_run_scene(resolved, &mut windows, run_scene, ticks_per_second)?;
     let outputs = crate::output::Outputs::default();
     let (windows, resources, controls) = devices_and_resources(
         state,

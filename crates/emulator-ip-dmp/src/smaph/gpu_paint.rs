@@ -532,15 +532,18 @@ mod tests {
     use super::{paint, shared_gpu};
     use crate::smaph::{Bank, Gradient, Texture, blend_pixel, packed, pixel_index};
 
-    fn require_gpu() -> bool {
+    /// Claim the process-wide device for this test. The returned guard must
+    /// live until the test ends; `None` means no adapter is available.
+    fn require_gpu() -> Option<std::sync::MutexGuard<'static, ()>> {
+        let guard = crate::test_lock::guard();
         match shared_gpu() {
             Ok(Some(gpu)) => {
                 println!("SMAPH GPU paint adapter: {}", gpu.name);
-                true
+                Some(guard)
             }
             Ok(None) => {
                 println!("SKIP SMAPH GPU paint: no wgpu adapter is available");
-                false
+                None
             }
             Err(error) => panic!("SMAPH GPU paint adapter initialization failed: {error}"),
         }
@@ -848,9 +851,9 @@ mod tests {
 
     #[test]
     fn existing_solid_and_image_path_draws_match_cpu() {
-        if !require_gpu() {
+        let Some(_gpu_lock) = require_gpu() else {
             return;
-        }
+        };
         let extent = [16, 16];
         let bounds = [0, 16, 0, 16];
         let target = vec![0; 16 * 16 * 4];
@@ -910,9 +913,9 @@ mod tests {
 
     #[test]
     fn every_supported_image_format_matches_cpu() {
-        if !require_gpu() {
+        let Some(_gpu_lock) = require_gpu() else {
             return;
-        }
+        };
         let extent = [16, 16];
         let bounds = [1, 15, 1, 15];
         let coverage = rectangle_coverage(bounds, 4);
@@ -950,9 +953,9 @@ mod tests {
 
     #[test]
     fn linear_and_radial_gradients_match_cpu() {
-        if !require_gpu() {
+        let Some(_gpu_lock) = require_gpu() else {
             return;
-        }
+        };
         let extent = [16, 16];
         let bounds = [0, 16, 0, 16];
         let coverage = rectangle_coverage(bounds, 2);
@@ -987,9 +990,9 @@ mod tests {
 
     #[test]
     fn randomized_paints_match_cpu_byte_for_byte() {
-        if !require_gpu() {
+        let Some(_gpu_lock) = require_gpu() else {
             return;
-        }
+        };
         let extent = [16, 16];
         let bounds = [1, 15, 1, 15];
         let contours = vec![vec![
@@ -1075,9 +1078,9 @@ mod tests {
     // bounding-box wide, so a 47-pixel box needs its own coverage stride.
     #[test]
     fn resident_tiled_source_over_paints_match_cpu() {
-        if !require_gpu() {
+        let Some(_gpu_lock) = require_gpu() else {
             return;
-        }
+        };
         let extent = [64, 64];
         let bounds = [3, 50, 5, 41];
         let regs = regs(false, false);

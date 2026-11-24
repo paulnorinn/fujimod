@@ -47,12 +47,10 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
             },
         )
         .await
-        {
-            if let Ok(candidate) = connection.begin_session(None).await {
+            && let Ok(candidate) = connection.begin_session(None).await {
                 session = Some(candidate);
                 break;
             }
-        }
     }
     let mut session = session.ok_or("no service session")?;
     let result = dump(&mut session, &out, chunk_bytes, storage).await;
@@ -91,7 +89,7 @@ async fn dump(session: &mut Session, out: &Path, chunk_bytes: u32, storage: bool
                 return Err(format!("short read at {offset:#x}: {} of {length}", chunk.len()).into());
             }
             bytes.extend_from_slice(&chunk);
-            if offset % 0x40000 == 0 {
+            if offset.is_multiple_of(0x40000) {
                 println!(
                     "  {view:?} {offset:#x}/{:x} in {:.1}s",
                     capacity,

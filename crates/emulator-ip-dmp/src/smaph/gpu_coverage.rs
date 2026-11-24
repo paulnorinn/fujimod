@@ -171,15 +171,18 @@ mod tests {
 
     type Point = [f64; 2];
 
-    fn require_gpu() -> bool {
+    /// Claim the process-wide device for this test. The returned guard must
+    /// live until the test ends; `None` means no adapter is available.
+    fn require_gpu() -> Option<std::sync::MutexGuard<'static, ()>> {
+        let guard = crate::test_lock::guard();
         match shared_gpu() {
             Ok(Some(gpu)) => {
                 println!("SMAPH GPU coverage adapter: {}", gpu.name);
-                true
+                Some(guard)
             }
             Ok(None) => {
                 println!("SKIP SMAPH GPU coverage: no wgpu adapter is available");
-                false
+                None
             }
             Err(error) => panic!("SMAPH GPU adapter initialization failed: {error}"),
         }
@@ -211,17 +214,17 @@ mod tests {
 
     #[test]
     fn authored_smaph_rectangle_matches_cpu_coverage() {
-        if !require_gpu() {
+        let Some(_gpu_lock) = require_gpu() else {
             return;
-        }
+        };
         compare(&[vec![[0.0, 0.0], [16.0, 0.0], [16.0, 16.0], [0.0, 16.0]]]);
     }
 
     #[test]
     fn scanline_contours_match_cpu_coverage() {
-        if !require_gpu() {
+        let Some(_gpu_lock) = require_gpu() else {
             return;
-        }
+        };
         compare(&[
             vec![[1.5, 1.5], [11.5, 1.5], [11.5, 9.5], [1.5, 9.5]],
             vec![[3.5, 3.5], [8.5, 3.5], [8.5, 7.5], [3.5, 7.5]],
@@ -240,9 +243,9 @@ mod tests {
 
     #[test]
     fn randomized_contours_match_cpu_coverage() {
-        if !require_gpu() {
+        let Some(_gpu_lock) = require_gpu() else {
             return;
-        }
+        };
         let mut seed = 123456789u32;
         for _ in 0..24 {
             let mut contours = Vec::new();

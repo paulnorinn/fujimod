@@ -169,10 +169,10 @@ fn serve(
                 );
             }
             // Browser requests from another page must not inject camera keys.
-            if name.eq_ignore_ascii_case("origin") {
-                if !origins.iter().any(|origin| origin == value.trim()) {
-                    return reply(stream, "403 Forbidden", "text/plain", b"foreign origin");
-                }
+            if name.eq_ignore_ascii_case("origin")
+                && !origins.iter().any(|origin| origin == value.trim())
+            {
+                return reply(stream, "403 Forbidden", "text/plain", b"foreign origin");
             }
         }
     }
@@ -208,10 +208,12 @@ fn serve(
                         .ok()
                         .and_then(|bytes| serde_json::from_slice::<serde_json::Value>(&bytes).ok())
                         .unwrap_or(serde_json::json!({"bank": bank, "enabled": false}));
-                    if let Ok(bytes) = std::fs::read(frames.join(format!("bank{bank}-publication.json"))) {
-                        if let Ok(publication) = serde_json::from_slice::<serde_json::Value>(&bytes) {
-                            status["frames"] = publication["frames"].clone();
-                        }
+                    if let Ok(bytes) =
+                        std::fs::read(frames.join(format!("bank{bank}-publication.json")))
+                        && let Ok(publication) =
+                            serde_json::from_slice::<serde_json::Value>(&bytes)
+                    {
+                        status["frames"] = publication["frames"].clone();
                     }
                     status["has_frame"] = frames
                         .join(format!("latest-bank{bank}.png"))

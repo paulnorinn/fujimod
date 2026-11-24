@@ -7,6 +7,7 @@ type CargoMessage = {
   message?: { rendered?: string };
   manifest_path?: string;
   filenames?: string[];
+  target?: { name?: string };
 };
 
 /** The artifact stems tie linker entries to the exact Cargo package, including parallel versions. */
@@ -39,9 +40,20 @@ export function cargoArtifacts(
     if (message.reason === 'compiler-message' && message.message?.rendered)
       process.stderr.write(message.message.rendered);
     if (message.reason !== 'compiler-artifact' || !message.manifest_path) continue;
+    // A binary crate (the wasm module itself) emits no rlib, so record its
+    // target name as well; the linker map names its objects after it.
+    if (message.target?.name) artifacts.set(message.target.name, dirname(message.manifest_path));
     for (const artifact of message.filenames ?? []) {
-      const stem = /^lib([\w]+-[a-f0-9]+)\.rlib$/.exec(basename(artifact))?.[1];
-      if (stem) artifacts.set(stem, dirname(message.manifest_path));
+      // The artifact is `lib<crate>-<hash>.rlib` normally, but a crate whose
+      // dependencies change every build (the wasm bindings embed the generated
+      // schema) is emitted as plain `lib<crate>.rlib`.
+      const match = /^lib([\w]+?)(?:-([a-f0-9]+))?\.rlib$/.exec(basename(artifact));
+      if (!match) continue;
+      const directory = dirname(message.manifest_path);
+      if (match[2]) artifacts.set(`${match[1]}-${match[2]}`, directory);
+      // Windows thin-LTO objects are named after the crate alone, so record the
+      // crate name too and let the linker map resolve them by it.
+      artifacts.set(match[1], directory);
     }
   }
   if (result.status !== 0) throw Error(`Cargo exited ${result.status ?? result.signal}`);
@@ -58,7 +70,9 @@ export function linkedCrates(map: string, artifacts: ReadonlyMap<string, string>
     const stem =
       /(?:^|[/\\])lib([\w]+-[a-f0-9]+)\.rlib\(/.exec(input)?.[1] ??
       /\.a\(([\w]+-[a-f0-9]+)\.[^()]*\.rcgu\.o\)/.exec(input)?.[1] ??
-      /[/\\]([\w]+-[a-f0-9]+)\.[^()]*\.rcgu\.o:/.exec(input)?.[1];
+      /[/\\]([\w]+-[a-f0-9]+)\.[^()]*\.rcgu\.o:/.exec(input)?.[1] ??
+      // Windows: `<crate>.<codegen hash>.<object hash>.rcgu.o`, no rlib hash.
+      /[/\\]([\w]+)\.[0-9a-z]+\.[0-9a-z]+\.rcgu\.o:/.exec(input)?.[1];
     const directory = stem && artifacts.get(stem);
     if (directory) directories.add(directory);
   }

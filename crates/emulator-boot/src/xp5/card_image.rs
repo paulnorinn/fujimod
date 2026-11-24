@@ -96,7 +96,7 @@ pub(crate) fn list_roots(card: &Card) -> Result<Listing, String> {
         if start == 0 || count == 0 || u64::from(start) + u64::from(count) > u64::from(card.sectors()) {
             return Err(format!("MBR entry {} (type {kind:#04x}) is empty or exceeds the card", index + 1));
         }
-        let label = format!("MBR entry {} type {kind:#04x} start LBA {start} ({} MiB) sectors {count}", index + 1, u64::from(start) * 512 >> 20);
+        let label = format!("MBR entry {} type {kind:#04x} start LBA {start} ({} MiB) sectors {count}", index + 1, (u64::from(start) * 512) >> 20);
         volume(card, u64::from(start), &label, &mut listing)?;
     }
     if used == 0 {
@@ -171,7 +171,7 @@ fn fat32(card: &Card, start: u64, boot: &[u8], label: &str, listing: &mut Listin
 /// 8.3 and long names of a FAT directory image. A long name is kept next to its short alias.
 fn fat_names(directory: &[u8], names: &mut Vec<String>) {
     let mut long: Vec<(u8, Vec<u16>)> = Vec::new();
-    for entry in directory.chunks_exact(32) {
+    for entry in directory.as_chunks::<32>().0 {
         match entry[0] {
             0x00 => break,
             0xe5 => {
@@ -183,7 +183,7 @@ fn fat_names(directory: &[u8], names: &mut Vec<String>) {
         if entry[11] == 0x0f {
             let mut units = Vec::with_capacity(13);
             for range in [1..11, 14..26, 28..32] {
-                units.extend(entry[range].chunks_exact(2).map(|pair| u16::from_le_bytes([pair[0], pair[1]])));
+                units.extend(entry[range].as_chunks::<2>().0.iter().map(|pair| u16::from_le_bytes([pair[0], pair[1]])));
             }
             long.push((entry[0] & 0x1f, units));
             continue;
@@ -245,7 +245,7 @@ fn exfat(card: &Card, start: u64, boot: &[u8], label: &str, listing: &mut Listin
         start + fat_offset,
         start + heap
     ));
-    let entries: Vec<&[u8]> = directory.chunks_exact(32).collect();
+    let entries = directory.as_chunks::<32>().0;
     let mut index = 0;
     while index < entries.len() {
         let entry = entries[index];
@@ -259,7 +259,13 @@ fn exfat(card: &Card, start: u64, boot: &[u8], label: &str, listing: &mut Listin
                 for next in entries.iter().skip(index + 1).take(secondary) {
                     match next[0] {
                         0xc0 => length = next[3] as usize,
-                        0xc1 => units.extend(next[2..32].chunks_exact(2).map(|pair| u16::from_le_bytes([pair[0], pair[1]]))),
+                        0xc1 => units.extend(
+                            next[2..32]
+                                .as_chunks::<2>()
+                                .0
+                                .iter()
+                                .map(|pair| u16::from_le_bytes([pair[0], pair[1]])),
+                        ),
                         _ => {}
                     }
                 }

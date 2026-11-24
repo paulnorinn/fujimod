@@ -9,6 +9,16 @@ const output = resolve(root, 'target/coverage/node');
 mkdirSync(output, { recursive: true });
 let failed = false;
 
+/**
+ * Run `npm` through the Windows command interpreter: npm is a `.cmd` shim
+ * there, which a direct spawn cannot execute.
+ */
+function npm(args: string[], directory = '.') {
+  return process.platform === 'win32'
+    ? run(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', 'npm', ...args], directory)
+    : run('npm', args, directory);
+}
+
 function run(command: string, args: string[], directory = '.') {
   const result = spawnSync(command, args, {
     cwd: resolve(root, directory),
@@ -53,14 +63,11 @@ for (const [name, testing] of [
 ] as const) {
   if (!run('node', ['scripts/build.ts', ...(testing ? ['--testing'] : [])], 'bindings/javascript'))
     continue;
-  if (!run('npm', ['exec', '--', 'tsc'], 'bindings/javascript')) continue;
-  run('npm', ['exec', '--', 'tsc', '-p', 'tsconfig.types.json'], 'bindings/javascript');
-  if (!run('npm', ['exec', '--', 'tsc', '-p', 'tsconfig.scripts.json'], 'bindings/javascript'))
+  if (!npm(['exec', '--', 'tsc'], 'bindings/javascript')) continue;
+  npm(['exec', '--', 'tsc', '-p', 'tsconfig.types.json'], 'bindings/javascript');
+  if (!npm(['exec', '--', 'tsc', '-p', 'tsconfig.scripts.json'], 'bindings/javascript'))
     continue;
-  if (
-    testing &&
-    !run('npm', ['exec', '--', 'tsc', '-p', 'tsconfig.testing.json'], 'bindings/javascript')
-  )
+  if (testing && !npm(['exec', '--', 'tsc', '-p', 'tsconfig.testing.json'], 'bindings/javascript'))
     continue;
   test(name, [testing ? 'tests/usb.test.ts' : 'tests/production.ts'], 'bindings/javascript');
 }

@@ -29,3 +29,17 @@ pub(crate) fn webgpu_bridge_enabled() -> bool {
         false
     }
 }
+
+/// The GPU tests share one process-wide device context, so they take turns:
+/// concurrent uploads and read-backs on one device would observe each other's
+/// bytes. A real command list is rendered single-threaded and needs no lock.
+#[cfg(test)]
+pub(crate) mod test_lock {
+    use std::sync::{Mutex, MutexGuard};
+
+    static LOCK: Mutex<()> = Mutex::new(());
+
+    pub(crate) fn guard() -> MutexGuard<'static, ()> {
+        LOCK.lock().unwrap_or_else(|error| error.into_inner())
+    }
+}

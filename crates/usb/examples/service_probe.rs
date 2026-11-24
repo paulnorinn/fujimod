@@ -82,10 +82,10 @@ async fn diagnose(session: &mut Session) -> Result<(), Box<dyn std::error::Error
         (0x0010_0000, 4),
         (0x0101_376c, 4),
         (0x0266_8000, 4),
-        (0x0e29_a98, 4),
+        (0x0e29a98, 4),
         (0x1000_0000, 4),
         (0x2000_0000, 4),
-        (0xea7_eb8, 4),
+        (0xea7eb8, 4),
     ] {
         let range = MemoryRange::new(
             Address(address),

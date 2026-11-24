@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,9 +9,14 @@ import type { D1Database } from '@cloudflare/workers-types';
 
 /** End to end through the built Worker: real Better Auth, real D1, real routes. */
 const web = fileURLToPath(new URL('../', import.meta.url));
-const wrangler = fileURLToPath(
+const wranglerBin = fileURLToPath(
   new URL('../../usb-sharing/node_modules/.bin/wrangler', import.meta.url),
 );
+// Windows installs the package binary as a .cmd shim next to the bare name.
+const wrangler =
+  process.platform === 'win32' && existsSync(`${wranglerBin}.cmd`)
+    ? `${wranglerBin}.cmd`
+    : wranglerBin;
 const secret = 'e2e-secret-e2e-secret-e2e-secret';
 const origin = 'https://fujimod.com';
 
@@ -32,10 +37,14 @@ function bundle(): string {
       compatibility_flags: ['nodejs_compat'],
     }),
   );
-  execFileSync(wrangler, ['deploy', '--dry-run', '--outdir', out, '--config', config], {
-    cwd: web,
-    stdio: 'pipe',
-  });
+  // A .cmd shim only runs through the Windows command interpreter.
+  const args = ['deploy', '--dry-run', '--outdir', out, '--config', config];
+  if (wrangler.endsWith('.cmd'))
+    execFileSync(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', wrangler, ...args], {
+      cwd: web,
+      stdio: 'pipe',
+    });
+  else execFileSync(wrangler, args, { cwd: web, stdio: 'pipe' });
   outdir = out;
   return join(out, 'worker.js');
 }

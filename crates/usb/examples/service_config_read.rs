@@ -44,12 +44,10 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
             },
         )
         .await
-        {
-            if let Ok(candidate) = connection.begin_session(None).await {
+            && let Ok(candidate) = connection.begin_session(None).await {
                 session = Some(candidate);
                 break;
             }
-        }
     }
     let mut session = session.ok_or("no service session")?;
     let result = read(&mut session, view, offset, length, out).await;

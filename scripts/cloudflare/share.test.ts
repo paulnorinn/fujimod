@@ -9,13 +9,17 @@ import { publication, shareUrl } from './share.ts';
 await test('publication detects local MIME and uses a content-addressed, encoded share URL', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'share-test-'));
   try {
-    const path = join(dir, 'hello #?.txt');
+    // Windows file names cannot contain '?', so it exercises the same encoding
+    // with '&' there; '#' and ' ' stay in both.
+    const name = process.platform === 'win32' ? 'hello #&.txt' : 'hello #?.txt';
+    const encoded = process.platform === 'win32' ? 'hello%20%23%26.txt' : 'hello%20%23%3F.txt';
+    const path = join(dir, name);
     await writeFile(path, 'hello world\n');
     const plan = await publication(path);
     assert.equal(plan.contentType, 'text/plain');
     const digest = createHash('sha256').update('hello world\n').digest('hex');
-    assert.equal(plan.key, `files/${digest}/hello #?.txt`);
-    assert.equal(plan.url, `https://share.fujimod.com/file/files/${digest}/hello%20%23%3F.txt`);
+    assert.equal(plan.key, `files/${digest}/${name}`);
+    assert.equal(plan.url, `https://share.fujimod.com/file/files/${digest}/${encoded}`);
     await assert.rejects(publication(path, { direct: true }), /requires an image or video/);
     await assert.rejects(publication(path, { contentType: 'invalid' }));
     const video = await publication(path, {
