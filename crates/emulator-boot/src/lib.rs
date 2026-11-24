@@ -234,6 +234,9 @@ fn prepared(resolved: ResolvedConfiguration) -> Result<Prepared, String> {
         Some(RunScene::Xp5(_)) => {
             return Err("native X70 boot does not support XP5 scene inputs".into());
         }
+        Some(RunScene::Xpp(_)) => {
+            return Err("native X70 boot does not support X-Processor Pro scene inputs".into());
+        }
         None => return Err("native X70 boot requires a declared generated scene".into()),
     };
     let execution_policy = configuration

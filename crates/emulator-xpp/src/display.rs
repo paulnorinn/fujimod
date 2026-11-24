@@ -1162,7 +1162,9 @@ mod tests {
             .unwrap()
             .expect("a composed frame");
         assert_eq!((frame.width, frame.height), (2, 1));
-        assert_eq!(frame.raw, [0, 0, 255, 255, 0, 0, 0, 0]);
+        // The composed frame is opaque: `compose` keeps every output pixel's
+        // alpha, so a fully transparent OSD pixel shows the black background.
+        assert_eq!(frame.raw, [0, 0, 255, 255, 0, 0, 0, 255]);
         assert_eq!(frame.rgb.as_deref(), Some(&[255, 0, 0, 0, 0, 0][..]));
         // Without requested pixels the raw byte order is still reported.
         let raw = ScanoutSource::frame(&out, 0, false, &mut read, false)

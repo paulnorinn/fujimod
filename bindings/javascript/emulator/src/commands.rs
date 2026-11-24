@@ -277,11 +277,14 @@ impl Session {
     }
     /// Show `rgb` (tightly packed, top row first) as the scene; `None` restores the analytic scene.
     pub fn set_scene(&mut self, scene: Option<(u32, u32, Vec<u8>)>) -> Result<(), String> {
-        let scene_input = self
-            .camera
-            .as_ref()
-            .and_then(|m| m.scene.as_ref())
-            .ok_or("session has no declared scene input")?;
+        let Some(scene_input) = self.camera.as_ref().and_then(|m| m.scene.as_ref()) else {
+            // A board that develops a caller's own picture (X-Processor Pro)
+            // takes the image directly; it has no analytic scene to restore.
+            let Some((width, height, bytes)) = scene else {
+                return Err("session has no declared scene input".into());
+            };
+            return self.set_picture(width, height, bytes);
+        };
         let (images, sensor, node, white_luminance) = (
             scene_input.images.clone(),
             scene_input.sensor.clone(),
@@ -329,5 +332,21 @@ impl Session {
             }
         }
         self.apply_input(Input::Wake { node })
+    }
+
+    /// Show a caller's own picture on a board that develops one; it is the same
+    /// picture `RunScene::Xpp` declares, replaced while the camera runs.
+    fn set_picture(&mut self, width: u32, height: u32, bytes: Vec<u8>) -> Result<(), String> {
+        if width == 0 || height == 0 || width > 8192 || height > 8192 {
+            return Err("invalid scene RGB dimensions".into());
+        }
+        if bytes.len() > 64 << 20 {
+            return Err("scene RGB exceeds 64 MiB".into());
+        }
+        if (width as usize) * (height as usize) * 3 != bytes.len() {
+            return Err("scene RGB length differs from its dimensions".into());
+        }
+        self.core
+            .set_picture(u64::from(width), u64::from(height), &bytes)
     }
 }

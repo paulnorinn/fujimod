@@ -15,9 +15,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         args.get(1).ok_or("OUT.json")?,
         &args[2..],
     );
-    let registers: serde_json::Value = serde_json::from_str(&format!(
-        "[[[\"Pc\",0]],[[\"Pc\",0]]]"
-    ))?;
+    let registers: serde_json::Value = serde_json::from_str("[[[\"Pc\",0]],[[\"Pc\",0]]]")?;
     let mut loaded: BTreeMap<String, Vec<u8>> = BTreeMap::new();
     for spec in assets {
         let (name, path) = spec.split_once('=').ok_or("asset must be NAME=PATH")?;

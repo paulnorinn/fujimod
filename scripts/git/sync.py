@@ -28,7 +28,6 @@ commit that does not apply cleanly stops the rebase with nothing changed.
 """
 
 import argparse
-import fcntl
 import json
 import os
 import plistlib
@@ -59,11 +58,29 @@ def locked(repository: Repository) -> Generator[None]:
     """Serialize syncs and commits in one checkout."""
     path = Path(repository.root, repository.output("rev-parse", "--git-path", LOCK))
     with path.open("w") as handle:
-        fcntl.flock(handle, fcntl.LOCK_EX)
-        try:
-            yield
-        finally:
-            fcntl.flock(handle, fcntl.LOCK_UN)
+        if sys.platform == "win32":
+            # Windows has no flock; lock the first byte of the handle instead.
+            import msvcrt
+
+            while True:
+                try:
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+                    break
+                except OSError:
+                    continue
+            try:
+                yield
+            finally:
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(handle, fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle, fcntl.LOCK_UN)
 
 
 def conflicts_path(repository: Repository) -> Path:

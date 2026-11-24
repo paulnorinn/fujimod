@@ -143,6 +143,48 @@ struct State {
 fn is_zero(n: &u32) -> bool {
     *n == 0
 }
+/// A host picture the imaging unit develops. The session holds a clone and
+/// may replace the picture between read-outs; the device locks per read-out,
+/// never per pixel.
+#[derive(Clone, Default)]
+pub struct SharedPicture(
+    std::sync::Arc<std::sync::RwLock<Option<(u64, u64, std::sync::Arc<[u8]>)>>>,
+);
+impl SharedPicture {
+    fn new(width: u64, height: u64, rgb: std::sync::Arc<[u8]>) -> Result<Self, String> {
+        if !(1..=16384).contains(&width) || !(1..=16384).contains(&height) {
+            return Err("Invalid X-Processor Pro sensor host image".into());
+        }
+        Ok(Self(std::sync::Arc::new(std::sync::RwLock::new(Some((
+            width, height, rgb,
+        ))))))
+    }
+    fn read(&self) -> Option<(u64, u64, std::sync::Arc<[u8]>)> {
+        self.0.read().ok().and_then(|picture| picture.clone())
+    }
+    /// Replace the picture. The `PictureResources` impl delegates here, so the
+    /// device and the session share one implementation.
+    pub fn set(&self, width: u64, height: u64, rgb: &[u8]) -> Result<(), String> {
+        if width * height * 3 != rgb.len() as u64 {
+            return Err("sensor host image size differs from its rows".into());
+        }
+        let picture = SharedPicture::new(width, height, rgb.into())?;
+        *self
+            .0
+            .write()
+            .map_err(|_| "the sensor picture lock is poisoned".to_string())? = picture.read();
+        Ok(())
+    }
+}
+impl fujimod_emulator_exr2_resources::PictureResources for SharedPicture {
+    fn set_picture(&self, width: u64, height: u64, rgb: &[u8]) -> Result<(), String> {
+        self.set(width, height, rgb)
+    }
+    fn picture_bytes(&self) -> usize {
+        self.read().map(|(_, _, rgb)| rgb.len()).unwrap_or(0)
+    }
+}
+
 pub struct Control {
     base: u64,
     words: BTreeMap<u64, u32>,
@@ -154,8 +196,9 @@ pub struct Control {
     /// The readout writes the declared sensor frame.
     sensor_frame: bool,
     /// Host RGB image (width, height, rows of red, green and blue bytes)
-    /// written instead of the virtual scene.
-    sensor_image: Option<(u64, u64, std::sync::Arc<[u8]>)>,
+    /// written instead of the virtual scene. Shared, so a host may replace it
+    /// while the session runs.
+    sensor_image: Option<SharedPicture>,
     /// Opt-in register-bus frame log (see [`FrameRecord`]).
     write_log: Option<Vec<FrameRecord>>,
     write_log_sequence: u64,
@@ -207,6 +250,9 @@ impl Control {
             return Err(format!("unknown X-Processor Pro sensor frame {profile}"));
         }
         self.sensor_frame = true;
+        // An empty handle: a host picture may replace the virtual scene at any
+        // time once the declared frame is written.
+        self.sensor_image = Some(SharedPicture::default());
         Ok(self)
     }
     /// The declared sensor frame takes its picture from a host RGB image of
@@ -224,8 +270,17 @@ impl Control {
         {
             return Err("Invalid X-Processor Pro sensor host image".into());
         }
-        self.sensor_image = Some((width, height, rgb.into()));
+        let handle = self
+            .sensor_image
+            .get_or_insert_with(SharedPicture::default)
+            .clone();
+        handle.set(width, height, &rgb)?;
         Ok(self)
+    }
+    /// The host picture handle, for a session that replaces it at run time.
+    /// `None` when the device was built without one.
+    pub fn picture(&self) -> Option<SharedPicture> {
+        self.sensor_image.clone()
     }
     /// Record every register-bus frame (diagnostic only; off by default and
     /// kept out of the checkpoint state).
@@ -286,12 +341,14 @@ impl Control {
                 BLACK + (linear * f64::from(WHITE - BLACK)).round() as u16
             })
             .collect();
+        // Read the shared picture once per read-out, never per pixel.
+        let picture = self.sensor_image.as_ref().and_then(SharedPicture::read);
         let mut line = vec![0; stride as usize];
         for y in 0..lines {
             let sites = &XTRANS[((y + TILE_PHASE.0) % 6) as usize];
             for (x, sample) in line.as_chunks_mut::<2>().0.iter_mut().enumerate() {
                 let color = sites[(x + TILE_PHASE.1 as usize) % 6] as usize;
-                let rgb = match &self.sensor_image {
+                let rgb = match &picture {
                     Some((w, h, image)) => bilinear(image, *w, *h, x as u64, y, width, lines),
                     None => fujimod_virtual_scene::rgb(scene, x as u64, y),
                 };
@@ -823,6 +880,7 @@ mod tests {
 
     #[test]
     fn a_sensor_host_image_replaces_the_scene_at_each_site() {
+        use fujimod_emulator_exr2_resources::PictureResources;
         let readout = Readout {
             offset: 0xc0,
             irq: 98,
@@ -856,5 +914,27 @@ mod tests {
             row,
             [BLACK, BLACK, BLACK, WHITE, BLACK, BLACK, WHITE, BLACK]
         );
+        // A host replaces the picture between read-outs: the handle the session
+        // holds is the device's own, so the next read-out writes the new image.
+        let handle = control.picture().unwrap();
+        handle
+            .set(8, 1, &[[0, 0, 255]; 8].concat())
+            .expect("replace the picture");
+        // The completion flag must clear before the unit starts again.
+        write(&mut control, &mut h, unit + 0x20, READOUT_DONE);
+        write(&mut control, &mut h, unit, 1);
+        advance(&mut control, &mut h, 20);
+        let row: Vec<u16> = (0..8)
+            .map(|x| u16::from_le_bytes([h.ram[0x1000 + 2 * x], h.ram[0x1001 + 2 * x]]))
+            .collect();
+        // Only the two B sites light now.
+        assert_eq!(
+            row,
+            [WHITE, BLACK, BLACK, BLACK, BLACK, BLACK, WHITE, BLACK]
+        );
+        // A picture whose bytes do not fill its rows is refused, and the
+        // device keeps the one it has.
+        assert!(handle.set(8, 2, &[0; 8]).is_err());
+        assert_eq!(handle.picture_bytes(), 24);
     }
 }

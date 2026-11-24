@@ -312,6 +312,7 @@ pub fn validate_selection(
         Some(RunScene::Exr2(_)) => selection.soc.id == "exr2",
         Some(RunScene::Xp4(_)) => selection.soc.id == "xp4",
         Some(RunScene::Xp5(_)) => selection.soc.id == "xp5",
+        Some(RunScene::Xpp(_)) => selection.soc.id == "xpp",
     };
     if !input_model_matches || !scene_model_matches {
         return Err("run inputs or scene do not match the selected SoC model".into());
@@ -618,6 +619,7 @@ fn scene_selection(scene: &RunScene, selection: &ResolvedSelection) -> Result<()
         RunScene::Xp4(scene) | RunScene::Xp5(scene) => {
             application_scene_selection(scene, selection)
         }
+        RunScene::Xpp(_) => scene.validate(),
     }
 }
 

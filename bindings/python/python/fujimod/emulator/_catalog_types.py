@@ -5306,7 +5306,9 @@ class RunRtcInput(TypedDict, total=False):
     ticks_per_second: Required[int]
 
 
-type RunScene = RunSceneVariant0 | RunSceneVariant1 | RunSceneVariant2
+type RunScene = (
+    RunSceneVariant0 | RunSceneVariant1 | RunSceneVariant2 | RunSceneVariant3
+)
 
 
 class RunSceneVariant0(TypedDict, total=False):
@@ -5329,6 +5331,11 @@ class RunSceneVariant2(TypedDict, total=False):
     frames: Required[list[ApplicationFrameInput]]
     kind: Required[Literal["xp5"]]
     statistics: Required[list[ApplicationStatisticsInput]]
+
+
+class RunSceneVariant3(TypedDict, total=False):
+    kind: Required[Literal["xpp"]]
+    picture: Required[XppRunPicture]
 
 
 type RunSdCardProfile = Literal[
@@ -5834,6 +5841,16 @@ class WordValue(TypedDict, total=False):
     address: Required[int]
     size: Required[int]
     value: Required[int]
+
+
+class XppRunPicture(TypedDict, total=False):
+    asset: Required[str]
+    height: Required[int]
+    light: Required[XppRunPictureLight]
+    width: Required[int]
+
+
+type XppRunPictureLight = Literal["rendered", "camera-raw"]
 
 
 class ZoomMechanism(TypedDict, total=False):

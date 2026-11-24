@@ -423,8 +423,24 @@ pub struct Built {
 impl Built {
     /// Adopt the planned device nodes and control wires in the shared session.
     pub fn into_session(self, definition: Value) -> Result<fujimod_emulator_session::Session, String> {
-        use fujimod_emulator_exr2_resources::{Resources, Wire};
-        let mut resources = Resources { encoders: self.encoders, ..Default::default() };
+        use fujimod_emulator_exr2_resources::{PictureResources, Resources, Wire};
+        // The imaging device owns the host picture; hand the session the same
+        // handle so a running session can replace it between read-outs.
+        let picture = self
+            .nodes
+            .get("imaging")
+            .and_then(|&node| {
+                self.board
+                    .inspect_device::<imaging::Control, _>(node, |control| Ok(control.picture()))
+                    .ok()
+            })
+            .flatten()
+            .map(|picture| Box::new(picture) as Box<dyn PictureResources>);
+        let mut resources = Resources {
+            encoders: self.encoders,
+            picture,
+            ..Default::default()
+        };
         for (name, level, node) in self.inputs {
             if resources.wires.insert(name.clone(), Wire::LogicLevel(level)).is_some() {
                 return Err("repeated X-Processor Pro physical input".into());

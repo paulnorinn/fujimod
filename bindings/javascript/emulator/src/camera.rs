@@ -383,13 +383,12 @@ impl Session {
                     if let Some(cfg) = settings {
                         ov.push((0x3840000, cfg));
                     }
-                    if let Some(reg) = nand {
-                        if reg.len() >= 136 + 10049 + 17940 {
+                    if let Some(reg) = nand
+                        && reg.len() >= 136 + 10049 + 17940 {
                             ov.push((0x3820000, reg[0..136].to_vec()));
                             ov.push((0x3320000, reg[136..136 + 10049].to_vec()));
                             ov.push((0x3330000, reg[136 + 10049..136 + 10049 + 17940].to_vec()));
                         }
-                    }
                     ov
                 },
             }

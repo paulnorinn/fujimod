@@ -245,6 +245,12 @@ impl Session {
         self.resources.images()?.use_analytic(name)?;
         self.image_inputs_changed(name)
     }
+    /// Replace the board's own live-view picture, for boards that develop a
+    /// caller's image instead of a declared scene. Processors must be stopped.
+    pub fn set_picture(&mut self, width: u64, height: u64, rgb: &[u8]) -> Result<(), String> {
+        self.resources.picture()?.set_picture(width, height, rgb)
+    }
+
     pub fn sensor_image(&mut self, name: &str) -> Result<(), String> {
         self.resources.images()?.use_sensor(name)?;
         self.image_inputs_changed(name)
