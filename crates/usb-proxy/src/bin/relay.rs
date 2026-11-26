@@ -16,15 +16,33 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .filter(|s| !s.is_empty())
         .map(str::to_owned)
         .collect();
-    let mut app = fujimod_usb_proxy::relay::router(token, origins.clone())?;
-    // Local development only: pages that share a camera register their link.
-    if let Ok(directory) = std::env::var("FUJIMOD_USB_PROXY_DEV_SHARES") {
-        app = app.merge(fujimod_usb_proxy::dev_shares::router(
-            directory.clone().into(),
-            origins,
-        )?);
-        println!("Development share registry: {directory}");
-    }
+    let app = {
+        let router = fujimod_usb_proxy::relay::router(token, origins.clone())?;
+        // Local development only: pages that share a camera register their link.
+        // The registry creates private files with Unix permissions, so the bin
+        // still builds on other hosts and refuses the setting there.
+        match std::env::var("FUJIMOD_USB_PROXY_DEV_SHARES") {
+            #[cfg(unix)]
+            Ok(directory) => {
+                println!("Development share registry: {directory}");
+                router.merge(fujimod_usb_proxy::dev_shares::router(
+                    directory.into(),
+                    origins,
+                )?)
+            }
+            #[cfg(unix)]
+            Err(_) => router,
+            #[cfg(not(unix))]
+            Ok(directory) => {
+                return Err(format!(
+                    "FUJIMOD_USB_PROXY_DEV_SHARES is unavailable on this platform: {directory}"
+                )
+                .into());
+            }
+            #[cfg(not(unix))]
+            Err(_) => router,
+        }
+    };
     let listener = tokio::net::TcpListener::bind(&bind).await?;
     println!("USB relay listening on {bind} at /usb-proxy/");
     axum::serve(listener, app)
