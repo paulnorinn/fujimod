@@ -3,9 +3,19 @@ use std::path::{Path, PathBuf};
 
 /// QEMU's configure, which Unicorn's CMake runs, rejects source and build
 /// directories containing spaces or colons and word-splits the compiler path.
+///
+/// A Windows drive prefix is not such a colon: the MSYS shell that runs
+/// configure reports the same directory as `/c/...`, so only the rest of the
+/// path decides.
 fn breaks_configure(path: &Path) -> bool {
-    path.to_str()
-        .is_none_or(|path| path.contains(|c: char| c.is_whitespace() || c == ':'))
+    let Some(text) = path.to_str() else {
+        return true;
+    };
+    let text = match text.as_bytes() {
+        [drive, b':', ..] if drive.is_ascii_alphabetic() => &text[2..],
+        _ => text,
+    };
+    text.contains(|c: char| c.is_whitespace() || c == ':')
 }
 
 #[cfg(unix)]
@@ -24,6 +34,23 @@ fn link(target: &Path, alias: &Path) {
         std::os::windows::fs::symlink_file(target, alias)
     }
     .expect("link Unicorn build alias");
+}
+
+/// QEMU's C sources need a compiler with C11 atomics and POSIX declarations;
+/// MSVC's `cl.exe` provides neither, so a Windows host must select clang-cl.
+#[cfg(windows)]
+fn require_clang_cl(compiler: PathBuf) -> PathBuf {
+    let name = compiler
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    assert!(
+        name.starts_with("clang-cl"),
+        "Unicorn needs clang-cl on Windows (selected {}); set CC and CXX to the full path of clang-cl.exe",
+        compiler.display()
+    );
+    compiler
 }
 
 fn main() {
@@ -49,32 +76,31 @@ fn main() {
         .map(|directory| directory.join(&compiler))
         .find(|path| path.is_file())
         .unwrap_or(compiler);
+    #[cfg(windows)]
+    let compiler = require_clang_cl(compiler);
     let mut config;
-    if [&source, &out, &compiler]
-        .into_iter()
-        .any(|path| breaks_configure(path))
-    {
+    if [&source, &out, &compiler].into_iter().any(|path| breaks_configure(path)) {
         let mut hasher = DefaultHasher::new();
         out.hash(&mut hasher);
-        let alias = std::env::temp_dir().join(format!("fujimod-unicorn-{:016x}", hasher.finish()));
-        assert!(
-            !breaks_configure(&alias),
-            "no space-free directory for the Unicorn build"
-        );
+        let alias = std::env::temp_dir()
+            .join(format!("fujimod-unicorn-{:016x}", hasher.finish()));
+        assert!(!breaks_configure(&alias), "no space-free directory for the Unicorn build");
         std::fs::create_dir_all(&alias).expect("create Unicorn build alias");
         link(&source, &alias.join("source"));
         link(&compiler, &alias.join("cc"));
         config = cmake::Config::new(alias.join("source"));
-        config
-            .out_dir(&alias)
-            .define("CMAKE_C_COMPILER", alias.join("cc"));
+        config.out_dir(&alias).define("CMAKE_C_COMPILER", alias.join("cc"));
         // The system may clear the temporary directory between builds.
-        println!(
-            "cargo:rerun-if-changed={}",
-            alias.join("build/libunicorn.a").display()
-        );
+        println!("cargo:rerun-if-changed={}", alias.join("build/libunicorn.a").display());
     } else {
         config = cmake::Config::new(&source);
+    }
+    #[cfg(windows)]
+    {
+        // QEMU's fujimod perf-map hook calls getpid() without including
+        // <process.h>, which clang-cl rejects as an implicit declaration.
+        config.generator("Ninja");
+        config.cflag("/FIprocess.h");
     }
     config
         // A compiler-path change makes CMake discard its cache and rerun
