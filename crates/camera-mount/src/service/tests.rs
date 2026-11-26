@@ -297,6 +297,13 @@ fn changed_code_or_outstanding_storage_never_frees_the_helper() {
 /// five cache-maintenance calls share one borrowed sequence and published
 /// bytes are verified once, through their uncached alias. Unbatched, install
 /// sent 296 commands and release 154.
+///
+/// The helper's image is compiled from `payload/*.c` by the host's clang, so
+/// its length — and with it the reads and writes that publish it — moves by a
+/// command or two between compilers. The reference counts are the ones the
+/// repository's pinned clang produces; a batching regression is two hundred
+/// commands away, so a small tolerance keeps the guard while letting the suite
+/// run on any host compiler.
 #[test]
 fn install_and_release_batch_their_camera_commands() {
     block_on(async {
@@ -311,8 +318,16 @@ fn install_and_release_batch_their_camera_commands() {
         let install = std::mem::take(&mut state.lock().unwrap().commands);
         service.release(&mut session, limits).await.unwrap();
         let release = state.lock().unwrap().commands;
-        assert_eq!(install, [106, 72, 20], "install [reads, writes, queries]");
-        assert_eq!(release, [57, 30, 11], "release [reads, writes, queries]");
+        /// The measured counts against the reference, within the variation the
+        /// payload's compiled length adds. Queries are pure protocol and must
+        /// match exactly.
+        fn close_to(measured: [usize; 3], reference: [usize; 3]) -> bool {
+            measured[0].abs_diff(reference[0]) <= 4
+                && measured[1].abs_diff(reference[1]) <= 4
+                && measured[2] == reference[2]
+        }
+        assert!(close_to(install, [106, 72, 20]), "install [reads, writes, queries] {install:?}");
+        assert!(close_to(release, [57, 30, 11]), "release [reads, writes, queries] {release:?}");
         restored(&state.lock().unwrap());
     });
 }
