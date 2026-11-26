@@ -41,9 +41,36 @@ fn build_jpeg(wasm: bool) {
         );
         println!("cargo:rustc-link-lib=static=jpeg");
     } else {
-        pkg_config::Config::new()
-            .probe("libjpeg")
-            .expect("libjpeg development library");
+        link_jpeg();
     }
     println!("cargo:rerun-if-changed=src/jpeg_scanlines.c");
+}
+
+/// Link libjpeg.
+///
+/// Python searches only an extension's own directory for its dependencies, so a
+/// dynamic libjpeg on Windows would have to be copied beside every installed
+/// extension. A static archive the probe can find keeps it self-contained;
+/// otherwise the probe's own dynamic link is used.
+fn link_jpeg() {
+    let library = pkg_config::Config::new()
+        .cargo_metadata(false)
+        .probe("libjpeg")
+        .expect("libjpeg development library");
+    let archives = ["jpeg-static.lib", "libjpeg-static.a", "libjpeg.a"];
+    let static_archive = cfg!(windows)
+        && library
+            .link_paths
+            .iter()
+            .any(|directory| archives.iter().any(|name| directory.join(name).is_file()));
+    if static_archive {
+        for directory in &library.link_paths {
+            println!("cargo:rustc-link-search=native={}", directory.display());
+        }
+        println!("cargo:rustc-link-lib=static=jpeg-static");
+        return;
+    }
+    pkg_config::Config::new()
+        .probe("libjpeg")
+        .expect("libjpeg development library");
 }
