@@ -379,7 +379,7 @@ fn display_files_are_read_only_and_chunk_reads_share_one_open_snapshot() {
     assert_ne!(fs.read(image.id, 122, 4).unwrap(), bytes[122..]);
     fs.close(image.id).unwrap();
     fs.reclaim(image.id).unwrap();
-    assert_eq!(fs.node(image.id).unwrap_err(), libc::ESTALE);
+    assert_eq!(fs.node(image.id).unwrap_err(), crate::ESTALE);
     assert!(
         device
             .0

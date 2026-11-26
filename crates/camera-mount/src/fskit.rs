@@ -269,7 +269,7 @@ impl<D: Device + 'static> Filesystem for Adapter<D> {
     ) -> Result<DirectoryEntries> {
         let (generation, nodes) = self.work(move |fs| fs.directory(id, cookie != 0)).await?;
         if cookie != 0 && verifier != generation {
-            return Err(Error::Posix(libc::ESTALE));
+            return Err(Error::Posix(crate::ESTALE));
         }
         let start = usize::try_from(cookie).map_err(|_| Error::Posix(libc::EINVAL))?;
         if start > nodes.len() {
