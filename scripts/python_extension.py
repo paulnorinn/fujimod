@@ -21,7 +21,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "bindings/python/python/fujimod"
-NAME = "_native.abi3.so"
+# Python imports a Windows extension as `.pyd`; only `.abi3.so` carries
+# the stable-ABI tag on the Unix platforms that recognise it.
+SUFFIX = ".pyd" if sys.platform == "win32" else ".abi3.so"
+NAME = "_native" + SUFFIX
 MODULES = ("catalog", "corpus", "emulator", "firmware", "recording", "remote", "usb")
 CHECK = """
 import importlib.util, sys
@@ -59,14 +62,18 @@ def build() -> Path:
             and "cdylib" in message["target"]["crate_types"]
         ):
             return Path(
-                next(f for f in message["filenames"] if f.endswith((".dylib", ".so")))
+                next(
+                    f
+                    for f in message["filenames"]
+                    if f.endswith((".dylib", ".so", ".dll"))
+                )
             )
     raise SystemExit("cargo built no extension library")
 
 
 def main() -> None:
     library = build()
-    candidate = PACKAGE / f"._native.new-{os.getpid()}.abi3.so"
+    candidate = PACKAGE / f"._native.new-{os.getpid()}{SUFFIX}"
     try:
         shutil.copyfile(library, candidate)
         candidate.chmod(0o755)
