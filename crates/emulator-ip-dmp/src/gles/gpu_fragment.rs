@@ -330,6 +330,12 @@ mod tests {
             }
             Err(error) => panic!("DMP fragment GPU setup failed: {error}"),
         };
+        // A software adapter's shader compiler rejects the generated DMP shader,
+        // so the fragment parity tests skip it as they skip a missing adapter.
+        if context.adapter_device_type() == wgpu::DeviceType::Cpu {
+            eprintln!("skipping DMP fragment test on a software GPU adapter");
+            return true;
+        }
         match GPU.get_or_init(|| Gpu::new(context).map(Mutex::new)) {
             Ok(_) => false,
             Err(error) => panic!("DMP fragment GPU setup failed: {error}"),

@@ -1653,8 +1653,11 @@ mod tests {
         let cpu = rectangles_on(&mut cx, &paths, &fills, (false, false)).unwrap();
         assert_eq!(cpu.len(), 1);
         assert_eq!((cpu[0].0, cpu[0].1.len()), (0x102000, 256));
-        if fujimod_emulator_gpu::context().is_ok() {
-            // Explicit verification still asks for the GPU on a software adapter.
+        // The parity check needs an adapter that can compile the SMAPH shaders;
+        // a software adapter renders through the CPU path and skips it.
+        if fujimod_emulator_gpu::context()
+            .is_ok_and(|context| context.adapter_device_type() != wgpu::DeviceType::Cpu)
+        {
             assert_eq!(
                 rectangles_on(&mut cx, &paths, &fills, (true, true)).unwrap(),
                 cpu

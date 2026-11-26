@@ -428,6 +428,12 @@ fn shared_gpu() -> Result<Option<&'static Gpu>, String> {
         Err(error) if error.starts_with("host GPU adapter:") => return Ok(None),
         Err(error) => return Err(error),
     };
+    // A software adapter renders through the CPU path; asking it to compile the
+    // SMAPH shaders only exercises a compiler it cannot run (FXC rejects the
+    // generated HLSL), so the parity tests skip it as they skip a missing adapter.
+    if context.adapter_device_type() == wgpu::DeviceType::Cpu {
+        return Ok(None);
+    }
     match GPU.get_or_init(|| Ok(Some(Gpu::new(context)))) {
         Ok(Some(gpu)) => Ok(Some(gpu)),
         Ok(None) => Ok(None),
