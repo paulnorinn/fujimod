@@ -17,6 +17,21 @@ const requested = process.argv.slice(2);
 const backends = requested.length ? requested : ['webgl2', 'webgpu'];
 if (backends.some((backend) => !['webgl2', 'webgpu'].includes(backend)))
   throw Error('Expected webgl2 or webgpu');
+/**
+ * binaryen publishes its `bin/wasm-opt` entry as a Node script on every
+ * platform, and the `.bin` shim beside it is a shell script. Neither is a
+ * native executable on Windows, so run the entry through the current Node
+ * interpreter there. `WASM_OPT` still wins when a host sets it.
+ */
+function wasmOptCommand(): [string, ...string[]] {
+  const override = process.env.WASM_OPT;
+  if (override) return [override];
+  const entry = join(root, 'crates/simulation/tools/node_modules/binaryen/bin/wasm-opt');
+  return readFileSync(entry).subarray(0, 2).toString() === '#!'
+    ? [process.execPath, entry]
+    : [entry];
+}
+
 function run(command: string, args: string[]) {
   const result = spawnSync(command, args, { cwd: root, stdio: 'inherit' });
   if (result.error) throw result.error;
@@ -71,7 +86,9 @@ for (const backend of backends) {
       'fujimod_simulation',
     ]);
     const wasm = join(staging, 'fujimod_simulation_bg.wasm');
-    run(process.env.WASM_OPT ?? join(root, 'crates/simulation/tools/node_modules/.bin/wasm-opt'), [
+    const [wasmOpt, ...wasmOptPrefix] = wasmOptCommand();
+    run(wasmOpt, [
+      ...wasmOptPrefix,
       wasm,
       '-Oz',
       '--enable-bulk-memory',
