@@ -97,8 +97,9 @@ impl Session {
         }
         match (&self.contact_driver, &saved.contact_driver) {
             (Some(current), Some(driver)) => current.validate_checkpoint(driver, saved.now())?,
+            // A session that has not connected its driver adopts the snapshot's;
+            // a connected one refuses a snapshot that carries none.
             (None, _) => (),
-            (_, None) => (),
             _ => return Err("snapshot host input driver differs".into()),
         }
         self.resources.validate_checkpoint(&saved.resources)
