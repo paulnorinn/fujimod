@@ -222,6 +222,13 @@ impl Engine {
         #[cfg(not(target_arch = "wasm32"))]
         {
             let (gpu_requested, verify_gpu) = host_gpu_mode();
+            // A software adapter pays the dispatch and read-back costs on top of
+            // the CPU rasterizer, so the host renderer stays an explicit choice
+            // there: only a verification run asks for it.
+            let gpu_requested = gpu_requested
+                && (verify_gpu
+                    || fujimod_emulator_gpu::context()
+                        .is_ok_and(|context| context.adapter_device_type() != wgpu::DeviceType::Cpu));
             if gpu_requested {
                 return if verify_gpu {
                     self.execute_host_gpu_verified(words, read)
