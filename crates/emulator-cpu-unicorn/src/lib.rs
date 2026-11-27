@@ -109,12 +109,23 @@ impl Library {
                 (core.api.uc_ctl)(raw, ffi::ctl(12, 1, 1), 0i32)
             })?;
         }
-        check(&core.api, unsafe {
-            (core.api.uc_ctl)(raw, ffi::ctl(13, 1, 1), translation_cache_size_bytes)
-        })?;
+        // The translation cache belongs to an A-profile TLB. An R5 translates
+        // through PMSA regions, and sizing a cache for it leaves state that the
+        // pinned Unicorn dereferences when the first mapping is installed.
+        if model != Model::CortexR5F {
+            check(&core.api, unsafe {
+                (core.api.uc_ctl)(raw, ffi::ctl(13, 1, 1), translation_cache_size_bytes)
+            })?;
+        }
         // Page-hook code invalidation requires translation-installed watches.
         // The AArch64 board still uses ordinary instruction observers.
-        if let Some(enable) = core.api.extensions.page_hooks {
+        //
+        // The extension walks A-profile translation structures. An R5 has PMSA
+        // regions and no page table to watch, and enabling the hooks on it
+        // faults inside the pinned Unicorn, so it keeps the ordinary observers.
+        if let Some(enable) = core.api.extensions.page_hooks
+            && model != Model::CortexR5F
+        {
             check(&core.api, unsafe { enable(raw, model != Model::ArmV8A) })?;
         }
         Ok(core)
