@@ -1651,9 +1651,9 @@ mod tests {
 
     #[test]
     fn mixed_driver_technology_follows_checked_identity() {
-        assert_eq!(selected_nand(true, Some(0x2c5b1b)).unwrap(), false);
-        assert_eq!(selected_nand(true, Some(0xefdc21)).unwrap(), true);
-        assert_eq!(selected_nand(false, Some(0x20bb20)).unwrap(), false);
+        assert!(!selected_nand(true, Some(0x2c5b1b)).unwrap());
+        assert!(selected_nand(true, Some(0xefdc21)).unwrap());
+        assert!(!selected_nand(false, Some(0x20bb20)).unwrap());
         assert!(selected_nand(false, Some(0xefdc21)).is_err());
         assert!(selected_nand(true, None).is_err());
         assert!(selected_nand(true, Some(0x123456)).is_err());

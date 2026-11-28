@@ -37,6 +37,9 @@ pub struct Inputs {
 }
 
 /// A native catalog session with its processor-specific physical input handle.
+// The XP5 variant carries the session and its input handle inline; boxing it
+// would only move the allocation, since one `Opened` is live at a time.
+#[allow(clippy::large_enum_variant)]
 pub enum Opened {
     Graph(Session),
     Xp4(Box<dyn crate::xp4_backend::Xp4Backend>),
