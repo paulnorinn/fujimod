@@ -28,6 +28,8 @@ picks the work up next, on a machine that can drive a real X-Pro2.
    every correction, in the order it was found.
 4. `reports/handover-2026-11-25.md` — how to set up a Windows machine, and the
    read-only data to collect from a physical body.
+5. `CAMERA-SESSION.md` — the checklist for the session that has the camera: set up,
+   reproduce, collect, and where each result belongs.
 
 ## Scripts
 
