@@ -245,7 +245,7 @@ pub fn phase() -> f64 {
 /// `diameter` pixels: two box passes in each direction, whose combined width matches the
 /// circle. Edges repeat the border pixel. A diameter under one pixel changes nothing.
 pub fn blur_rgb(rgb: &mut [u8], width: usize, height: usize, diameter: f64) {
-    if width == 0 || height == 0 || rgb.len() != width * height * 3 || !(diameter >= 1.) {
+    if width == 0 || height == 0 || rgb.len() != width * height * 3 || diameter < 1. || diameter.is_nan() {
         return;
     }
     // Two boxes of width b convolve to a triangle of base 2b - 1; take b = diameter / 2.
@@ -313,7 +313,7 @@ fn disc_edge_integral(u: f64) -> f64 {
 /// the picture as the lens moved).
 pub fn defocus_kernel(diameter: f64) -> Vec<f64> {
     let radius = diameter / 2.;
-    if !(radius > 1e-9) {
+    if radius <= 1e-9 || radius.is_nan() {
         return vec![1.];
     }
     let reach = radius.ceil() as isize + 1;
@@ -493,7 +493,7 @@ mod tests {
     fn bars(width: usize, height: usize, period: usize) -> Vec<f64> {
         (0..width * height)
             .map(|i| {
-                if (i % width) / period % 2 == 0 {
+                if ((i % width) / period).is_multiple_of(2) {
                     0.
                 } else {
                     1000.
@@ -547,7 +547,7 @@ mod tests {
             let reach = kernel.len() / 2;
             assert_eq!(
                 kernel.len(),
-                2 * (((diameter / 2.) as f64).ceil() as usize + 1) + 1
+                2 * ((diameter / 2.).ceil() as usize + 1) + 1
             );
             assert!((kernel.iter().sum::<f64>() - 1.).abs() < 1e-9, "{diameter}");
             for k in 0..reach {
@@ -585,9 +585,9 @@ mod tests {
         }
         // The blurred edge stays inside its blur circle: a cell further away sees nothing.
         let far = cells(20.);
-        for band in 0..4 {
-            assert_eq!(far[band][1], 0., "band {band}");
-            assert!(far[band][4] > 0. || far[band][3] > 0., "band {band}");
+        for (band, row) in far.iter().enumerate().take(4) {
+            assert_eq!(row[1], 0., "band {band}");
+            assert!(row[4] > 0. || row[3] > 0., "band {band}");
         }
     }
 
