@@ -63,6 +63,7 @@ export class RemoteEngine implements Engine {
   private cardListeners = new Listeners<CardState>();
   private saveListeners = new Listeners<SaveEvent>();
   private powerListeners = new Listeners<boolean>();
+  private liveViewListeners = new Listeners<boolean>();
   private nativeStateListeners = new Listeners<NativeDisplayState>();
   private progress?: LoadingProgress;
   private unavailable?: Error;
@@ -344,6 +345,11 @@ export class RemoteEngine implements Engine {
   }
   power(_on: boolean): Promise<void> {
     return this.unavailableMethod('Power input');
+  }
+  liveViewSource(listener: (available: boolean) => void) {
+    // A native session renders its own display, so the source is always there.
+    listener(true);
+    return this.liveViewListeners.add(listener);
   }
   powerChanges(listener: (on: boolean) => void) {
     return this.powerListeners.add(listener);

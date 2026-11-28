@@ -279,9 +279,11 @@ fn the_interface_implements_no_device() {
         let root = &packages[name].root;
         for (path, text) in source(root) {
             if device(&text) {
+                // The remaining list uses forward slashes; `display` yields
+                // backslashes on Windows, so normalize to keep the two equal.
                 found.insert(format!(
                     "{name}/{}",
-                    path.strip_prefix(root).unwrap().display()
+                    path.strip_prefix(root).unwrap().display().to_string().replace('\\', "/")
                 ));
             }
         }

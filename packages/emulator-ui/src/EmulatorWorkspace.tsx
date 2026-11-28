@@ -14,6 +14,19 @@ import { Connections } from './ui/connections';
 import './style.css';
 import './loading.css';
 
+/**
+ * A body whose emulated firmware draws no imaging output has no live view at
+ * all. Say so instead of leaving a frozen screen that reads as a hang.
+ */
+export function LiveViewNote(props: { live: string; liveViewSource: boolean }) {
+  return props.live === 'LIVE' && !props.liveViewSource ? (
+    <p id="live-view-note" role="note">
+      No live-view image source: this board's emulated firmware draws no imaging output, so the screen
+      stays blank.
+    </p>
+  ) : null;
+}
+
 export function EmulatorWorkspace(props: {
   state: SessionState;
   runtime?: SessionController;
@@ -79,6 +92,7 @@ export function EmulatorWorkspace(props: {
         <span id="status" class={{ error: props.state.error }} role="status" aria-live="polite">
           {props.state.message}
         </span>
+        <LiveViewNote live={props.state.live} liveViewSource={props.state.liveViewSource} />
         <span id="live-label">{props.state.live}</span>
       </div>
       <aside

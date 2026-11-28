@@ -24,6 +24,10 @@
       "label": "Power",
       "text": "Power"
     },
+    "sensitivity_dial": {
+      "label": "ISO",
+      "text": "ISO"
+    },
     "auto_mode_selector_lever": {
       "label": "Auto",
       "text": "Auto"

@@ -417,17 +417,43 @@ pub struct Built {
     pub inputs: Vec<(String, Level, usize)>,
     pub contacts: BTreeMap<String, fujimod_emulator_devices::parts::card_contacts::Contacts>,
     pub encoders: BTreeMap<String, fujimod_emulator_devices::parts::encoder_input::EncoderInput>,
+    /// The masked GPIO bank's shared input words, for direct contact driving.
+    pub pins: Option<fujimod_emulator_ip::socionext::gpio::SharedPins>,
 }
 impl Built {
     /// Adopt the planned device nodes and control wires in the shared session.
     pub fn into_session(self, definition: Value) -> Result<fujimod_emulator_session::Session, String> {
-        use fujimod_emulator_exr2_resources::{Resources, Wire};
-        let mut resources = Resources { encoders: self.encoders, ..Default::default() };
+        use fujimod_emulator_exr2_resources::{PictureResources, Resources, Wire};
+        // The imaging device owns the host picture; hand the session the same
+        // handle so a running session can replace it between read-outs.
+        let picture = self
+            .nodes
+            .get("imaging")
+            .and_then(|&node| {
+                self.board
+                    .inspect_device::<imaging::Control, _>(node, |control| Ok(control.picture()))
+                    .ok()
+            })
+            .flatten()
+            .map(|picture| Box::new(picture) as Box<dyn PictureResources>);
+        let mut resources = Resources {
+            encoders: self.encoders,
+            picture,
+            ..Default::default()
+        };
         for (name, level, node) in self.inputs {
             if resources.wires.insert(name.clone(), Wire::LogicLevel(level)).is_some() {
                 return Err("repeated X-Processor Pro physical input".into());
             }
             resources.users.entry(name).or_default().insert(node);
+        }
+        // The masked GPIO bank drives its contacts directly; the generic
+        // session input path reaches it through this block.
+        if let Some(pins) = self.pins {
+            resources.direct_gpio.insert(
+                "gpio".into(),
+                Box::new(fujimod_emulator_ip::socionext::gpio::DirectInput::new(pins)),
+            );
         }
         Ok(fujimod_emulator_session::Session {
             definition, board: self.board, controls: None, contact_driver: None, resources,
@@ -622,6 +648,11 @@ pub fn build(
         .nodes
         .iter()
         .any(|n| matches!(&n.model, Model::RegisterBlock { base, .. } if *base == AUDIO_SOURCE.0))
+        .then(blocks::Published::default);
+    let serial7_words = spec
+        .nodes
+        .iter()
+        .any(|n| matches!(&n.model, Model::RegisterBlock { base, .. } if *base == 0xfff2_f000))
         .then(blocks::Published::default);
     // The color unit and the still tone unit a development engine reads,
     // published by their blocks.
@@ -893,6 +924,11 @@ pub fn build(
                     && let Some(words) = &audio_words
                 {
                     model = model.with_published(words.clone());
+                }
+                if base == 0xfff2_f000
+                    && let Some(words) = &serial7_words
+                {
+                    model = model.with_published(words.clone()).with_serial7_irq(90);
                 }
                 if let Some(j) = job {
                     model = model.with_job(blocks::Job {
@@ -1434,6 +1470,13 @@ pub fn build(
                         words.clone(),
                     )?));
                 }
+                if let Some(words) = &serial7_words {
+                    sources.push(Arc::new(blocks::SourceWindow::new_writable(
+                        0xfff2_f000,
+                        0x1000,
+                        words.clone(),
+                    )?));
+                }
                 sources.extend(
                     lens_link
                         .iter()
@@ -1482,6 +1525,7 @@ pub fn build(
         inputs,
         contacts: card_contacts,
         encoders,
+        pins,
     })
 }
 

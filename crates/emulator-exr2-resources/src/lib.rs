@@ -93,16 +93,33 @@ pub struct CardPins {
     pub protect: fujimod_emulator_devices::parts::pins::Pin,
     pub protected_high: bool,
 }
+/// A board's live-view picture that a host may replace while the session runs.
+///
+/// The X-Processor Pro boards develop a caller's picture instead of their own
+/// scene; the picture lives in the imaging device, so this handle only reaches
+/// it. EXR II boards have no such handle: their pictures are image inputs.
+pub trait PictureResources: Send {
+    /// Replace the picture with `width` x `height` red, green and blue bytes.
+    fn set_picture(&self, width: u64, height: u64, rgb: &[u8]) -> Result<(), String>;
+    /// Host bytes the current picture retains.
+    fn picture_bytes(&self) -> usize;
+}
+
 #[derive(Default)]
 pub struct Resources {
     pub inputs: Inputs,
     /// The image wires and inputs, when the board has any.
     pub images: Option<Box<dyn ImageResources>>,
+    /// The board's live-view picture, when it develops a caller's own.
+    pub picture: Option<Box<dyn PictureResources>>,
     pub card_pins: BTreeMap<String, CardPins>,
     pub wires: BTreeMap<String, Wire>,
     pub users: BTreeMap<String, BTreeSet<usize>>,
     pub image_users: BTreeMap<String, BTreeSet<usize>>,
     pub gpio: BTreeMap<String, gpio::Pads>,
+    /// Boards that set their GPIO input words directly instead of presenting
+    /// pad registers, keyed by node name.
+    pub direct_gpio: BTreeMap<String, Box<dyn fujimod_emulator_devices::parts::pins::DirectPins>>,
     pub analog: BTreeMap<String, fujimod_emulator_devices::parts::analog::Samples>,
     pub pulses: BTreeMap<String, pulse::PulsePins>,
     pub encoders: BTreeMap<String, fujimod_emulator_devices::parts::encoder_input::EncoderInput>,
@@ -152,6 +169,13 @@ impl Resources {
         self.images
             .as_deref()
             .ok_or_else(|| "board has no image inputs".into())
+    }
+
+    /// The board's own live-view picture, when it has one.
+    pub fn picture(&self) -> Result<&dyn PictureResources, String> {
+        self.picture
+            .as_deref()
+            .ok_or_else(|| "board has no host picture".into())
     }
 
     pub fn logic_level(
@@ -224,6 +248,13 @@ impl Resources {
             .get(name)
             .cloned()
             .ok_or_else(|| format!("{name} is not a constructed GPIO block"))
+    }
+    /// The directly driven input block of a board that has no pad model.
+    pub fn direct_pins(
+        &self,
+        name: &str,
+    ) -> Option<&dyn fujimod_emulator_devices::parts::pins::DirectPins> {
+        self.direct_gpio.get(name).map(Box::as_ref)
     }
     pub fn pulses(&self, name: &str) -> Result<pulse::PulsePins, String> {
         self.pulses

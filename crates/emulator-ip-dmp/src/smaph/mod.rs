@@ -952,7 +952,9 @@ fn rectangles_on(
     #[cfg(not(target_arch = "wasm32"))]
     let gpu_enabled = if gpu_requested {
         match fujimod_emulator_gpu::context() {
-            Ok(_) => true,
+            // Software adapters pay the compute dispatch and readback costs on
+            // top of CPU rasterization. Keep them available for parity checks.
+            Ok(gpu) => verify_gpu || gpu.adapter_device_type() != wgpu::DeviceType::Cpu,
             Err(error) if !verify_gpu && error.starts_with("host GPU adapter:") => false,
             Err(error) => return Err(error),
         }
@@ -1651,9 +1653,13 @@ mod tests {
         let cpu = rectangles_on(&mut cx, &paths, &fills, (false, false)).unwrap();
         assert_eq!(cpu.len(), 1);
         assert_eq!((cpu[0].0, cpu[0].1.len()), (0x102000, 256));
-        if fujimod_emulator_gpu::context().is_ok() {
+        // The parity check needs an adapter that can compile the SMAPH shaders;
+        // a software adapter renders through the CPU path and skips it.
+        if fujimod_emulator_gpu::context()
+            .is_ok_and(|context| context.adapter_device_type() != wgpu::DeviceType::Cpu)
+        {
             assert_eq!(
-                rectangles_on(&mut cx, &paths, &fills, (true, false)).unwrap(),
+                rectangles_on(&mut cx, &paths, &fills, (true, true)).unwrap(),
                 cpu
             );
         }

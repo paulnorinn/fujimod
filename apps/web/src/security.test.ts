@@ -11,6 +11,13 @@ test('SSR and static hosting enforce the same Wasm policy', async () => {
   for (const [name, value] of Object.entries(runtimeHeaders))
     assert.equal(response.headers.get(name), value);
   const headers = await readFile(new URL('../public/_headers', import.meta.url), 'utf8');
-  assert.equal(headers.trim(), '/*\n' + Object.entries(runtimeHeaders).map(([name, value]) => `  ${name}: ${value}`).join('\n'));
+  // The file is compared as text, so a Windows checkout's CRLF endings must not
+  // change the expected policy.
+  const expected =
+    '/*\n' +
+    Object.entries(runtimeHeaders)
+      .map(([name, value]) => `  ${name}: ${value}`)
+      .join('\n');
+  assert.equal(headers.replaceAll('\r\n', '\n').trim(), expected);
   assert.ok(!contentSecurityPolicy.includes("'unsafe-eval'"));
 });

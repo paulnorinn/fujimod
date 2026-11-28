@@ -37,7 +37,7 @@ fn exr2_inputs(resolved: &mut ResolvedConfiguration) -> &mut Exr2RunInputs {
 fn run_scene(resolved: &mut ResolvedConfiguration) -> &mut Exr2RunScene {
     match resolved.configuration.scene.as_mut().unwrap() {
         RunScene::Exr2(scene) => scene,
-        RunScene::Xp4(_) | RunScene::Xp5(_) => panic!("unexpected scene model"),
+        RunScene::Xp4(_) | RunScene::Xp5(_) | RunScene::Xpp(_) => panic!("unexpected scene model"),
     }
 }
 
@@ -130,7 +130,7 @@ fn checked_run_configuration_selects_runtime_and_supplies_scene_and_quantum() {
     let execution = configuration.execution.unwrap();
     let scene = match configuration.scene.as_ref().unwrap() {
         RunScene::Exr2(scene) => scene,
-        RunScene::Xp4(_) | RunScene::Xp5(_) => panic!("unexpected scene model"),
+        RunScene::Xp4(_) | RunScene::Xp5(_) | RunScene::Xpp(_) => panic!("unexpected scene model"),
     };
     assert_eq!(spec.quantum, execution.quantum);
     assert_eq!(

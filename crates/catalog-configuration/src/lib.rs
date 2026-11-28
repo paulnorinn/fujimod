@@ -1268,6 +1268,8 @@ pub enum RunScene {
     Xp4(crate::application_inputs::ApplicationRunScene),
     /// External scene inputs for an XP5-based body.
     Xp5(crate::application_inputs::ApplicationRunScene),
+    /// The host picture an X-Processor Pro body develops in live view.
+    Xpp(XppRunScene),
 }
 
 impl RunScene {
@@ -1277,8 +1279,80 @@ impl RunScene {
             Self::Exr2(scene) => scene.validate(),
             Self::Xp4(scene) => scene.validate(),
             Self::Xp5(scene) => scene.validate(),
+            Self::Xpp(scene) => scene.validate(),
         }
     }
+}
+
+/// The caller's live-view picture for an X-Processor Pro body. The bytes live
+/// in a scene asset; the catalog names only its raster and the light it carries.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "schema", schemars(deny_unknown_fields))]
+#[cfg_attr(
+    all(target_arch = "wasm32", not(target_os = "emscripten")),
+    derive(tsify::Tsify),
+    tsify(hashmap_as_object, missing_as_null)
+)]
+pub struct XppRunScene {
+    /// Host RGB picture written in place of the declared sensor frame's scene.
+    pub picture: XppRunPicture,
+}
+
+impl XppRunScene {
+    fn validate(&self) -> Result<(), String> {
+        self.picture.validate()
+    }
+}
+
+/// One host RGB picture: red, green and blue bytes, row-major.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "schema", schemars(deny_unknown_fields))]
+#[cfg_attr(
+    all(target_arch = "wasm32", not(target_os = "emscripten")),
+    derive(tsify::Tsify),
+    tsify(hashmap_as_object, missing_as_null)
+)]
+pub struct XppRunPicture {
+    /// Picture width in pixels.
+    pub width: u32,
+    /// Picture height in pixels.
+    pub height: u32,
+    /// Generated scene asset identity holding the picture's red, green and blue bytes.
+    pub asset: String,
+    /// The light the picture's channels carry.
+    pub light: XppRunPictureLight,
+}
+
+impl XppRunPicture {
+    fn validate(&self) -> Result<(), String> {
+        if self.asset.is_empty() {
+            return Err("X-Processor Pro picture has no asset identity".into());
+        }
+        if self.width == 0 || self.height == 0 || self.width > 8192 || self.height > 8192 {
+            return Err("X-Processor Pro picture raster is outside its bound".into());
+        }
+        Ok(())
+    }
+}
+
+/// The light a caller's picture carries, as the sensor frame writes it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[serde(rename_all = "kebab-case")]
+#[cfg_attr(
+    all(target_arch = "wasm32", not(target_os = "emscripten")),
+    derive(tsify::Tsify),
+    tsify(hashmap_as_object, missing_as_null)
+)]
+pub enum XppRunPictureLight {
+    /// Display-referred sRGB at the declared wall's light.
+    Rendered,
+    /// The camera's own linear light per site, unbalanced.
+    CameraRaw,
 }
 
 /// Generated scene assets and the devices that consume them on EXR2 bodies.

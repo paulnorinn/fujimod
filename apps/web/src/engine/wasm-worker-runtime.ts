@@ -191,6 +191,8 @@ export class WasmWorkerRuntime {
   private nextInspection = 0n;
   private sourceFrames?: number;
   private sourceTicks = 0n;
+  /** Prepared device kind, read from the bundle document (e.g. `xpp`). */
+  private preparedKind?: string;
   private canvas?: OffscreenCanvas;
   private lease = 0;
   private release?: () => void;
@@ -598,6 +600,9 @@ export class WasmWorkerRuntime {
         prepared,
         new URL('wasm.json', config.bundle),
       );
+      // The device kind decides which observations exist natively: the XPP
+      // boot-to-REC check and the EXR2 statistics preview are EXR2-only.
+      this.preparedKind = reflectKind(text);
       this.camera = this.timings.measure('create', () =>
         createCamera(
           module,
@@ -626,6 +631,10 @@ export class WasmWorkerRuntime {
           manifest.construction,
         ),
       );
+    // Whether the LCD ever receives frames decides how the workspace reports
+    // an idle screen: a body without a live-view source shows no picture at
+    // all, which must not read as a hang.
+    this.send({ type: 'preview', available: this.previewEnabled() });
     const session = this.camera;
     if (manifest.construction !== 'resolved') {
       if (saved) this.observe(session.restoreDurable(new Uint8Array(saved.durable)));
@@ -696,15 +705,39 @@ export class WasmWorkerRuntime {
       };
       if (this.manifest!.bootTicks)
         await this.runUntil(s.status().ticks + BigInt(this.manifest!.bootTicks), reportProgress);
+      // A prepared XPP bundle carries no catalog, so its control wiring and
+      // input confirmation are compiled here, once the firmware has loaded the
+      // configuration they read. EXR2 bundles already declare both.
       if (this.manifest!.construction === 'prepared') {
+        // Controls are an enhancement: a body whose contact model is not wired
+        // for the generic input path must still boot and stream its display.
+        try {
+          const controls = this.require().connectControls(
+            this.config!.firmwareId,
+            this.manifest!.ticksPerSecond,
+          );
+          const compiled = JSON.parse(controls) as {
+            inputs?: { id: string; supported?: boolean; unavailable?: string }[];
+          };
+          for (const input of compiled.inputs ?? [])
+            if (input.supported === false)
+              console.warn('control unavailable: ' + input.id + ' — ' + (input.unavailable ?? ''));
+        } catch (error) {
+          console.warn(
+            'controls not compiled: ' + (error instanceof Error ? error.message : String(error)),
+          );
+        }
+      }
+      if (this.manifest!.construction === 'prepared' && this.recCheckEnabled()) {
         const report = await this.bootToRec(2_000_000_000n, reportProgress);
         if (report.status !== 'rec')
           throw Error(report.failure ?? `Camera boot stopped: ${report.status}`);
       }
       if (this.scene) showScene(s, this.scene);
       if (
-        this.manifest!.construction === 'prepared' ||
-        (this.manifest!.construction === 'session' && this.manifest!.session.preview)
+        this.previewEnabled() &&
+        (this.manifest!.construction === 'prepared' ||
+          (this.manifest!.construction === 'session' && this.manifest!.session.preview))
       )
         s.preview();
       if (held.some((input) => input.position === undefined)) s.releaseBootInputs(held);
@@ -819,7 +852,8 @@ export class WasmWorkerRuntime {
   private inspectSource(tick: bigint) {
     if (this.manifest!.construction === 'resolved' || tick < this.nextInspection) return;
     this.sourceFrames =
-      this.manifest!.construction === 'prepared' || this.manifest!.session.preview
+      this.previewEnabled() &&
+      (this.manifest!.construction === 'prepared' || this.manifest!.session.preview)
         ? this.require().previewState().frames
         : undefined;
     this.sourceTicks = tick;
@@ -855,6 +889,14 @@ export class WasmWorkerRuntime {
       // A following replay step must not mutate a shared borrowed frame.
       await this.leased;
     } else await this.dispatch(step);
+  }
+  /** Prepared XPP bundles have no native boot-to-REC check. */
+  private recCheckEnabled(): boolean {
+    return this.manifest!.recCheck !== false && this.preparedKind !== 'xpp';
+  }
+  /** Prepared XPP bundles have no EXR2 statistics frame source. */
+  private previewEnabled(): boolean {
+    return this.manifest!.preview !== false && this.preparedKind !== 'xpp';
   }
   private publish(force = false) {
     const s = this.require(),
@@ -956,5 +998,21 @@ export class WasmWorkerRuntime {
       this.send({ type: 'saved', error: String(error) });
       throw error;
     }
+  }
+}
+
+/** The prepared document's device kind, or undefined when it is not JSON. */
+function reflectKind(document: string): string | undefined {
+  try {
+    const parsed: unknown = JSON.parse(document);
+    if (parsed === null || typeof parsed !== 'object') return undefined;
+    const prepared: unknown = Reflect.get(parsed, 'prepared');
+    if (prepared === null || typeof prepared !== 'object') return undefined;
+    const devices: unknown = Reflect.get(prepared, 'devices');
+    if (devices === null || typeof devices !== 'object') return undefined;
+    const kind: unknown = Reflect.get(devices, 'kind');
+    return typeof kind === 'string' ? kind : undefined;
+  } catch {
+    return undefined;
   }
 }

@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { mkdtemp, realpath, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { basename, join, resolve } from 'node:path';
+import { basename, extname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { MIMEType, parseArgs } from 'node:util';
 
@@ -32,15 +32,41 @@ export function shareUrl(key: string, direct = false): string {
   return `https://share.fujimod.com/file/${key.split('/').map(encodeURIComponent).join('/')}${direct ? '?direct=true' : ''}`;
 }
 
+/**
+ * The MIME type as `file` reports it, or from the extension where that command
+ * does not exist (Windows images ship no `file`).
+ */
+function detectType(path: string): string {
+  try {
+    return execFileSync('file', ['--brief', '--mime-type', path], { encoding: 'utf8' }).trim();
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    return EXTENSIONS[extname(path).toLowerCase()] ?? 'application/octet-stream';
+  }
+}
+
+/** The extensions `publication` accepts from the CLI, matching `file`'s names. */
+const EXTENSIONS: Record<string, string> = {
+  '.avif': 'image/avif',
+  '.gif': 'image/gif',
+  '.heic': 'image/heic',
+  '.jpeg': 'image/jpeg',
+  '.jpg': 'image/jpeg',
+  '.mov': 'video/quicktime',
+  '.mp4': 'video/mp4',
+  '.png': 'image/png',
+  '.txt': 'text/plain',
+  '.webm': 'video/webm',
+  '.webp': 'image/webp',
+};
+
 export async function publication(
   file: string,
   options: { contentType?: string; key?: string; direct?: boolean } = {},
 ) {
   const path = await realpath(resolve(file));
   if (!(await stat(path)).isFile()) throw Error('Choose a regular file.');
-  const contentType =
-    options.contentType ??
-    execFileSync('file', ['--brief', '--mime-type', path], { encoding: 'utf8' }).trim();
+  const contentType = options.contentType ?? detectType(path);
   const mime = new MIMEType(contentType);
   const media = mime.type === 'image' || mime.type === 'video';
   if (options.direct && !media) throw Error('--direct requires an image or video MIME type.');

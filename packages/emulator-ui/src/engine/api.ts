@@ -104,6 +104,12 @@ export interface Engine {
   /** Media changes, including busy transitions; refresh the tree after writes settle. */
   cardChanges(listener: (state: CardState) => void): () => void;
   frames(listener: (frame: Frame) => void): () => void;
+  /**
+   * Whether this camera has a live-view image source. A false value leaves the
+   * LCD blank: the emulated firmware draws no imaging output, which is a body
+   * limitation rather than a hang. Replays the latest answer on subscribe.
+   */
+  liveViewSource(listener: (available: boolean) => void): () => void;
   press(id: string, stage?: string): Promise<void>;
   release(id: string): Promise<void>;
   rotate(id: string, steps: number): Promise<void>;

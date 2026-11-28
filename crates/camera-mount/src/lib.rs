@@ -30,6 +30,13 @@ pub const FLASH: u64 = 6;
 pub const UNLOAD: u64 = 7;
 pub const IO_BYTES: usize = fujimod_usb::operations::card::MAX_REQUEST_BYTES as usize;
 pub const MEMORY_IO_BYTES: usize = 64 << 20;
+/// The namespace reports a handle that no longer resolves. The MSVC CRT names
+/// no `ESTALE`, so this boundary uses the POSIX number there; its codes are
+/// compared by identity and never handed to the host as a system error.
+#[cfg(target_os = "windows")]
+pub(crate) const ESTALE: i32 = 116;
+#[cfg(not(target_os = "windows"))]
+pub(crate) const ESTALE: i32 = libc::ESTALE;
 pub type Result<T> = std::result::Result<T, i32>;
 
 /// No memory-write operation exists at this boundary.
@@ -207,7 +214,7 @@ impl<D: Device> CameraFs<D> {
         self.display
             .node(id)
             .or_else(|| self.nodes.get(&id).cloned())
-            .ok_or(libc::ESTALE)
+            .ok_or(crate::ESTALE)
     }
 
     pub fn metadata(&mut self, id: u64) -> Result<Node> {
@@ -217,7 +224,7 @@ impl<D: Device> CameraFs<D> {
         }
         if id > UNLOAD {
             let (_, entries) = self.directory(node.parent, false)?;
-            return entries.into_iter().find(|n| n.id == id).ok_or(libc::ESTALE);
+            return entries.into_iter().find(|n| n.id == id).ok_or(crate::ESTALE);
         }
         Ok(node)
     }
@@ -451,11 +458,11 @@ impl<D: Device> CameraFs<D> {
             let n = zero.len().min((offset - cursor) as usize);
             self.device.write(path, cursor as u32, &zero[..n])?;
             cursor += n as u64;
-            self.nodes.get_mut(&id).ok_or(libc::ESTALE)?.size = cursor;
+            self.nodes.get_mut(&id).ok_or(crate::ESTALE)?.size = cursor;
             self.listings.remove(&node.parent);
         }
         self.device.write(path, offset as u32, data)?;
-        self.nodes.get_mut(&id).ok_or(libc::ESTALE)?.size = node.size.max(end);
+        self.nodes.get_mut(&id).ok_or(crate::ESTALE)?.size = node.size.max(end);
         self.listings.remove(&node.parent);
         Ok(data.len())
     }
@@ -512,7 +519,7 @@ impl<D: Device> CameraFs<D> {
         if size == 0 {
             self.device
                 .create(node.path.as_deref().ok_or(libc::EROFS)?)?;
-            self.nodes.get_mut(&id).ok_or(libc::ESTALE)?.size = 0;
+            self.nodes.get_mut(&id).ok_or(crate::ESTALE)?.size = 0;
         } else if size > node.size {
             self.write(id, size.checked_sub(1).ok_or(libc::EINVAL)?, &[0])?;
         } else {
@@ -520,7 +527,7 @@ impl<D: Device> CameraFs<D> {
                 node.path.as_deref().ok_or(libc::EROFS)?,
                 size.try_into().map_err(|_| libc::EFBIG)?,
             )?;
-            self.nodes.get_mut(&id).ok_or(libc::ESTALE)?.size = size;
+            self.nodes.get_mut(&id).ok_or(crate::ESTALE)?.size = size;
         }
         self.listings.remove(&node.parent);
         self.node(id)

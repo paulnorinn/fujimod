@@ -12,7 +12,7 @@ use fujimod_catalog::{
     reference::{Body, ConnectionSignal, MemoryKind, MemoryRegion, RegionSize},
     soc::ApplicationHardware,
 };
-use fujimod_catalog_configuration::RunInstructionRate;
+use fujimod_catalog_configuration::{RunInstructionRate, RunScene};
 use fujimod_catalog_resolution::ResolvedConfiguration;
 use fujimod_catalog_run_inputs::HardwareReset;
 use fujimod_emulator::board::factory;
@@ -87,6 +87,38 @@ impl SensorImageLight {
     }
 }
 
+/// Build the caller's live-view picture from a declared run scene and its
+/// assets, ready for [`definition`]'s `sensor_image`.
+pub fn scene_sensor_image(
+    scene: &fujimod_catalog_configuration::XppRunScene,
+    assets: &BTreeMap<String, Vec<u8>>,
+) -> Result<SensorImage, String> {
+    let picture = &scene.picture;
+    let expected = picture.width as usize * picture.height as usize * 3;
+    let rgb = assets
+        .get(&picture.asset)
+        .ok_or_else(|| format!("scene asset {} is not loaded", picture.asset))?;
+    if rgb.len() != expected {
+        return Err(format!(
+            "scene asset {} holds {} bytes; {}x{} red, green and blue needs {}",
+            picture.asset,
+            rgb.len(),
+            picture.width,
+            picture.height,
+            expected
+        ));
+    }
+    let light = match picture.light {
+        fujimod_catalog_configuration::XppRunPictureLight::Rendered => SensorImageLight::Rendered,
+        fujimod_catalog_configuration::XppRunPictureLight::CameraRaw => SensorImageLight::CameraRaw,
+    };
+    Ok(SensorImage {
+        width: picture.width,
+        height: picture.height,
+        rgb: rgb.clone(),
+        light,
+    })
+}
 fn soc_profile(resolved: &ResolvedConfiguration) -> Result<&SocProfile, String> {
     let selection = resolved
         .configuration
@@ -1032,6 +1064,18 @@ pub fn definition(
     sensor_image: Option<&SensorImage>,
 ) -> Result<Value, String> {
     let resolved = ResolvedConfiguration::with_overlays(configuration_id, overlays)?;
+    resolved_definition(&resolved, registers, sub_cpu_registers, assets, sensor_image)
+}
+
+/// Assembly for an already-resolved configuration, so a caller that changed
+/// the scene in memory gets the same assembly as one that resolved by identity.
+pub fn resolved_definition(
+    resolved: &ResolvedConfiguration,
+    registers: Value,
+    sub_cpu_registers: &[(u8, u8)],
+    assets: &BTreeMap<String, Vec<u8>>,
+    sensor_image: Option<&SensorImage>,
+) -> Result<Value, String> {
     let registers: Vec<Vec<(Register, u64)>> =
         serde_json::from_value(registers).map_err(|error| error.to_string())?;
     let processors = &resolved.reference.soc.processors;
@@ -1052,8 +1096,15 @@ pub fn definition(
             registers,
         })
         .collect();
+    // A declared X-Processor Pro scene is the caller's own live-view picture:
+    // build it from the asset it names unless the caller passed one directly.
+    let declared = match (sensor_image, resolved.configuration.scene.as_ref()) {
+        (None, Some(RunScene::Xpp(scene))) => Some(scene_sensor_image(scene, assets)?),
+        _ => None,
+    };
+    let sensor_image = sensor_image.or(declared.as_ref());
     let assembly = assemble(
-        &resolved,
+        resolved,
         &Inputs {
             starts: &starts,
             sub_cpu_registers,
@@ -1556,6 +1607,70 @@ mod tests {
         assert_eq!(
             imaging["model"]["sensor_image"],
             json!({"width": 2, "height": 1, "rgb": "ff00000000ff"})
+        );
+    }
+
+    #[test]
+    fn a_declared_xpp_scene_is_the_picture_the_definition_writes() {
+        use fujimod_catalog_configuration::{XppRunPicture, XppRunPictureLight, XppRunScene};
+        let mut resolved = ResolvedConfiguration::bundled("xt20-211").unwrap();
+        resolved.configuration.scene = Some(RunScene::Xpp(XppRunScene {
+            picture: XppRunPicture {
+                width: 2,
+                height: 1,
+                asset: "scene-picture".into(),
+                light: XppRunPictureLight::Rendered,
+            },
+        }));
+        let mut assets = assets();
+        assets.insert("scene-picture".into(), vec![255, 0, 0, 0, 0, 255]);
+        let registers = json!([[["Pc", 0]], [["Pc", 0]]]);
+        let definition =
+            resolved_definition(&resolved, registers.clone(), &[], &assets, None).unwrap();
+        let imaging = definition["devices"]["nodes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|node| node["model"]["kind"] == "imaging-control")
+            .unwrap();
+        assert_eq!(
+            imaging["model"]["sensor_image"],
+            json!({"width": 2, "height": 1, "rgb": "ff00000000ff"})
+        );
+        // A picture whose bytes do not fill its raster refuses before assembly.
+        let mut short = assets.clone();
+        short.insert("scene-picture".into(), vec![0; 5]);
+        assert!(
+            resolved_definition(&resolved, registers.clone(), &[], &short, None)
+                .err()
+                .unwrap()
+                .contains("red, green and blue needs 6")
+        );
+        // A missing scene asset names itself.
+        assert!(
+            resolved_definition(&resolved, registers.clone(), &[], &BTreeMap::new(), None)
+                .err()
+                .unwrap()
+                .contains("scene asset scene-picture is not loaded")
+        );
+        // A caller's own picture still wins over the declared one.
+        let caller = SensorImage {
+            width: 2,
+            height: 1,
+            rgb: vec![0, 0, 255, 0, 0, 0],
+            light: SensorImageLight::Rendered,
+        };
+        let definition =
+            resolved_definition(&resolved, registers, &[], &assets, Some(&caller)).unwrap();
+        let imaging = definition["devices"]["nodes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|node| node["model"]["kind"] == "imaging-control")
+            .unwrap();
+        assert_eq!(
+            imaging["model"]["sensor_image"],
+            json!({"width": 2, "height": 1, "rgb": "0000ff000000"})
         );
     }
 

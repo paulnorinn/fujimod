@@ -900,6 +900,25 @@ impl Board {
             .set_gravity_g(node, gravity)
             .map_err(error)
     }
+    /// Locate the body's physical controls and install their wiring and input
+    /// confirmation, exactly as a browser session does. Returns the electronic
+    /// controls that could not be compiled, with their reasons.
+    fn connect_controls(&mut self, selection: &str, ticks_per_second: u64) -> PyResult<String> {
+        // The selection type belongs to the catalog; let the callee's signature
+        // name it so this binding needs no direct catalog dependency.
+        let selection = serde_json::from_str(selection).map_err(|e| error(e.to_string()))?;
+        let problems =
+            fujimod_emulator_controls::connect(self.session_mut()?, &selection, ticks_per_second)
+                .map_err(error)?;
+        serde_json::to_string(&problems).map_err(|failure| error(failure.to_string()))
+    }
+    /// Replace the board's own live-view picture, for boards that develop a
+    /// caller's image instead of a declared scene.
+    fn set_picture(&mut self, width: u64, height: u64, rgb: &[u8]) -> PyResult<()> {
+        self.session_mut()?
+            .set_picture(width, height, rgb)
+            .map_err(error)
+    }
     fn configure_controls(&mut self, spec: &str) -> PyResult<()> {
         self.session_mut()?
             .configure_controls(json(spec)?)

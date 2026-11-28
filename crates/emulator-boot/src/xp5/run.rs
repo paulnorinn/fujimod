@@ -264,7 +264,7 @@ pub fn run_boot(run: Run) -> Result<Value, String> {
     ctrlc::set_handler(move || signal.store(true, Ordering::Release))
         .map_err(|error| error.to_string())?;
     let limits = crate::host::Limits::new(&session, instruction_limit, limit, ticks_per_second)?;
-    let slice = ((ticks_per_second / 1_000).max(1)).min(100_000_000);
+    let slice = (ticks_per_second / 1_000).clamp(1, 100_000_000);
     let mut next_status =
         start.saturating_add(crate::host::duration_ticks(status_every, ticks_per_second));
     eprintln!(
@@ -310,10 +310,11 @@ pub fn run_boot(run: Run) -> Result<Value, String> {
                     .and_then(|site| site["cpu"].as_u64())
                     .and_then(|core| usize::try_from(core).ok());
                 let mut error = error.clone();
-                if let Some(site) = stop_site {
-                    if let (Some(tick), Some(pc)) = (site["tick"].as_u64(), site["pc"].as_u64()) {
-                        error = format!("{error}; tick={tick} PC={pc:#x}");
-                    }
+                if let Some(site) = stop_site
+                    && let (Some(tick), Some(pc)) =
+                        (site["tick"].as_u64(), site["pc"].as_u64())
+                {
+                    error = format!("{error}; tick={tick} PC={pc:#x}");
                 }
                 if let Some(core) = stop_core {
                     let lr_register = if core == 4 {

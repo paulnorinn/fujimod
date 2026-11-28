@@ -646,6 +646,12 @@ mod tests {
             }
             Err(error) => panic!("EXR2 GPU paint context failed: {error}"),
         };
+        // A software adapter cannot run the EXR2 paint shaders, so this parity
+        // check skips it as it skips a missing adapter.
+        if context.adapter_device_type() == wgpu::DeviceType::Cpu {
+            eprintln!("skipping EXR2 GPU paint test on a software adapter");
+            return;
+        }
         assert!(
             context.supports_read_write_r32uint_storage(),
             "the EXR2 paint path requires in-place R32Uint storage support"
@@ -772,6 +778,10 @@ mod tests {
             }
             Err(error) => panic!("EXR2 GPU paint context failed: {error}"),
         };
+        if context.adapter_device_type() == wgpu::DeviceType::Cpu {
+            eprintln!("skipping EXR2 GPU paint test on a software adapter");
+            return;
+        }
         let shape = draw(
             0x190000,
             0,

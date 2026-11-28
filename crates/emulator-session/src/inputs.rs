@@ -91,7 +91,15 @@ impl Session {
             }
         }
         for (node, changes) in pins {
-            self.resources.pads(node)?.admit_requests(&changes)?;
+            match self.resources.direct_pins(node) {
+                // A directly driven block has no queued stage to admit.
+                Some(direct) => {
+                    for (pin, _) in &changes {
+                        direct.input(*pin)?;
+                    }
+                }
+                None => self.resources.pads(node)?.admit_requests(&changes)?,
+            }
             self.node(node)?;
         }
         Ok(())
@@ -129,7 +137,14 @@ impl Session {
             }
         }
         for (node, changes) in pins {
-            self.resources.pads(node)?.request_many(&changes)?;
+            match self.resources.direct_pins(node) {
+                Some(direct) => {
+                    for (pin, high) in &changes {
+                        direct.set_input(*pin, *high)?;
+                    }
+                }
+                None => self.resources.pads(node)?.request_many(&changes)?,
+            }
             self.board.inputs_changed(self.node(node)?)?;
         }
         for (node, changes) in analog {

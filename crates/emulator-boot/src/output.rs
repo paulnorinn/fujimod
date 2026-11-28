@@ -76,7 +76,12 @@ impl Outputs {
             sequence,
             width: u32::try_from(frame.width).map_err(|_| "frame width exceeds u32")?,
             height: u32::try_from(frame.height).map_err(|_| "frame height exceeds u32")?,
-            rgba: rgb.chunks_exact(3).flat_map(|rgb| [rgb[0], rgb[1], rgb[2], 255]).collect(),
+            rgba: rgb
+                .as_chunks::<3>()
+                .0
+                .iter()
+                .flat_map(|rgb| [rgb[0], rgb[1], rgb[2], 255])
+                .collect(),
         })?;
         self.status(0, serde_json::json!({"bank":0,"enabled":true,"sequence":sequence}))
     }

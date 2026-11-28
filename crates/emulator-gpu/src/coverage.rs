@@ -475,6 +475,8 @@ mod tests {
 
     #[test]
     fn float_pixel_edges_preserve_fractional_fill_positions() {
+        // One test at a time on the process-wide device (see `crate::test_lock`).
+        let _guard = crate::test_lock::guard();
         let context = match crate::context() {
             Ok(context) => context,
             Err(error) if error.starts_with("host GPU adapter:") => {
@@ -513,6 +515,8 @@ mod tests {
 
     #[test]
     fn float_pixel_edges_preserve_f64_residuals_below_f32_precision() {
+        // One test at a time on the process-wide device (see `crate::test_lock`).
+        let _guard = crate::test_lock::guard();
         let context = match crate::context() {
             Ok(context) => context,
             Err(error) if error.starts_with("host GPU adapter:") => {
@@ -551,6 +555,8 @@ mod tests {
 
     #[test]
     fn float_pixel_edges_keep_sloped_sample_side_near_intersections() {
+        // One test at a time on the process-wide device (see `crate::test_lock`).
+        let _guard = crate::test_lock::guard();
         let context = match crate::context() {
             Ok(context) => context,
             Err(error) if error.starts_with("host GPU adapter:") => {

@@ -16,7 +16,9 @@ crate-type = ["staticlib", "rlib"]
 perf = ["fujimod-emulator/perf"]
 
 [dependencies]
+fujimod-catalog.workspace = true
 fujimod-catalog-configuration.workspace = true
+fujimod-emulator-controls.workspace = true
 fujimod-framebuffer.workspace = true
 fujimod-emulator-session.workspace = true
 fujimod-emulator-exr2-resources.workspace = true
@@ -40,6 +42,7 @@ fujimod-emulator-exr2-gpu.workspace = true
 fujimod-emulator-gpu.workspace = true
 fujimod-emulator-exr2-board.workspace = true
 fujimod-emulator-exr2-plan.workspace = true
+fujimod-emulator-xpp.workspace = true
 fujimod-firmware.workspace = true
 serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true

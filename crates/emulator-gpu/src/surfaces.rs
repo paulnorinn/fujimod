@@ -169,10 +169,15 @@ impl GpuContext {
     }
 
     /// Serialize a multi-pass submission that updates resident targets.
+    ///
+    /// A panic inside one submission poisons the lock. The guard orders
+    /// submissions; it holds no state to restore, so a later submission takes
+    /// the lock anyway instead of leaving the device unusable for the process.
     pub fn acquire(&self) -> Result<MutexGuard<'_, ()>, String> {
-        self.submission_lock
+        Ok(self
+            .submission_lock
             .lock()
-            .map_err(|_| "GPU submission lock poisoned".into())
+            .unwrap_or_else(std::sync::PoisonError::into_inner))
     }
 
     /// Get or create a resident surface, synchronizing it when guest memory changed.
@@ -1617,9 +1622,12 @@ mod tests {
         }
     }
 
-    fn context_or_skip() -> Option<&'static GpuContext> {
+    /// The context is process-wide, so the returned guard keeps one test at a
+    /// time on its device: concurrent surfaces would interleave their uploads.
+    fn context_or_skip() -> Option<(std::sync::MutexGuard<'static, ()>, &'static GpuContext)> {
+        let guard = crate::test_lock::guard();
         match context() {
-            Ok(context) => Some(context),
+            Ok(context) => Some((guard, context)),
             Err(error) if error.starts_with("host GPU adapter:") => {
                 eprintln!(
                     "skipping host GPU surface test because no host GPU adapter is available: {error}"
@@ -1632,7 +1640,7 @@ mod tests {
 
     #[test]
     fn guest_upload_and_readback_are_exact_for_every_surface_format() {
-        let Some(context) = context_or_skip() else {
+        let Some((_guard, context)) = context_or_skip() else {
             return;
         };
         let formats = [
@@ -1667,7 +1675,7 @@ mod tests {
 
     #[test]
     fn write_mask_reports_exact_morton_guest_byte_ranges() {
-        let Some(context) = context_or_skip() else {
+        let Some((_guard, context)) = context_or_skip() else {
             return;
         };
         let format = SurfaceFormat::D24S8;
@@ -1717,7 +1725,7 @@ mod tests {
 
     #[test]
     fn encoded_surface_upload_and_batched_readback_preserve_write_masks() {
-        let Some(context) = context_or_skip() else {
+        let Some((_guard, context)) = context_or_skip() else {
             return;
         };
         let keys = [0x134000, 0x135000].map(|guest_address| SurfaceKey {
@@ -1813,7 +1821,7 @@ mod tests {
 
     #[test]
     fn resident_surface_reuses_unchanged_guest_bytes_and_uploads_changes() {
-        let Some(context) = context_or_skip() else {
+        let Some((_guard, context)) = context_or_skip() else {
             return;
         };
         let key = SurfaceKey {
@@ -1847,7 +1855,7 @@ mod tests {
 
     #[test]
     fn async_surface_readback_preserves_guest_bytes() {
-        let Some(context) = context_or_skip() else {
+        let Some((_guard, context)) = context_or_skip() else {
             return;
         };
         let key = SurfaceKey {
@@ -1870,7 +1878,7 @@ mod tests {
 
     #[test]
     fn linear_surface_round_trip_preserves_row_major_bytes() {
-        let Some(context) = context_or_skip() else {
+        let Some((_guard, context)) = context_or_skip() else {
             return;
         };
         let extent = SurfaceExtent {
@@ -1894,7 +1902,7 @@ mod tests {
 
     #[test]
     fn submitted_gpu_work_updates_resident_bytes_and_write_ranges() {
-        let Some(context) = context_or_skip() else {
+        let Some((_guard, context)) = context_or_skip() else {
             return;
         };
         let extent = SurfaceExtent {

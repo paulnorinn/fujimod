@@ -1181,12 +1181,98 @@ fn thread_cpu_ns_now() -> u64 {
         .saturating_add(time.tv_nsec as u64)
 }
 
-#[cfg(not(unix))]
+/// Win32 thread and process times, which `std` does not expose.
+#[cfg(windows)]
+mod win32 {
+    use std::ffi::c_void;
+
+    /// A Windows `FILETIME`: one 100-nanosecond interval per tick.
+    #[repr(C)]
+    #[derive(Default)]
+    struct FileTime {
+        low: u32,
+        high: u32,
+    }
+    impl FileTime {
+        fn ticks(&self) -> u64 {
+            (u64::from(self.high) << 32) | u64::from(self.low)
+        }
+    }
+    unsafe extern "system" {
+        fn GetCurrentThread() -> *mut c_void;
+        fn GetCurrentProcess() -> *mut c_void;
+        fn GetThreadTimes(
+            thread: *mut c_void,
+            creation: *mut FileTime,
+            exit: *mut FileTime,
+            kernel: *mut FileTime,
+            user: *mut FileTime,
+        ) -> i32;
+        fn GetProcessTimes(
+            process: *mut c_void,
+            creation: *mut FileTime,
+            exit: *mut FileTime,
+            kernel: *mut FileTime,
+            user: *mut FileTime,
+        ) -> i32;
+    }
+    /// Kernel and user time of the calling thread, in nanoseconds. The
+    /// `GetCurrentThread` pseudo-handle is never closed.
+    pub fn thread_ns() -> Option<u64> {
+        let (mut creation, mut exit, mut kernel, mut user) = (
+            FileTime::default(),
+            FileTime::default(),
+            FileTime::default(),
+            FileTime::default(),
+        );
+        let ok = unsafe {
+            GetThreadTimes(
+                GetCurrentThread(),
+                &mut creation,
+                &mut exit,
+                &mut kernel,
+                &mut user,
+            )
+        };
+        (ok != 0).then(|| (kernel.ticks() + user.ticks()).saturating_mul(100))
+    }
+    /// Kernel and user time of the process, in nanoseconds.
+    pub fn process_ns() -> Option<u64> {
+        let (mut creation, mut exit, mut kernel, mut user) = (
+            FileTime::default(),
+            FileTime::default(),
+            FileTime::default(),
+            FileTime::default(),
+        );
+        let ok = unsafe {
+            GetProcessTimes(
+                GetCurrentProcess(),
+                &mut creation,
+                &mut exit,
+                &mut kernel,
+                &mut user,
+            )
+        };
+        (ok != 0).then(|| (kernel.ticks() + user.ticks()).saturating_mul(100))
+    }
+}
+
+#[cfg(windows)]
+fn thread_cpu_seconds() -> Option<f64> {
+    win32::thread_ns().map(|nanoseconds| nanoseconds as f64 / 1e9)
+}
+
+#[cfg(windows)]
+fn thread_cpu_ns_now() -> u64 {
+    win32::thread_ns().unwrap_or(0)
+}
+
+#[cfg(not(any(unix, windows)))]
 fn thread_cpu_seconds() -> Option<f64> {
     None
 }
 
-#[cfg(not(unix))]
+#[cfg(not(any(unix, windows)))]
 fn thread_cpu_ns_now() -> u64 {
     0
 }
@@ -1201,7 +1287,12 @@ fn process_cpu_seconds() -> Option<f64> {
     Some(seconds(usage.ru_utime) + seconds(usage.ru_stime))
 }
 
-#[cfg(not(unix))]
+#[cfg(windows)]
+fn process_cpu_seconds() -> Option<f64> {
+    win32::process_ns().map(|nanoseconds| nanoseconds as f64 / 1e9)
+}
+
+#[cfg(not(any(unix, windows)))]
 fn process_cpu_seconds() -> Option<f64> {
     None
 }
@@ -1213,13 +1304,28 @@ mod tests {
 
     static TEST_LOCK: TestMutex<()> = TestMutex::new(());
 
+    /// Windows reports thread times at the scheduler quantum, so a span must do
+    /// measurable work for its CPU delta to be nonzero there. Unix clocks are
+    /// nanosecond-resolution and need no help.
+    fn spin_for_the_quantum_clocks() {
+        if !cfg!(windows) {
+            return;
+        }
+        let until = std::time::Instant::now() + std::time::Duration::from_millis(25);
+        while std::time::Instant::now() < until {
+            std::hint::spin_loop();
+        }
+    }
+
     #[test]
     fn spans_nest_and_record_per_kind_guest_deltas() {
         let _lock = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         begin_guide("spans");
         let mut outer = span(SpanKind::Guide);
+        spin_for_the_quantum_clocks();
         {
             let mut wait = span(SpanKind::Wait(WaitKind::Debounce));
+            spin_for_the_quantum_clocks();
             wait.guest(
                 GuestProgress {
                     instructions: 10,

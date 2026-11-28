@@ -15,6 +15,40 @@ pub struct Pins {
     changes: [[u64; 16]; 16],
 }
 pub type SharedPins = Arc<Mutex<Pins>>;
+/// A masked GPIO block's external inputs, driven and observed directly.
+///
+/// The X-Processor Pro sets its sampled input words straight from the board's
+/// contacts, so its blocks reach the generic session input path through this
+/// handle rather than the EXR II pad registers.
+#[derive(Clone)]
+pub struct DirectInput(SharedPins);
+impl DirectInput {
+    pub fn new(pins: SharedPins) -> Self {
+        Self(pins)
+    }
+}
+fn pin_index(pin: fujimod_emulator_devices::parts::pins::Pin) -> Result<(usize, usize), String> {
+    let (port, bit) = (usize::from(pin.port), usize::from(pin.pin));
+    if port >= 16 || bit >= 16 {
+        return Err("Invalid masked GPIO input pin".into());
+    }
+    Ok((port, bit))
+}
+impl fujimod_emulator_devices::parts::pins::DirectPins for DirectInput {
+    fn set_input(&self, pin: fujimod_emulator_devices::parts::pins::Pin, high: bool) -> Result<(), String> {
+        let (port, bit) = pin_index(pin)?;
+        self.0.lock().unwrap().set_input(port, bit, high);
+        Ok(())
+    }
+    fn input(&self, pin: fujimod_emulator_devices::parts::pins::Pin) -> Result<bool, String> {
+        let (port, bit) = pin_index(pin)?;
+        Ok(self.0.lock().unwrap().input(port, bit))
+    }
+    fn input_levels(&self) -> [u32; 16] {
+        let pins = self.0.lock().unwrap();
+        std::array::from_fn(|port| u32::from(pins.inputs[port]))
+    }
+}
 impl Pins {
     pub fn new(inputs: [u16; 16]) -> SharedPins {
         Arc::new(Mutex::new(Self {

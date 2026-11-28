@@ -15,6 +15,9 @@ __pycache__/
 /bindings/python/python/fujimod/_native*.so.*
 /bindings/python/python/fujimod/._native*
 /bindings/python/python/fujimod/_native*.pyd
+# A Windows host whose libjpeg offers only the dynamic library leaves its
+# runtime DLL beside the extension, which is the only directory Python searches.
+/bindings/python/python/fujimod/jpeg*.dll
 
 # Local build directories and scratch, at any depth.
 .tools/

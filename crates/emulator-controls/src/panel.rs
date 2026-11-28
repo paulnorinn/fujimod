@@ -399,7 +399,10 @@ pub struct Plan {
 
 type Widget = (String, String, String, Vec<(String, Vec<String>)>);
 
-fn widgets(row: &LocatedControl) -> Result<(Vec<Widget>, BTreeSet<String>), Unresolved> {
+fn widgets(
+    row: &LocatedControl,
+    rotary: bool,
+) -> Result<(Vec<Widget>, BTreeSet<String>), Unresolved> {
     let inactive: BTreeSet<&str> = row
         .positions
         .iter()
@@ -409,7 +412,16 @@ fn widgets(row: &LocatedControl) -> Result<(Vec<Widget>, BTreeSet<String>), Unre
     let (widgets, keys): (Vec<Widget>, BTreeSet<String>) = if row.kind == "shutter" {
         let names: BTreeSet<&str> = row.actions.iter().map(|(name, _)| name.as_str()).collect();
         if names != BTreeSet::from(["half_press", "full_press"]) {
-            return Err("Shutter stages are unresolved".into());
+            let detail = row
+                .actions
+                .iter()
+                .map(|(name, keys)| format!("{name}=[{}]", keys.join("+")))
+                .collect::<Vec<_>>()
+                .join(" ");
+            return Err(Unresolved(format!(
+                "Shutter stages are unresolved: {} action(s) {detail}",
+                row.actions.len()
+            )));
         }
         let half = row.action("half_press").unwrap_or_default().to_vec();
         let full = row.action("full_press").unwrap_or_default().to_vec();
@@ -454,7 +466,9 @@ fn widgets(row: &LocatedControl) -> Result<(Vec<Widget>, BTreeSet<String>), Unre
             keys,
         )
     } else if !row.actions.is_empty() {
-        let single = row.actions.len() == 1;
+        // A rotary control keeps its remaining action, such as the dial's own
+        // press, as a distinct part of the control rather than the control.
+        let single = row.actions.len() == 1 && !rotary;
         let widgets = row
             .actions
             .iter()
@@ -504,8 +518,9 @@ fn prepare(
     nodes: &Nodes,
     analog_levels: u32,
     stable_offset: Option<u32>,
+    rotary: bool,
 ) -> Result<Vec<Prepared>, Unresolved> {
-    let (widgets, keys) = widgets(row)?;
+    let (widgets, keys) = widgets(row, rotary)?;
     let mut wires: BTreeMap<String, (Vec<Term>, bool)> = BTreeMap::new();
     let mut records: BTreeMap<String, Vec<ScannerRecord>> = BTreeMap::new();
     for key in &keys {
@@ -618,6 +633,7 @@ pub fn compile(
     nodes: &Nodes,
     analog_levels: u32,
     stable_offset: Option<u32>,
+    rotaries: &std::collections::BTreeSet<String>,
 ) -> Result<Plan, String> {
     if !(2..=65536).contains(&analog_levels) {
         return Err("Analog input domain must declare 2..65536 discrete levels".into());
@@ -626,7 +642,25 @@ pub fn compile(
     let mut unavailable = Vec::new();
     let mut problems = Vec::new();
     for row in controls {
-        match prepare(row, calibration, nodes, analog_levels, stable_offset) {
+        // A control the locator already refused has no actions to prepare;
+        // report the locator's reason rather than a symptom of the empty row.
+        if let Some(reason) = &row.unavailable {
+            if !row.mechanical {
+                problems.push(Problem {
+                    control: row.id.clone(),
+                    reason: reason.clone(),
+                });
+            }
+            unavailable.push(UnavailableControl {
+                id: row.id.clone(),
+                label: row.name.clone(),
+                kind: row.kind.clone(),
+                reason: reason.clone(),
+            });
+            continue;
+        }
+        let rotary = rotaries.contains(&row.id);
+        match prepare(row, calibration, nodes, analog_levels, stable_offset, rotary) {
             Ok(controls) => prepared.extend(controls),
             Err(Unresolved(reason)) => {
                 if !row.mechanical {
@@ -695,8 +729,21 @@ pub fn compile(
             .iter()
             .map(|control| control.positions.len())
             .product();
-        if count > 4096 {
-            return Err("Contact component exceeds 4096 declared combinations".into());
+        // The odometer below visits every declared combination but keeps only
+        // those whose masks intersect, so a shared ladder of mutually exclusive
+        // keys costs its poses, not the full product. The bound is a guard on
+        // that enumeration, so it must admit the products a real ladder makes:
+        // fifteen two-pose keys already declare 32768, of which two are real.
+        const MAX_COMBINATIONS: usize = 1 << 20;
+        if count > MAX_COMBINATIONS {
+            let detail = group
+                .iter()
+                .map(|control| format!("{}={}", control.id, control.positions.len()))
+                .collect::<Vec<_>>()
+                .join(" ");
+            return Err(format!(
+                "Contact component exceeds {MAX_COMBINATIONS} declared combinations ({count}): {detail}"
+            ));
         }
         let mut cases = Vec::new();
         let mut initial: Vec<Vec<String>> = Vec::new();

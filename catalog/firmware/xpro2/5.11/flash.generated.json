@@ -1,0 +1,47 @@
+{
+  "$schema": "https://fujimod.com/schemas/flash.generated.schema.json",
+  "schema": 1,
+  "id": "xpro2-511-flash",
+  "firmware_id": "xpro2-511",
+  "device": {
+    "kind": "serial-nor"
+  },
+  "window": {
+    "address": 4026531840,
+    "size": 67108864
+  },
+  "update_image": {
+    "dat_offset": 604,
+    "xor": 255
+  },
+  "reader": {
+    "symbol": "flash_read_wait",
+    "alignment": 4
+  },
+  "transport": "xpp-cmd-callback",
+  "code_ranges": [
+    {
+      "name": "flash_read",
+      "address": 11596760,
+      "size": 964
+    },
+    {
+      "name": "flash_read_wait",
+      "address": 11597724,
+      "size": 52
+    }
+  ],
+  "state_checks": [
+    {
+      "name": "flash driver ready",
+      "address": 15216308,
+      "size": 4,
+      "value": 0
+    }
+  ],
+  "control": {
+    "offset": 0,
+    "size": 32768,
+    "sha256": "c739fbeed409df7e4be6a217cb0097d4d2b994f6da478a762387870552f83248"
+  }
+}

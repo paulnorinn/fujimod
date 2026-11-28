@@ -1,5 +1,6 @@
 import { expect, test } from 'vite-plus/test';
 import { execFileSync } from 'node:child_process';
+import { mkdirSync } from 'node:fs';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -72,7 +73,14 @@ test('the card ZIP holds every checked file and a clean Git repository of FUJIMO
   const directory = await mkdtemp(join(tmpdir(), 'sd-card-zip-'));
   try {
     await writeFile(join(directory, 'card.zip'), new Uint8Array(await zip.arrayBuffer()));
-    execFileSync('unzip', ['-q', 'card.zip', '-d', 'card'], { cwd: directory });
+    // Windows images have no `unzip`, but they do ship bsdtar, which reads ZIP.
+    try {
+      execFileSync('unzip', ['-q', 'card.zip', '-d', 'card'], { cwd: directory });
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+      mkdirSync(join(directory, 'card'), { recursive: true });
+      execFileSync('tar', ['-xf', 'card.zip', '-C', 'card'], { cwd: directory });
+    }
     const card = join(directory, 'card');
     expect(await readFile(join(card, 'FM_EXR2.BIN'), 'utf8')).toBe('stage 2');
     expect(await readFile(join(card, 'FUJIMOD/SYSTEM/STORE', storeName(patchSha)), 'utf8')).toBe(

@@ -977,6 +977,34 @@ mod tests {
     use fujimod_catalog::reference::ReferenceCatalog;
 
     #[test]
+    fn xpro2_shutter_resolves_both_stages_to_its_key_contacts() {
+        let selection = ReferenceCatalog::bundled()
+            .unwrap()
+            .resolve_firmware("xpro2-511")
+            .unwrap();
+        let located = super::locate(&selection).unwrap();
+        let shutter = located
+            .controls
+            .iter()
+            .find(|row| row.id == "shutter_button")
+            .unwrap();
+        assert_eq!(shutter.unavailable, None);
+        // Stage order follows the catalog's map, not the declaration order.
+        let stage = |name: &str| {
+            shutter
+                .actions
+                .iter()
+                .find(|(action, _)| action == name)
+                .unwrap_or_else(|| panic!("missing stage {name}"))
+                .1
+                .clone()
+        };
+        assert_eq!(stage("half_press"), vec!["S1".to_owned()]);
+        assert_eq!(stage("full_press"), vec!["S1".to_owned(), "S2".to_owned()]);
+        assert_eq!(shutter.actions.len(), 2);
+    }
+
+    #[test]
     fn every_firmware_with_located_inputs_resolves_its_controls() {
         let catalog = ReferenceCatalog::bundled().unwrap();
         let mut resolved = 0;

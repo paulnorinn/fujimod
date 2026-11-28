@@ -280,7 +280,7 @@ pub(super) fn binding(
     // The one word: the copy's source is the section's own address ORed into the destination, so
     // the destination's bits must be clear in the section's address.
     require(
-        destination % 0x1000 == 0
+        destination.is_multiple_of(0x1000)
             && (READ_ONLY_FLOOR..READ_ONLY_CEILING).contains(&destination)
             && plan.dst & destination == 0
             && plan.dst + plan.bytes as u64 <= file_bytes as u64
@@ -404,7 +404,7 @@ pub(super) fn references_into(image: &[u8], lo: usize, hi: usize) -> Vec<(usize,
 /// directly after a `ret` and ends on a vector-table boundary, on a `SLED_ALIGN` boundary, with
 /// `SLED_MARGIN` bytes of nops left after it, and only if nothing in the image refers to the run.
 pub(super) fn sled(reset: &[u8], bytes: usize) -> Result<usize> {
-    require(bytes != 0 && bytes % 4 == 0 && bytes <= STUB_MAX, "The copy stub's size is not usable")?;
+    require(bytes != 0 && bytes.is_multiple_of(4) && bytes <= STUB_MAX, "The copy stub's size is not usable")?;
     let words = reset.len() / 4;
     let mut runs = Vec::new();
     let mut n = 0;
@@ -537,15 +537,15 @@ pub(super) fn stub_binding(
     guard_bytes: usize, file_bytes: usize, apply: bool, lamp: &StubLamp, template: &[u8],
 ) -> Result<StubBinding> {
     require(
-        destination % 0x1000 == 0
+        destination.is_multiple_of(0x1000)
             && (READ_ONLY_FLOOR..READ_ONLY_CEILING).contains(&destination)
             && plan.dst + plan.bytes as u64 <= file_bytes as u64
             && destination + file_bytes as u64 <= READ_ONLY_CEILING,
         "The copy stub's source does not fit the read-only destination and the file",
     )?;
     require(
-        plan.copy_old & BL.1 == BL.0 && plan.copy_site % 4 == 0 && plan.copy_site + 4 <= guard_bytes
-            && plan.copy_fn % 4 == 0 && plan.copy_fn + 4 <= guard_bytes,
+        plan.copy_old & BL.1 == BL.0 && plan.copy_site.is_multiple_of(4) && plan.copy_site + 4 <= guard_bytes
+            && plan.copy_fn.is_multiple_of(4) && plan.copy_fn + 4 <= guard_bytes,
         "The reset stage's copy call is not a bl inside the RAM-0 guard",
     )?;
     let offset = sled(extent(reset, 0, guard_bytes)?, template.len())?;
@@ -625,7 +625,7 @@ pub(super) fn bind_stub(program: &mut [u8], at: usize, stub: &StubBinding) -> Re
     template[..8].copy_from_slice(&1u64.to_le_bytes());
     require(extent(program, at, size)? == template, "XP5 copy-stub binding template changed")?;
     require(
-        stub.image.len() % 4 == 0 && (16..=STUB_MAX).contains(&stub.image.len()),
+        stub.image.len().is_multiple_of(4) && (16..=STUB_MAX).contains(&stub.image.len()),
         "The copy stub's size is not usable",
     )?;
     put64(program, at + 8, stub.offset as u64)?;
