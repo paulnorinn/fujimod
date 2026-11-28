@@ -31,6 +31,9 @@ impl Contacts {
     pub fn protected(&self) -> bool {
         self.0.load(Ordering::Relaxed) & 2 != 0
     }
+    // `fetch_update` is deprecated in favour of `try_update`, which is newer
+    // than this workspace's minimum supported Rust version.
+    #[allow(deprecated)]
     pub fn set(&self, present: bool, protected: bool) {
         let level = present as u8 | (protected as u8) << 1;
         self.0
@@ -49,6 +52,8 @@ impl Contacts {
     pub fn interface_clock(&self) -> u8 {
         (self.0.load(Ordering::Relaxed) & INTERFACE_CLOCK) >> 4
     }
+    // See `set` for why the deprecated name is the correct one here.
+    #[allow(deprecated)]
     pub fn select_interface_clock(&self, field: u8) {
         self.0
             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |bits| {
