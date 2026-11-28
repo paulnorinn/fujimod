@@ -596,7 +596,7 @@ mod tests {
         let mut rgba = vec![0; DIGEST_CHUNK * 8 + 11];
         rgba[DIGEST_CHUNK + 47] = 0xf3;
         for low in 0..=255 {
-            let start = 0xabcdef_123456_0000 | low;
+            let start = 0x00ab_cdef_1234_5600_u64 | low;
             let mut digest = vec![start];
             RenderedFrame::extend_digest(&rgba, &mut digest);
             assert_eq!(digest.last(), Some(&RenderedFrame::hash(start, &rgba)));

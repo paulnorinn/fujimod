@@ -184,11 +184,9 @@ impl Inputs {
             if session
                 .board
                 .with_device::<Spi, _>(id, |spi| spi.has_part("power-controller"))?
-            {
-                if power.replace(id).is_some() {
+                && power.replace(id).is_some() {
                     return Err("more than one XP5 power controller is attached".into());
                 }
-            }
         }
         let power = power.ok_or("the XP5 board has no power controller for the USB supply")?;
         session

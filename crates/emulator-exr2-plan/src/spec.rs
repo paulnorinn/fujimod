@@ -98,6 +98,10 @@ pub enum SensorControls {
     /// Store-only (register high, register low, value) records; no radiometry.
     RegisterRecords {},
 }
+// The variants differ in size because each carries one peer's full option set;
+// a plan is deserialized once at start-up, so boxing them would only move the
+// allocation without reducing peak use.
+#[allow(clippy::large_enum_variant)]
 #[derive(Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum SerialEndpoint {
@@ -182,6 +186,10 @@ pub struct InputSignal {
     pub gpio: String,
     pub selection: fujimod_emulator_devices::parts::pins::Selection,
 }
+// The variants differ in size because each carries one peer's full option set;
+// a plan is deserialized once at start-up, so boxing them would only move the
+// allocation without reducing peak use.
+#[allow(clippy::large_enum_variant)]
 #[derive(Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum Model {

@@ -68,6 +68,10 @@ struct MmioHook {
     base: u64,
 }
 struct XipPage {
+    /// The page each core's execute-in-place mapping points at. No Rust code
+    /// reads it back; the box owns the memory `map_backing` borrowed, so it
+    /// must outlive the mapping.
+    #[allow(dead_code)]
     data: Box<[u8; 4096]>,
     epoch: u64,
 }
